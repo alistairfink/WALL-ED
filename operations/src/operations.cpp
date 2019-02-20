@@ -1,6 +1,5 @@
 #include <stack>
 #include "../include/operations.h"
-#include <iostream>
 
 using namespace operations;
 

@@ -1,14 +1,15 @@
 #include <stack>
 #include "../include/operations.h"
+#include <iostream>
 
 using namespace operations;
 
 void initialize()
 {
-	missions.push(mission::candle);
-	missions.push(mission::food);
-	missions.push(mission::people);
-	missions.push(mission::people);
+	missions.push(candle);
+	missions.push(food);
+	missions.push(people);
+	missions.push(people);
 }
 
 void traverse_to_empty()
@@ -33,13 +34,13 @@ void objective_tasks()
 	int curr = missions.top();
 	switch (curr)
 	{
-		case mission::candle:
+		case candle:
 			mission_candle();
 			break;
-		case mission::food:
+		case food:
 			mission_food();
 			break;
-		case mission::people:
+		case people:
 			mission_people();
 			break;
 		default:

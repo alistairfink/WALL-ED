@@ -3,29 +3,6 @@
 
 using namespace operations;
 
-int main()
-{
-	initialize();
-	while(!missions.empty())
-	{
-		// 1. If object mapped?
-		// yes?
-		// 		2. Path plan to empty -> traverse_to_empty()
-		// no?
-		// 		2. Is curr mission food?
-		//		yes?
-		//			3. Is mapped?
-		//			yes?
-		//				4. Path plan to food -> traverse_to_objective()
-		//			no? 
-		//				4. Grid Traversal -> grid_traverse()
-		//		no?
-		//			3. Path plan to objective -> traverse_to_objective()
-	}
-	// Traverse to start
-	return 1;
-}
-
 void initialize()
 {
 	missions.push(mission::candle);
@@ -85,4 +62,27 @@ void mission_food()
 void mission_candle()
 {
 	// Do thing for candle
+}
+
+int main()
+{
+	initialize();
+	while(!missions.empty())
+	{
+		// 1. If object mapped?
+		// yes?
+		// 		2. Path plan to empty -> traverse_to_empty()
+		// no?
+		// 		2. Is curr mission food?
+		//		yes?
+		//			3. Is mapped?
+		//			yes?
+		//				4. Path plan to food -> traverse_to_objective()
+		//			no? 
+		//				4. Grid Traversal -> grid_traverse()
+		//		no?
+		//			3. Path plan to objective -> traverse_to_objective()
+	}
+	// Traverse to start
+	return 1;
 }

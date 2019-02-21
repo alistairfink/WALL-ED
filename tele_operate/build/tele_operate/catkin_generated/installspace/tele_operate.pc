@@ -1,0 +1,8 @@
+prefix=/home/alistairfink/WALL-ED/tele_operate/install
+
+Name: tele_operate
+Description: Description of tele_operate
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/alistairfink/WALL-ED/tele_operate/install/lib 
+Requires: 

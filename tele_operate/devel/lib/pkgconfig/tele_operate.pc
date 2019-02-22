@@ -2,7 +2,7 @@ prefix=/home/alistairfink/WALL-ED/tele_operate/devel
 
 Name: tele_operate
 Description: Description of tele_operate
-Version: 0.0.0
-Cflags: 
-Libs: -L/home/alistairfink/WALL-ED/tele_operate/devel/lib 
-Requires: 
+Version: 1.0.0
+Cflags: -I/home/alistairfink/WALL-ED/tele_operate/devel/include -I/home/alistairfink/WALL-ED/tele_operate/src/tele_operate/include
+Libs: -L/home/alistairfink/WALL-ED/tele_operate/devel/lib -ltele_operate
+Requires: roscpp rospy std_msgs message_runtime

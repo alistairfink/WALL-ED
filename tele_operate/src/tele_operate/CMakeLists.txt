@@ -11,7 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
-  message_generation
+  genmsg
 )
 
 ## System dependencies are found with CMake's conventions
@@ -49,9 +49,11 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## Generate messages in the 'msg' folder
 add_message_files(
+    DIRECTORY
+    msg
     FILES
 #   Message1.msg
-	Control.msg
+    Control.msg
 #   Message2.msg
 )
 
@@ -72,7 +74,7 @@ add_message_files(
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
     DEPENDENCIES
-	std_msgs
+    std_msgs
 )
 
 ################################################
@@ -199,3 +201,12 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+
+add_executable(controller src/controller.cpp)
+target_link_libraries(controller ${catkin_LIBRARIES})
+add_dependencies(controller tele_operate_generate_messages_cpp)
+
+add_executable(listener src/listener.cpp)
+target_link_libraries(listener ${catkin_LIBRARIES})
+add_dependencies(listener tele_operate_generate_messages_cpp)

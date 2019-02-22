@@ -1,0 +1,8 @@
+prefix=/home/skye/software_projs/ros_playground/rplidar/install
+
+Name: hector_nav_msgs
+Description: Description of hector_nav_msgs
+Version: 0.3.5
+Cflags: -I/home/skye/software_projs/ros_playground/rplidar/install/include
+Libs: -L/home/skye/software_projs/ros_playground/rplidar/install/lib 
+Requires: nav_msgs geometry_msgs message_runtime

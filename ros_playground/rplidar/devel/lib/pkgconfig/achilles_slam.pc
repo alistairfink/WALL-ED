@@ -1,0 +1,8 @@
+prefix=/home/skye/software_projs/ros_playground/rplidar/devel
+
+Name: achilles_slam
+Description: Description of achilles_slam
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/skye/software_projs/ros_playground/rplidar/devel/lib 
+Requires: 

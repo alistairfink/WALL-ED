@@ -1,0 +1,8 @@
+prefix=/home/skye/software_projs/ros_playground/rplidar/devel
+
+Name: hector_imu_attitude_to_tf
+Description: Description of hector_imu_attitude_to_tf
+Version: 0.3.5
+Cflags: 
+Libs: -L/home/skye/software_projs/ros_playground/rplidar/devel/lib 
+Requires: 

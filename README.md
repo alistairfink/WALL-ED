@@ -1,5 +1,5 @@
-[![pipeline status](https://gitlab.com/alistairfink/WALL-ED/badges/master/pipeline.svg)](https://gitlab.com/alistairfink/WALL-ED/commits/master)
-[![coverage report](https://gitlab.com/alistairfink/WALL-ED/badges/master/coverage.svg)](https://gitlab.com/alistairfink/WALL-ED/commits/master)
+<a href="https://gitlab.com/alistairfink/WALL-ED/commits/master"><img alt="pipeline status" src="https://gitlab.com/alistairfink/WALL-ED/badges/master/pipeline.svg" /></a>
+<a href="https://gitlab.com/alistairfink/WALL-ED/commits/master"><img alt="coverage report" src="https://gitlab.com/alistairfink/WALL-ED/badges/master/coverage.svg" /></a>
 
 <p algin="center">
     <img src="./res/wall-ed.png" style="max-width: 90%;">

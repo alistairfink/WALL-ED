@@ -17,4 +17,3 @@ catkin tools:
   stage: build
   script:
     - catkin build --summarize --no-status --force-color
-

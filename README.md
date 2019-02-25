@@ -69,5 +69,5 @@ class Javadoc_Test
 ```
 * Any launch files should be placed in a "launch" folder in the root of the ros_package/catkin_ws directory. Also please use a package-relative path in launch files.  
 See http://wiki.ros.org/roslaunch/XML for details on how to.
-* For **catkin packages** keep all public facing headers in the include direcotry. And all private headers and source in the source space (i.e the src folder).
+* For **catkin packages** keep all public facing headers in the include directory. And all private headers and source in the source space (i.e the src folder).
 * DELETE BRANCHES AFTER MERGING PR

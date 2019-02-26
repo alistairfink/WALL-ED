@@ -20,8 +20,11 @@ int INbPin4 = A2;
 int INaPin5 = A1;
 int INbPin5 = A0;
 */
+
+int led = 13;
 void setup() {
     Serial.begin(115200);
+    pinMode(led, OUTPUT);
 /*
     // set pins to output
     pinMode(pwmPin0, OUTPUT);
@@ -78,6 +81,18 @@ void loop() {
             buff[counter] = '\0';
             speed[0]=atoi(strtok(buff,","));
             speed[1]=atoi(strtok(NULL,","));
+            if (speed[0] == 1)
+            {
+                digitalWrite(led, HIGH);
+                delay(500);
+                digitalWrite(led, LOW);
+            }
+            else
+            {
+                digitalWrite(led, HIGH);
+                delay(5000);
+                digitalWrite(led, LOW);
+            }
         }
         else{
             counter++;

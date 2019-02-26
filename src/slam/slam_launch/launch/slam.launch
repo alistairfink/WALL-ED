@@ -5,7 +5,7 @@
 	<param name="/use_sim_time" value="true"/>
 
 	<node pkg="rviz" type="rviz" name="rviz" 
-	    args="-d $(find hector_slam_launch)/rviz_cfg/mapping_demo.rviz"/>
+	    args="-d $(find slam_launch)/cfg/rviz_config.rviz"/>
 
 	<include file="$(find slam_launch)/launch/hector_mapping.launch"/>
 	 

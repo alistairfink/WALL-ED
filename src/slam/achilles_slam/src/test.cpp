@@ -28,7 +28,7 @@ walls identify_walls(const nav_msgs::OccupancyGrid::ConstPtr& msg)
 	uint32_t south_search = msg->info.width;
 
 	// Used to break from while loop when both walls are found
-	bool north_found = false
+	bool north_found = false;
 	bool south_found = false;
 
 	// Loop through rows top down and bottom up simultaneously to find N and S walls

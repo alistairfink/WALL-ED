@@ -25,7 +25,6 @@ int main(int argc, char **argv)
 	std::vector<unsigned char> msg_toSend (2, 0);
 	msg_toSend.insert(msg_toSend.begin() + 1, (unsigned char)(ms.speed));//(int)(ms.forward)));
 	msg_toSend.insert(msg_toSend.begin() + 1, (unsigned char)(ms.speed));
-//	std::cout << "Stuff: " << msg_toSend[0] << " " << msg_toSend[1];
 	ser.write(msg_toSend);
 
 	for (;;)

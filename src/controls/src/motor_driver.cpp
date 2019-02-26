@@ -22,9 +22,10 @@ int main(int argc, char **argv)
 	ms.forward = true;
 	ms.speed = 1;
 	motor_control_pub.publish(ms);
-	std::vector<unsigned char> msg_toSend;
-	msg_toSend.insert(msg_toSend.begin() + 1, (unsigned char)(ms.forward));
+	std::vector<unsigned char> msg_toSend (2, 0);
+	msg_toSend.insert(msg_toSend.begin() + 1, (unsigned char)(ms.speed));//(int)(ms.forward)));
 	msg_toSend.insert(msg_toSend.begin() + 1, (unsigned char)(ms.speed));
+//	std::cout << "Stuff: " << msg_toSend[0] << " " << msg_toSend[1];
 	ser.write(msg_toSend);
 
 	for (;;)

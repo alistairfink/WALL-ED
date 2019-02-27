@@ -2,18 +2,32 @@
 #include "std_msgs/String.h"
 #include "nav_msgs/OccupancyGrid.h"
 
-#define MAP_WIDTH 1.829			// Map width in meters
+#define MAP_WIDTH 1.829		// Map width in meters
 #define FOUND_ROW_FACTOR 2	// Divisor for expected # of cells to accept as wall
 
 
+/**
+* Walls struct
+* Contains row/column of walls in occupancy grid from hector.
+* Possible wall row and column numbers start at 0 (from left and top of occupancy grid array respectively) and go to (width-1).
+*/
 struct walls {
-	// Set walls to max length of map cause will we ever actually use max length
+	// Set walls to max length of map cause will we ever actually use max length. These will mean wall not found.
 	uint32_t north_wall = 0xFFFFFFFF;
 	uint32_t south_wall = 0xFFFFFFFF;
 	uint32_t east_wall = 0xFFFFFFFF;
 	uint32_t west_wall = 0xFFFFFFFF;
 };
 
+
+/**
+* count_horizontal_cells
+* Takes a row number (0 to width-1 left to right) and returns the count of occupied cells in that row of occupancy grid.
+*
+* @param msg const pointer to nav_msgs::OccupancyGrid containing occupancy grid as 1D array
+* @param row integer of row to count occupied cells. (Value should be 0 to width-1)
+* @return The number of occupied cells in row
+*/
 uint32_t count_horizontal_cells(const nav_msgs::OccupancyGrid::ConstPtr& msg, const uint32_t row)
 {
 	uint64_t end = (row * msg->info.width) + msg->info.width; // last cell in that row
@@ -30,6 +44,15 @@ uint32_t count_horizontal_cells(const nav_msgs::OccupancyGrid::ConstPtr& msg, co
 	return count;
 }
 
+
+/**
+* count_vertical_cells
+* Takes a column number (0 to width-1 top to bottom) and returns the count of occupied cells in that column of occupancy grid.
+*
+* @param msg const pointer to nav_msgs::OccupancyGrid containing occupancy grid as 1D array
+* @param row integer of column to count occupied cells. (Value should be 0 to width-1)
+* @return The number of occupied cells in column
+*/
 uint32_t count_vertical_cells(const nav_msgs::OccupancyGrid::ConstPtr& msg, const uint32_t column)
 {
 	uint64_t end = column + (msg->info.width * (msg->info.width-1)); // last cell in that column
@@ -47,6 +70,14 @@ uint32_t count_vertical_cells(const nav_msgs::OccupancyGrid::ConstPtr& msg, cons
 	return count;
 }
 
+
+/**
+* identify_walls
+* Processes occupancy grid from hector_mapping and determines rows and columns of walls of obstacle course
+*
+* @param msg const pointer to nav_msgs::OccupancyGrid containing occupancy grid as 1D array
+* @return An instance of wall struct containing row and column numbers of walls. 
+*/
 walls identify_walls(const nav_msgs::OccupancyGrid::ConstPtr& msg)
 {
 	walls retVal;
@@ -193,7 +224,12 @@ walls identify_walls(const nav_msgs::OccupancyGrid::ConstPtr& msg)
 	return retVal;
 }
 
-// Handle occupancy grids
+/**
+* handle_map
+* Callback for arriving msgs on the map topic. Hands occupancy grid to relevant functions for processing to course map.
+*
+* @param msg const pointer to nav_msgs::OccupancyGrid containing occupancy grid as 1D array
+*/
 void handle_map(const nav_msgs::OccupancyGrid::ConstPtr& msg)
 {
 	// ROS_INFO("Frame is [%d]", msg->header.seq);
@@ -205,11 +241,17 @@ void handle_map(const nav_msgs::OccupancyGrid::ConstPtr& msg)
 }
 
 
-
+/**
+* main
+* Main for achilles_mapping node
+*
+* @param argc arg count 0?
+* @param argv arg vector (none expected)
+*/
 int main(int argc, char **argv)
 {
   
-	ros::init(argc, argv, "achilles_test");
+	ros::init(argc, argv, "achilles_mapping");
 	ros::NodeHandle n;
 
 	// Subscribe to the /map for occupancy grids from Hector

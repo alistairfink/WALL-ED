@@ -199,9 +199,8 @@ include_directories(
 # catkin_add_nosetests(test)
 
 
-## Build achilles test
+## Build achilles_mapping
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-add_executable(achilles_test src/test.cpp)
-target_link_libraries(achilles_test ${catkin_LIBRARIES})
-#add_dependencies(achilles_test beginner_tutorials_generate_messages_cpp)
+add_executable(achilles_mapping src/achilles_mapping.cpp)
+target_link_libraries(achilles_mapping ${catkin_LIBRARIES})

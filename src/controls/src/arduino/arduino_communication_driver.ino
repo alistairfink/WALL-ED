@@ -73,15 +73,14 @@ void loop() {
     static int speed[2];
     static char buff[30];
     int counter = 0;
-    Serial.print("fuck you");
     // read command from raspberry pi
-    if (Serial.available() > 0)
+    while (Serial.available() > 0)
     {
-        Serial.print("fuck this");
         Serial.read();
         digitalWrite(led, HIGH);
         delay(500);
         digitalWrite(led, LOW);
+        delay(500);
     }
     /*while(Serial.available()){
         buff[counter] = Serial.read();

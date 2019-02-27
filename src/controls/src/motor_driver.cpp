@@ -26,11 +26,11 @@ int main(int argc, char **argv)
 		msg_toSend.insert(msg_toSend.begin() + 1, (unsigned char)(ms.speed));//(int)(ms.forward)));
 		msg_toSend.insert(msg_toSend.begin() + 1, (unsigned char)(ms.speed));
 		ser.write(msg_toSend);
-	for (;;)
+/*	for (;;)
 	{
 		std::string msg = ser.readline();
 		std::cout << msg << std::endl; 
-	}
+	}*/
 /*	for (;;)
 	{
 		controls::motor_control msg;

@@ -18,21 +18,25 @@ int main(int argc, char **argv)
 		std::cout << "Connected" << std::endl;
 	}
 
-	controls::motor_control ms;
-	ms.forward = true;
-	ms.speed = 1;
-	motor_control_pub.publish(ms);
-	std::vector<unsigned char> msg_toSend (2, 0);
-	msg_toSend.insert(msg_toSend.begin() + 1, (unsigned char)(ms.speed));//(int)(ms.forward)));
-	msg_toSend.insert(msg_toSend.begin() + 1, (unsigned char)(ms.speed));
-	ser.write(msg_toSend);
-
+		controls::motor_control ms;
+		ms.forward = true;
+		ms.speed = 1;
+		motor_control_pub.publish(ms);
+		std::vector<unsigned char> msg_toSend (1, 0);
+		msg_toSend.insert(msg_toSend.begin() + 1, (unsigned char)(ms.speed));//(int)(ms.forward)));
+		msg_toSend.insert(msg_toSend.begin() + 1, (unsigned char)(ms.speed));
+		ser.write(msg_toSend);
 	for (;;)
+	{
+		std::string msg = ser.readline();
+		std::cout << msg << std::endl; 
+	}
+/*	for (;;)
 	{
 		controls::motor_control msg;
 		msg.forward = true;
 		msg.speed = 1;
 		motor_control_pub.publish(msg);
-	}
+	}*/
 
 }

@@ -21,7 +21,7 @@ int INaPin5 = A1;
 int INbPin5 = A0;
 */
 
-int led = 13;
+int led = 12;
 void setup() {
     Serial.begin(115200);
     pinMode(led, OUTPUT);
@@ -73,9 +73,17 @@ void loop() {
     static int speed[2];
     static char buff[30];
     int counter = 0;
-
+    Serial.print("fuck you");
     // read command from raspberry pi
-    while(Serial.available()){
+    if (Serial.available() > 0)
+    {
+        Serial.print("fuck this");
+        Serial.read();
+        digitalWrite(led, HIGH);
+        delay(500);
+        digitalWrite(led, LOW);
+    }
+    /*while(Serial.available()){
         buff[counter] = Serial.read();
         if (counter > 30 || buff[counter] == '*') {
             buff[counter] = '\0';
@@ -97,7 +105,7 @@ void loop() {
         else{
             counter++;
         }
-    }
+    }*/
 /*
     // control motors
     control_motor(speed[0], pwmPin0, INaPin0, INbPin0);
@@ -108,8 +116,8 @@ void loop() {
     control_motor(speed[5], pwmPin5, INaPin5, INbPin5);*/
 
     // send messages to raspberry pi
-    Serial.print(speed[0]); Serial.print(",");
-    Serial.print(speed[1]); Serial.print(",");
+  /*  Serial.print(speed[0]); Serial.print(",");
+    Serial.print(speed[1]); Serial.print(",");*/
 
     delay(100);
 }

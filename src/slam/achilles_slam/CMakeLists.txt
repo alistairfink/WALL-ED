@@ -202,5 +202,8 @@ include_directories(
 ## Build achilles_mapping
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-add_executable(achilles_mapping src/achilles_mapping.cpp)
+add_executable(achilles_mapping
+				src/achilles_mapping.h
+				src/achilles_mapping.cpp
+				src/main.cpp)
 target_link_libraries(achilles_mapping ${catkin_LIBRARIES})

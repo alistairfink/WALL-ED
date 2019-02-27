@@ -1,6 +1,6 @@
 #include "ros/ros.h"
-#include "std_msgs/String.h"
 #include "nav_msgs/OccupancyGrid.h"
+#include "achilles_mapping.h"
 
 #define MAP_WIDTH 1.829		// Map width in meters
 #define FOUND_ROW_FACTOR 2	// Divisor for expected # of cells to accept as wall
@@ -238,25 +238,4 @@ void handle_map(const nav_msgs::OccupancyGrid::ConstPtr& msg)
 	// ROS_INFO("Height is [%d]\n", msg->info.height);
 
 	identify_walls(msg);
-}
-
-
-/**
-* main
-* Main for achilles_mapping node
-*
-* @param argc arg count 0?
-* @param argv arg vector (none expected)
-*/
-int main(int argc, char **argv)
-{
-  
-	ros::init(argc, argv, "achilles_mapping");
-	ros::NodeHandle n;
-
-	// Subscribe to the /map for occupancy grids from Hector
-	ros::Subscriber sub = n.subscribe("map", 1000, handle_map);
-	ros::spin();
-
-	return 0;
 }

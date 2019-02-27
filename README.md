@@ -10,10 +10,11 @@
   * Operations Node
   * Movement Node
   * Path Planning Library
-* SLAM Package
-  * RPLidar Node
-  * Hector SLAM Node
-  * Achilles SLAM Node
+* SLAM
+  * RPLidar Package
+  * Hector SLAM Package
+  * Achilles SLAM Package
+  * SLAM Launch Package
 * Controls Package
   * Sensors Node
   * Motor Controls Library

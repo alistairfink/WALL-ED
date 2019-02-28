@@ -18,14 +18,14 @@ namespace motor_abs {
 	{
 	private:
 		serial::Serial connection;
-		string format(int16_t motor, int16_t speed);
+		std::string format(int16_t motor, int16_t speed);
 
 	public:
-		motor_driver(string port, int baud);
+		motor_driver(std::string port, int baud);
 		bool check_connection();	
 		void set_speed(int16_t motor, int16_t speed);
 		~motor_driver();
-	}
+	};
 }
 
 #endif

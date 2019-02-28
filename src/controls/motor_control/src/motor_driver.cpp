@@ -25,7 +25,7 @@ private:
 	 * @param speed What to set the speed to
 	 * @return Formatted string
 	 */
-	string format(int16_t motor, int16_t speed)
+	std::string format(int16_t motor, int16_t speed)
 	{
 		std::ostringstream stm;
 		stm << motor << "," << speed << "*";
@@ -40,7 +40,7 @@ public:
 	 * @param port Serial port arduino is connected by
 	 * @param baud Baud rate for serial connection. Should be 115200 for arduino
 	 */
-	motor_driver(string port, int baud)
+	motor_driver(std::string port, int baud)
 	{
 		connection = Serial(port, baud, serial::Timeout::simpleTimeout(1000));
 	}

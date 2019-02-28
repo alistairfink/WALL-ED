@@ -5,6 +5,10 @@ const int MOTOR_1 = 1;
 const int MOTOR_2 = 2;
 DualMC33926MotorShield motor_shield;
 
+/**
+ * stop_if_fault
+ * Stops execution if theres a fault
+ */
 void stop_if_fault()
 {
     if (motor_shield.getFault())
@@ -13,9 +17,16 @@ void stop_if_fault()
     }
 }
 
+/**
+ * motor_speed
+ * Changes the motor speed of the requested motor
+ *
+ * @param motor Which motor we're setting the speed of
+ * @param speed What to set the speed to
+ */
 void motor_speed(int motor, int speed)
 {
-    if (speed > -400 && speed < 400)
+    if (speed >= -400 && speed <= 400)
     {
         if (motor == MOTOR_1)
         {
@@ -29,11 +40,19 @@ void motor_speed(int motor, int speed)
     }    
 }
 
+/**
+ * setup
+ * Arduino setup. Opens serial connection and initializes motor shield stuff.
+ */
 void setup() {
     Serial.begin(115200);
     motor_shield.init();
 }
 
+/**
+ * loop
+ * Arduino loop function. Continuously polls for commands from pi
+ */
 void loop() {
     static int motor_control[2];
     static char buff[30];

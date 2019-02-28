@@ -7,6 +7,8 @@ cache:
 before_script:
   - git clone https://gitlab.com/VictorLamoine/ros_gitlab_ci.git
   - source ros_gitlab_ci/gitlab-ci.bash >/dev/null
+  - git submodule init
+  - git submodule update
 
 catkin_make:
   stage: build

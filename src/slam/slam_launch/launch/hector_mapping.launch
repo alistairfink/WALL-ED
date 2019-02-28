@@ -18,11 +18,11 @@
 		<param name="laser_min_dist" value="1.0"/>
 
 		<!-- Custom params -->
-		<param name="map_pub_period" value="1" />
+		<param name="map_pub_period" value="0.25" />
 		<param name="laser_max_dist" value="10" />
 
-		<param name="map_resolution" value="0.1"/>
-		<param name="map_size" value="70"/>
+		<param name="map_resolution" value="0.05"/>
+		<param name="map_size" value="100"/>
 		<param name="map_start_x" value="0.5"/>
 		<param name="map_start_y" value="0.5" />
 

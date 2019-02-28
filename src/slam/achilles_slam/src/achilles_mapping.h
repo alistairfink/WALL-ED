@@ -13,4 +13,21 @@ uint32_t count_vertical_cells(const nav_msgs::OccupancyGrid::ConstPtr& msg, cons
 walls identify_walls(const nav_msgs::OccupancyGrid::ConstPtr& msg);
 
 void handle_map(const nav_msgs::OccupancyGrid::ConstPtr& msg);
+
+// terrain
+enum terrain_type {	unknown, 
+					flat, 
+					gravel, 
+					sand, 
+					water };
+
+// target
+enum target_type {	unknown_undetermined, 
+					none, 
+					unknown_occupied, 
+					mansion, 
+					cabin, 
+					supplies, 
+					fire };
+
 #endif

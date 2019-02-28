@@ -1,8 +1,11 @@
 #include "ros/ros.h"
 #include "nav_msgs/OccupancyGrid.h"
+#include "achilles_slam/course_map.h"
+#include "achilles_slam/get_course_map.h"
 #include "achilles_mapping.h"
 
-#define MAP_WIDTH 1.829		// Map width in meters
+#define MAP_WIDTH_M 1.829		// Map width in meters
+#define MAP_WIDTH_TILES 6		// Map width in tiles
 #define FOUND_ROW_FACTOR 2	// Divisor for expected # of cells to accept as wall
 
 
@@ -108,7 +111,7 @@ walls identify_walls(const nav_msgs::OccupancyGrid::ConstPtr& msg)
 	uint32_t last_west_count = 0;
 
 	// Expected wall length in cells
-	uint32_t actual_length = MAP_WIDTH / msg->info.resolution;
+	uint32_t actual_length = MAP_WIDTH_M / msg->info.resolution;
 
 	// Loop through rows top down and bottom up simultaneously to find N and S walls
 	// =====================================================================================
@@ -224,6 +227,30 @@ walls identify_walls(const nav_msgs::OccupancyGrid::ConstPtr& msg)
 	return retVal;
 }
 
+target_type process_tile_target(const nav_msgs::OccupancyGrid::ConstPtr& msg, const uint16_t tile_num) 
+{
+
+}
+
+achilles_slam::course_map construct_course_map(const nav_msgs::OccupancyGrid::ConstPtr& msg, const walls course_walls)
+{
+	// Course Map to be returned
+	achilles_slam::course_map retVal;
+
+	// Write width to return message
+	retVal.width = MAP_WIDTH_TILES;
+
+	// Tile holder to be pushed into map vector
+	achilles_slam::tile temp_tile;
+
+	for (uint16_t i = 0 ; i < MAP_WIDTH_TILES*MAP_WIDTH_TILES ; i++)
+	{
+		temp_tile;
+		retVal.map.push_back(temp_tile);
+	}
+}
+
+
 /**
 * handle_map
 * Callback for arriving msgs on the map topic. Hands occupancy grid to relevant functions for processing to course map.
@@ -231,11 +258,15 @@ walls identify_walls(const nav_msgs::OccupancyGrid::ConstPtr& msg)
 * @param msg const pointer to nav_msgs::OccupancyGrid containing occupancy grid as 1D array
 */
 void handle_map(const nav_msgs::OccupancyGrid::ConstPtr& msg)
-{
+{	
+	walls course_walls;
 	// ROS_INFO("Frame is [%d]", msg->header.seq);
 	// ROS_INFO("Resolution is [%f]", msg->info.resolution);
 	// ROS_INFO("Width is [%d]", msg->info.width);
 	// ROS_INFO("Height is [%d]\n", msg->info.height);
 
-	identify_walls(msg);
+	course_walls = identify_walls(msg);
+
+	construct_course_map(msg, course_walls);
 }
+

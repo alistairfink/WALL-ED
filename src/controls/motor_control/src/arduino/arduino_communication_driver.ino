@@ -1,26 +1,44 @@
 #include <string.h>
-#include "./DualMC33926MotorShield/DualMC33926MotorShield.h"
+#include "DualMC33926MotorShield/DualMC33926MotorShield.h"
 
-int led = 12;
+const int MOTOR_1 = 1;
+const int MOTOR_2 = 2;
+DualMC33926MotorShield motor_shield;
+
+void stop_if_fault()
+{
+    if (motor_shield.getFault())
+    {
+        while(1);
+    }
+}
+
+void motor_speed(int motor, int speed)
+{
+    if (speed > -400 && speed < 400)
+    {
+        if (motor == MOTOR_1)
+        {
+            motor_shield.setM1Speed(speed);
+        }
+        else if (motor == MOTOR_2)
+        {
+            motor_shield.setM2Speed(speed);
+        }
+        stop_if_fault();
+    }    
+}
+
 void setup() {
     Serial.begin(115200);
-    pinMode(led, OUTPUT);
+    motor_shield.init();
 }
 
 void loop() {
-    static int motor_control[3];
+    static int motor_control[2];
     static char buff[30];
     int counter = 0;
     bool dirty = false;
-
-    // Reset the arduino when it's fucking itself
-    /*
-    digitalWrite(led, HIGH);
-    delay(500);
-    digitalWrite(led, LOW);
-    delay(500);
-    while (Serial.available() > 0) {}
-    */
 
     while (Serial.available() > 0)
     {
@@ -40,14 +58,8 @@ void loop() {
 
     if (dirty)
     {
-        for (int i = 0; i < motor_control[1]; i++)
-        {
-            digitalWrite(led, HIGH);
-            delay(500);
-            digitalWrite(led, LOW);
-            delay(500);
-        }
+        motor_speed(motor_control[0], motor_control[1]);
     }
 
-    delay(100);
+    delay(2);
 }

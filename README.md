@@ -15,10 +15,42 @@
   * Hector SLAM Package
   * Achilles SLAM Package
   * SLAM Launch Package
-* Controls Package
-  * Sensors Node
+* Controls
+  * Sensors Package
   * Motor Controls Library
 
+## Dependencies
+* ROS Kinetic
+* Arduino
+* Arduino-Mk
+
+## Build Instructions
+### Dependencies
+```
+sudo apt-get install arduino
+sudo apt-get install arduino-mk
+```
+Follow instructions here to download ROS Kinetic: http://wiki.ros.org/kinetic/Installation/Ubuntu
+### Clone Repo
+```
+git clone https://github.com/alistairfink/WALL-ED.git
+git submodule init
+git submodule update
+```
+
+### Build 
+From the root directory of the repo:
+If there are previous build and devel folders run the following command:
+```
+sudo rm -rf build/ devel/
+```
+```
+catkin_make clean
+catkin_make
+source ./devel/setup.bash
+```
+FILL IN RUN INSTRUCTIONS AFTER CREATING LAUNCH FILES
+### Run
 
 ## Coding Standards (for contributors)
 * Please use snake_case for all naming throughout repo (variables, functions, files, directories, etc.)

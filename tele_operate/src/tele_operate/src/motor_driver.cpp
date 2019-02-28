@@ -1,7 +1,7 @@
 #include <string>
 #include <sstream>
 #include "serial/serial.h"
-#include "../include/motor_driver.h"
+#include "motor_driver.h"
 
 using namespace motor_abs;
 

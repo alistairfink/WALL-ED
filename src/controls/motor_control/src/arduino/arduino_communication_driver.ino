@@ -1,5 +1,5 @@
 #include <string.h>
-#include "DualMC33926MotorShield/DualMC33926MotorShield.h"
+#include "DualMC33926MotorShield.h"
 
 const int MOTOR_1 = 1;
 const int MOTOR_2 = 2;

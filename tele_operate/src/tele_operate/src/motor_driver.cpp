@@ -1,5 +1,7 @@
 #include <string>
 #include <sstream>
+#include <stdint.h>
+#include "ros/ros.h"
 #include "serial/serial.h"
 #include "motor_driver.h"
 
@@ -24,7 +26,7 @@ private:
 	 * @param speed What to set the speed to
 	 * @return Formatted string
 	 */
-	std::string format(int16 motor, int16 speed)
+	std::string format(int16_t motor, int16_t speed)
 	{
 		std::ostringstream stm;
 		stm << motor << "," << speed << "*";
@@ -37,9 +39,9 @@ public:
 	 * Constructor for motor_driver. Initializes serial connection
 	 * 
 	 * @param port Serial port arduino is connected by
-	 * @param baud Baud rate for serial connection
+	 * @param baud Baud rate for serial connection. Should be 115200 for the arduino
 	 */
-	motor_driver(std::string port, std::int baud = 115200)
+	motor_driver(std::string port, int baud)
 	{
 		connection = Serial(port, baud, serial::Timeout::simpleTimeout(1000));
 	}
@@ -62,7 +64,7 @@ public:
 	 * @param motor Which motor we're setting the speed of
 	 * @param speed What to set the speed to
 	 */
-	void set_speed(int16 motor, int16 speed)
+	void set_speed(int16_t motor, int16_t speed)
 	{
 		if (speed >= MAX_BACKWARD && speed <= MAX_FORWARD)
 		{

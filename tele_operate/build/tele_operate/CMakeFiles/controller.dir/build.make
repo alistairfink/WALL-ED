@@ -107,8 +107,10 @@ controller_EXTERNAL_OBJECTS =
 /home/alistairfink/WALL-ED/tele_operate/devel/lib/tele_operate/controller: /usr/lib/x86_64-linux-gnu/libboost_chrono.so
 /home/alistairfink/WALL-ED/tele_operate/devel/lib/tele_operate/controller: /usr/lib/x86_64-linux-gnu/libboost_date_time.so
 /home/alistairfink/WALL-ED/tele_operate/devel/lib/tele_operate/controller: /usr/lib/x86_64-linux-gnu/libboost_atomic.so
-/home/alistairfink/WALL-ED/tele_operate/devel/lib/tele_operate/controller: /usr/lib/x86_64-linux-gnu/libpthread.so
 /home/alistairfink/WALL-ED/tele_operate/devel/lib/tele_operate/controller: /usr/lib/x86_64-linux-gnu/libconsole_bridge.so
+/home/alistairfink/WALL-ED/tele_operate/devel/lib/tele_operate/controller: /home/alistairfink/WALL-ED/tele_operate/devel/lib/libserial.so
+/home/alistairfink/WALL-ED/tele_operate/devel/lib/tele_operate/controller: /usr/lib/x86_64-linux-gnu/librt.so
+/home/alistairfink/WALL-ED/tele_operate/devel/lib/tele_operate/controller: /usr/lib/x86_64-linux-gnu/libpthread.so
 /home/alistairfink/WALL-ED/tele_operate/devel/lib/tele_operate/controller: tele_operate/CMakeFiles/controller.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/alistairfink/WALL-ED/tele_operate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable /home/alistairfink/WALL-ED/tele_operate/devel/lib/tele_operate/controller"
 	cd /home/alistairfink/WALL-ED/tele_operate/build/tele_operate && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/controller.dir/link.txt --verbose=$(VERBOSE)

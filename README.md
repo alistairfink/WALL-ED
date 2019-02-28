@@ -40,6 +40,7 @@ git submodule update
 
 ### Build 
 From the root directory of the repo:
+
 If there are previous build and devel folders run the following command:
 ```
 sudo rm -rf build/ devel/

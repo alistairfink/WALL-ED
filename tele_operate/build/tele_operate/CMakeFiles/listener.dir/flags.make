@@ -6,5 +6,5 @@ CXX_FLAGS =
 
 CXX_DEFINES = -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\"tele_operate\"
 
-CXX_INCLUDES = -I/home/alistairfink/WALL-ED/tele_operate/devel/include -I/home/alistairfink/WALL-ED/tele_operate/src/serial/include -I/opt/ros/kinetic/include -I/opt/ros/kinetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp 
+CXX_INCLUDES = -I/home/alistairfink/WALL-ED/tele_operate/devel/include -I/home/alistairfink/WALL-ED/tele_operate/src/serial/include -I/home/alistairfink/WALL-ED/tele_operate/src/motor_control/include -I/opt/ros/kinetic/include -I/opt/ros/kinetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp 
 

@@ -1,9 +1,8 @@
 #include <string>
 #include <sstream>
-#include <stdint.h>
 #include "ros/ros.h"
 #include "serial/serial.h"
-#include "motor_driver.h"
+#include "motor_control/motor_driver.h"
 
 using namespace motor_abs;
 
@@ -39,7 +38,7 @@ public:
 	 * Constructor for motor_driver. Initializes serial connection
 	 * 
 	 * @param port Serial port arduino is connected by
-	 * @param baud Baud rate for serial connection. Should be 115200 for the arduino
+	 * @param baud Baud rate for serial connection. Should be 115200 for arduino
 	 */
 	motor_driver(std::string port, int baud)
 	{

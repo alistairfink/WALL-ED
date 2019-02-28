@@ -329,6 +329,15 @@ lib:FILEPATH=/usr/lib/x86_64-linux-gnu/libpthread.so
 //The directory containing a CMake configuration file for message_runtime.
 message_runtime_DIR:PATH=/opt/ros/kinetic/share/message_runtime/cmake
 
+//Value Computed by CMake
+motor_control_BINARY_DIR:STATIC=/home/alistairfink/WALL-ED/tele_operate/build/motor_control
+
+//The directory containing a CMake configuration file for motor_control.
+motor_control_DIR:PATH=/home/alistairfink/WALL-ED/tele_operate/devel/share/motor_control/cmake
+
+//Value Computed by CMake
+motor_control_SOURCE_DIR:STATIC=/home/alistairfink/WALL-ED/tele_operate/src/motor_control
+
 //The directory containing a CMake configuration file for rosconsole.
 rosconsole_DIR:PATH=/opt/ros/kinetic/share/rosconsole/cmake
 
@@ -476,7 +485,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=6
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=7
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

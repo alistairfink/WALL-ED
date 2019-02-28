@@ -19,6 +19,7 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "/home/alistairfink/WALL-ED/tele_operate/devel/include"
   "/home/alistairfink/WALL-ED/tele_operate/src/serial/include"
+  "/home/alistairfink/WALL-ED/tele_operate/src/motor_control/include"
   "/opt/ros/kinetic/include"
   "/opt/ros/kinetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp"
   )

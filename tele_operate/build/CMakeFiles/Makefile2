@@ -905,6 +905,24 @@ clean: serial/tests/CMakeFiles/run_tests_serial_gtest_serial-test-timer.dir/clea
 .PHONY : clean
 
 #=============================================================================
+# Directory level rules for directory motor_control
+
+# Convenience name for "all" pass in the directory.
+motor_control/all:
+
+.PHONY : motor_control/all
+
+# Convenience name for "clean" pass in the directory.
+motor_control/clean:
+
+.PHONY : motor_control/clean
+
+# Convenience name for "preinstall" pass in the directory.
+motor_control/preinstall:
+
+.PHONY : motor_control/preinstall
+
+#=============================================================================
 # Directory level rules for directory tele_operate
 
 # Convenience name for "all" pass in the directory.

@@ -1,6 +1,6 @@
 #include "ros/ros.h"
 #include "std_msgs/Int64.h"
-#include "motor_driver.h"
+#include "motor_control/motor_driver.h"
 #include "commands.h"
 
 motor_abs::motor_driver md("/dev/ttyUSB0", 115200);

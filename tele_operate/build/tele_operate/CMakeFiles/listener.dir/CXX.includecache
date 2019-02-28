@@ -6,6 +6,12 @@
 
 #IncludeRegexTransform: 
 
+/home/alistairfink/WALL-ED/tele_operate/src/motor_control/include/motor_control/motor_driver.h
+ros/ros.h
+/home/alistairfink/WALL-ED/tele_operate/src/motor_control/include/motor_control/ros/ros.h
+serial/serial.h
+/home/alistairfink/WALL-ED/tele_operate/src/motor_control/include/motor_control/serial/serial.h
+
 /home/alistairfink/WALL-ED/tele_operate/src/serial/include/serial/serial.h
 limits
 -
@@ -39,16 +45,10 @@ ros/ros.h
 /home/alistairfink/WALL-ED/tele_operate/src/tele_operate/src/ros/ros.h
 std_msgs/Int64.h
 /home/alistairfink/WALL-ED/tele_operate/src/tele_operate/src/std_msgs/Int64.h
-motor_driver.h
-/home/alistairfink/WALL-ED/tele_operate/src/tele_operate/src/motor_driver.h
+motor_control/motor_driver.h
+/home/alistairfink/WALL-ED/tele_operate/src/tele_operate/src/motor_control/motor_driver.h
 commands.h
 /home/alistairfink/WALL-ED/tele_operate/src/tele_operate/src/commands.h
-
-/home/alistairfink/WALL-ED/tele_operate/src/tele_operate/src/motor_driver.h
-ros/ros.h
-/home/alistairfink/WALL-ED/tele_operate/src/tele_operate/src/ros/ros.h
-serial/serial.h
-/home/alistairfink/WALL-ED/tele_operate/src/tele_operate/src/serial/serial.h
 
 /opt/ros/kinetic/include/ros/advertise_options.h
 ros/forwards.h

@@ -56,6 +56,13 @@
 /home/alistairfink/WALL-ED/tele_operate/build/serial/tests/CMakeFiles/run_tests_serial_gtest.dir
 /home/alistairfink/WALL-ED/tele_operate/build/serial/tests/CMakeFiles/serial-test-timer.dir
 /home/alistairfink/WALL-ED/tele_operate/build/serial/tests/CMakeFiles/run_tests_serial_gtest_serial-test-timer.dir
+/home/alistairfink/WALL-ED/tele_operate/build/motor_control/CMakeFiles/list_install_components.dir
+/home/alistairfink/WALL-ED/tele_operate/build/motor_control/CMakeFiles/install.dir
+/home/alistairfink/WALL-ED/tele_operate/build/motor_control/CMakeFiles/rebuild_cache.dir
+/home/alistairfink/WALL-ED/tele_operate/build/motor_control/CMakeFiles/install/strip.dir
+/home/alistairfink/WALL-ED/tele_operate/build/motor_control/CMakeFiles/install/local.dir
+/home/alistairfink/WALL-ED/tele_operate/build/motor_control/CMakeFiles/test.dir
+/home/alistairfink/WALL-ED/tele_operate/build/motor_control/CMakeFiles/edit_cache.dir
 /home/alistairfink/WALL-ED/tele_operate/build/tele_operate/CMakeFiles/list_install_components.dir
 /home/alistairfink/WALL-ED/tele_operate/build/tele_operate/CMakeFiles/install.dir
 /home/alistairfink/WALL-ED/tele_operate/build/tele_operate/CMakeFiles/rebuild_cache.dir

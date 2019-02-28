@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   genmsg
   serial
+  motor_control
 )
 
 ## System dependencies are found with CMake's conventions
@@ -110,7 +111,7 @@ generate_messages(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES tele_operate
-  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime serial
+  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime serial motor_control
   DEPENDS system_lib
 )
 

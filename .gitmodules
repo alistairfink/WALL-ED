@@ -1,0 +1,3 @@
+[submodule "src/controls/motor_control/src/serial"]
+	path = src/controls/motor_control/src/serial
+	url = https://github.com/wjwwood/serial.git

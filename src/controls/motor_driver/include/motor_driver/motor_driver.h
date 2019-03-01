@@ -17,11 +17,11 @@ namespace motor_abs {
 	class motor_driver
 	{
 	private:
-		serial::Serial connection;
+		serial::Serial* connection;
 		std::string format(int16_t motor, int16_t speed);
 
 	public:
-		motor_driver(std::string port, int baud);
+		motor_driver(std::string port, uint32_t baud);
 		bool check_connection();	
 		void set_speed(int16_t motor, int16_t speed);
 		~motor_driver();

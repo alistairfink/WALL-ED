@@ -28,6 +28,8 @@ private:
 
 	walls identify_walls(const nav_msgs::OccupancyGrid::ConstPtr& msg);
 
+	achilles_slam::tile process_tile(const nav_msgs::OccupancyGrid::ConstPtr &msg, const achilles_mapping_service::walls *course_walls, const uint16_t tile_num);
+
 };
 
 

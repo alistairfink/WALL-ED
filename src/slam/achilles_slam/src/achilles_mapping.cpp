@@ -4,6 +4,7 @@
 #include "achilles_slam/get_course_map.h"
 #include "achilles_slam/update_course_map.h"
 #include "achilles_mapping.h"
+#include <math.h> 
 
 #define MAP_WIDTH_M 1.829		// Map width in meters
 #define MAP_WIDTH_TILES 6		// Map width in tiles
@@ -243,6 +244,7 @@ achilles_mapping_service::achilles_mapping_service()
 	temp_tile.terrain = achilles_slam::tile::TERRAIN_UKNOWN;
 	temp_tile.target = achilles_slam::tile::TARGET_UKNOWN_UNDERTERMINED;
 
+	// Set initialize map to null tiles
 	for (uint16_t i = 0 ; i < MAP_WIDTH_TILES*MAP_WIDTH_TILES ; i++)
 	{
 		temp_tile.terrain = 0;
@@ -252,16 +254,78 @@ achilles_mapping_service::achilles_mapping_service()
 
 achilles_mapping_service::~achilles_mapping_service()
 {
+	// delete the map
 	delete this->course_map;
 }
 
+
+achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::OccupancyGrid::ConstPtr &msg, const achilles_mapping_service::walls *course_walls, const uint16_t tile_num) 
+{
+	// Determine length and width of one tile
+	// determined separately in case detected walls do not form perfect square
+	uint32_t tile_length = (course_walls->south_wall - course_walls->north_wall - 1) / MAP_WIDTH_TILES;
+	uint32_t tile_width = (course_walls->east_wall - course_walls->west_wall - 1) / MAP_WIDTH_TILES;
+
+	// First cell in the tile
+	// jesus christ i dont wanna debug this if it doesnt work
+	uint32_t start_cell = (  ( ((course_walls->north_wall + 1) + (tile_length * floor(tile_num/MAP_WIDTH_TILES))) * msg->info.width)  + ((course_walls->west_wall + 1) + (tile_width * (tile_num%MAP_WIDTH_TILES) )));
+
+	// Index of cell to check
+	uint32_t cell = 0;
+
+	// Cycle through rows of tile
+	for (uint32_t row_count = 0 ; row_count < tile_length ; row_count++)
+	{
+		cell = start_cell + (msg->info.width * row_count);
+		for (uint32_t column_count = 0 ; column_count < tile_width ; column_count++)
+		{
+			if (msg->data[cell] == 100)
+			{
+				// increment full count
+			} 
+			else if (msg->data[cell] == -1)
+			{
+				// increment unknown count
+			}
+			else
+			{
+				// increment empty count
+			}
+			cell++;
+		}
+	}
+}
+
+
+
+
+
+
+
 bool achilles_mapping_service::get_course_map_srv(achilles_slam::get_course_map::Request& req, achilles_slam::get_course_map::Response& resp)
 {
+	// Get occupancy grid from hector and make sure its not null
 	nav_msgs::OccupancyGrid::ConstPtr msg = ros::topic::waitForMessage<nav_msgs::OccupancyGrid>("map", ros::Duration(2));
 	if (msg == NULL)
+	{
         ROS_INFO("No point occupancy grid messages received");
+	}
     else
+    {
+    	// Tile used for processing occ grid
+    	achilles_slam::tile temp_tile;
+
+    	// Identify walls of obtained occupancy grid
         achilles_mapping_service::walls course_walls = this->identify_walls(msg);
+
+        // Loop through tiles and process
+		for (uint16_t tile_num = 0 ; tile_num < MAP_WIDTH_TILES*MAP_WIDTH_TILES ; tile_num++)
+		{
+			temp_tile = this->process_tile(msg, &course_walls, tile_num);
+			this->course_map->map.push_back(temp_tile);
+		}
+	    
+	}
 }
 
 bool achilles_mapping_service::update_course_map_srv(achilles_slam::update_course_map::Request& req, achilles_slam::update_course_map::Response& resp)
@@ -277,10 +341,7 @@ bool achilles_mapping_service::update_course_map_srv(achilles_slam::update_cours
 
 
 
-// target_type achilles_mapping_service::process_tile_target(const nav_msgs::OccupancyGrid::ConstPtr& msg, const uint16_t tile_num) 
-// {
 
-// }
 
 // achilles_slam::course_map achilles_mapping_service::construct_course_map(const nav_msgs::OccupancyGrid::ConstPtr& msg, const walls course_walls)
 // {

@@ -257,12 +257,18 @@ achilles_mapping_service::~achilles_mapping_service()
 
 bool achilles_mapping_service::get_course_map_srv(achilles_slam::get_course_map::Request& req, achilles_slam::get_course_map::Response& resp)
 {
+	nav_msgs::OccupancyGrid::ConstPtr msg = ros::topic::waitForMessage<nav_msgs::OccupancyGrid>("map", ros::Duration(2));
+	if (msg == NULL)
+        ROS_INFO("No point occupancy grid messages received");
+    else
+        achilles_mapping_service::walls course_walls = this->identify_walls(msg);
 }
 
 bool achilles_mapping_service::update_course_map_srv(achilles_slam::update_course_map::Request& req, achilles_slam::update_course_map::Response& resp)
 {
-	
+
 }
+
 
 
 

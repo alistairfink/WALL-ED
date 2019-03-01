@@ -1,0 +1,71 @@
+#include <string>
+#include <sstream>
+#include "ros/ros.h"
+#include "serial/serial.h"
+#include "motor_driver/motor_driver.h"
+
+using namespace motor_abs;
+
+/**
+ * format
+ * Formats string into format to send across serial
+ *
+ * @param motor Which motor we're setting the speed of
+ * @param speed What to set the speed to
+ * @return Formatted string
+ */
+std::string motor_driver::format(int16_t motor, int16_t speed)
+{
+	std::ostringstream stm;
+	stm << motor << "," << speed << "*";
+	return stm.str();
+}
+
+/**
+ * motor_driver
+ * Constructor for motor_driver. Initializes serial connection
+ * 
+ * @param port Serial port arduino is connected by
+ * @param baud Baud rate for serial connection. Should be 115200 for arduino
+ */
+motor_driver::motor_driver(std::string port, uint32_t baud)
+{
+	connection = new serial::Serial(port, baud, serial::Timeout::simpleTimeout(1000));
+}
+
+/**
+ * check_connection
+ * Checks if serial connection is open
+ * 
+ * @return Returns if connection is open or not
+ */
+bool motor_driver::check_connection()
+{
+	return connection->isOpen(); 
+}
+
+/**
+ * set_speed
+ * Sets the speed of a motor
+ *
+ * @param motor Which motor we're setting the speed of
+ * @param speed What to set the speed to
+ */
+void motor_driver::set_speed(int16_t motor, int16_t speed)
+{
+	if (speed >= MAX_BACKWARD && speed <= MAX_FORWARD)
+	{
+		std::string message = format(motor, speed);
+		connection->write(message);
+	}
+}
+
+/**
+ * ~motor_driver
+ * Destructor for motor_driver. Closes serial connection.
+ */
+motor_driver::~motor_driver()
+{
+	connection->close();
+	delete &connection;
+}

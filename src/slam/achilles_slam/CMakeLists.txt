@@ -59,6 +59,7 @@ add_message_files(
 add_service_files(
   FILES
   get_course_map.srv
+  update_course_map.srv
 )
 
 ## Generate actions in the 'action' folder

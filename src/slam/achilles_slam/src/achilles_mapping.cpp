@@ -2,6 +2,7 @@
 #include "nav_msgs/OccupancyGrid.h"
 #include "achilles_slam/course_map.h"
 #include "achilles_slam/get_course_map.h"
+#include "achilles_slam/update_course_map.h"
 #include "achilles_mapping.h"
 
 #define MAP_WIDTH_M 1.829		// Map width in meters
@@ -14,7 +15,7 @@
 * Contains row/column of walls in occupancy grid from hector.
 * Possible wall row and column numbers start at 0 (from left and top of occupancy grid array respectively) and go to (width-1).
 */
-struct walls {
+struct achilles_mapping_service::walls {
 	// Set walls to max length of map cause will we ever actually use max length. These will mean wall not found.
 	uint32_t north_wall = 0xFFFFFFFF;
 	uint32_t south_wall = 0xFFFFFFFF;
@@ -31,7 +32,7 @@ struct walls {
 * @param row integer of row to count occupied cells. (Value should be 0 to width-1)
 * @return The number of occupied cells in row
 */
-uint32_t count_horizontal_cells(const nav_msgs::OccupancyGrid::ConstPtr& msg, const uint32_t row)
+uint32_t achilles_mapping_service::count_horizontal_cells(const nav_msgs::OccupancyGrid::ConstPtr& msg, const uint32_t row)
 {
 	uint64_t end = (row * msg->info.width) + msg->info.width; // last cell in that row
 	uint32_t count = 0;
@@ -56,7 +57,7 @@ uint32_t count_horizontal_cells(const nav_msgs::OccupancyGrid::ConstPtr& msg, co
 * @param row integer of column to count occupied cells. (Value should be 0 to width-1)
 * @return The number of occupied cells in column
 */
-uint32_t count_vertical_cells(const nav_msgs::OccupancyGrid::ConstPtr& msg, const uint32_t column)
+uint32_t achilles_mapping_service::count_vertical_cells(const nav_msgs::OccupancyGrid::ConstPtr& msg, const uint32_t column)
 {
 	uint64_t end = column + (msg->info.width * (msg->info.width-1)); // last cell in that column
 	uint32_t count = 0;
@@ -81,7 +82,7 @@ uint32_t count_vertical_cells(const nav_msgs::OccupancyGrid::ConstPtr& msg, cons
 * @param msg const pointer to nav_msgs::OccupancyGrid containing occupancy grid as 1D array
 * @return An instance of wall struct containing row and column numbers of walls. 
 */
-walls identify_walls(const nav_msgs::OccupancyGrid::ConstPtr& msg)
+achilles_mapping_service::walls achilles_mapping_service::identify_walls(const nav_msgs::OccupancyGrid::ConstPtr& msg)
 {
 	walls retVal;
 
@@ -227,46 +228,90 @@ walls identify_walls(const nav_msgs::OccupancyGrid::ConstPtr& msg)
 	return retVal;
 }
 
-target_type process_tile_target(const nav_msgs::OccupancyGrid::ConstPtr& msg, const uint16_t tile_num) 
-{
 
-}
 
-achilles_slam::course_map construct_course_map(const nav_msgs::OccupancyGrid::ConstPtr& msg, const walls course_walls)
+achilles_mapping_service::achilles_mapping_service()
 {
-	// Course Map to be returned
-	achilles_slam::course_map retVal;
+	// Course map for this instance
+	this->course_map = new achilles_slam::course_map;
 
 	// Write width to return message
-	retVal.width = MAP_WIDTH_TILES;
+	this->course_map->width = MAP_WIDTH_TILES;
 
 	// Tile holder to be pushed into map vector
 	achilles_slam::tile temp_tile;
+	temp_tile.terrain = achilles_slam::tile::TERRAIN_UKNOWN;
+	temp_tile.target = achilles_slam::tile::TARGET_UKNOWN_UNDERTERMINED;
 
 	for (uint16_t i = 0 ; i < MAP_WIDTH_TILES*MAP_WIDTH_TILES ; i++)
 	{
-		temp_tile;
-		retVal.map.push_back(temp_tile);
+		temp_tile.terrain = 0;
+		this->course_map->map.push_back(temp_tile);
 	}
 }
 
-
-/**
-* handle_map
-* Callback for arriving msgs on the map topic. Hands occupancy grid to relevant functions for processing to course map.
-*
-* @param msg const pointer to nav_msgs::OccupancyGrid containing occupancy grid as 1D array
-*/
-void handle_map(const nav_msgs::OccupancyGrid::ConstPtr& msg)
-{	
-	walls course_walls;
-	// ROS_INFO("Frame is [%d]", msg->header.seq);
-	// ROS_INFO("Resolution is [%f]", msg->info.resolution);
-	// ROS_INFO("Width is [%d]", msg->info.width);
-	// ROS_INFO("Height is [%d]\n", msg->info.height);
-
-	course_walls = identify_walls(msg);
-
-	construct_course_map(msg, course_walls);
+achilles_mapping_service::~achilles_mapping_service()
+{
+	delete this->course_map;
 }
+
+bool achilles_mapping_service::get_course_map_srv(achilles_slam::get_course_map::Request& req, achilles_slam::get_course_map::Response& resp)
+{
+}
+
+bool achilles_mapping_service::update_course_map_srv(achilles_slam::update_course_map::Request& req, achilles_slam::update_course_map::Response& resp)
+{
+	
+}
+
+
+
+
+
+
+
+
+// target_type achilles_mapping_service::process_tile_target(const nav_msgs::OccupancyGrid::ConstPtr& msg, const uint16_t tile_num) 
+// {
+
+// }
+
+// achilles_slam::course_map achilles_mapping_service::construct_course_map(const nav_msgs::OccupancyGrid::ConstPtr& msg, const walls course_walls)
+// {
+// 	// Course Map to be returned
+// 	achilles_slam::course_map retVal;
+
+// 	// Write width to return message
+// 	retVal.width = MAP_WIDTH_TILES;
+
+// 	// Tile holder to be pushed into map vector
+// 	achilles_slam::tile temp_tile;
+
+// 	for (uint16_t i = 0 ; i < MAP_WIDTH_TILES*MAP_WIDTH_TILES ; i++)
+// 	{
+// 		temp_tile;
+// 		retVal.map.push_back(temp_tile);
+// 	}
+// }
+
+
+// /**
+// * handle_map
+// * Callback for arriving msgs on the map topic. Hands occupancy grid to relevant functions for processing to course map.
+// *
+// * @param msg const pointer to nav_msgs::OccupancyGrid containing occupancy grid as 1D array
+// */
+// void handle_map(const nav_msgs::OccupancyGrid::ConstPtr& msg)
+// {	
+// 	walls course_walls;
+// 	// ROS_INFO("Frame is [%d]", msg->header.seq);
+// 	// ROS_INFO("Resolution is [%f]", msg->info.resolution);
+// 	// ROS_INFO("Width is [%d]", msg->info.width);
+// 	// ROS_INFO("Height is [%d]\n", msg->info.height);
+
+// 	course_walls = identify_walls(msg);
+
+// 	construct_course_map(msg, course_walls);
+// }
+
 

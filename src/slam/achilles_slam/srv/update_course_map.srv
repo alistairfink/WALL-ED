@@ -1,0 +1,4 @@
+coord tile_coord			# Coordinate of tile to update
+tile update_tile			# Tile info to update into tile of coord tile_coord
+---
+							# Empty resposne

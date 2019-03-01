@@ -1,15 +1,17 @@
-uint8 terrain 	# uint8_t representing terrain of tiles:
-				# 	unknown = 0
-				# 	flat = 1
-				# 	gravel =2 
-				# 	sand = 3
-				# 	water = 4
+# uint8_t representing terrain of tiles:
+uint8 terrain 				
+uint8 TERRAIN_UKNOWN	= 0				
+uint8 TERRAIN_FLAT 		= 1			
+uint8 TERRAIN_GRAVEL	= 2
+uint8 TERRAIN_SAND 		= 3	
+uint8 TERRAIN_WATER 	= 4	
 
-uint8 target	# uint8_t representing target in tile:
-				# 	unknown_undetermined = 0
-				# 	none = 1
-				# 	unknown_occupied =2 
-				# 	mansion = 3
-				# 	cabin = 4
-				# 	supplies = 5
-				# 	fire = 6
+# uint8_t representing target in tile:
+uint8 target
+uint8 TARGET_UKNOWN_UNDERTERMINED	= 0
+uint8 TARGET_NONE 					= 1
+uint8 TARGET_OCCUPIED				= 2
+uint8 TARGET_MANSION				= 3
+uint8 TARGET_CABIN					= 4
+uint8 TARGET_SUPPLIES				= 5
+uint8 TARGET_FIRE					= 6

@@ -277,6 +277,9 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 	for (uint32_t row_count = 0 ; row_count < tile_length ; row_count++)
 	{
 		cell = start_cell + (msg->info.width * row_count);
+		
+		// Cycle through columns of row 
+		// and count occupied/empty/unknown cells
 		for (uint32_t column_count = 0 ; column_count < tile_width ; column_count++)
 		{
 			if (msg->data[cell] == 100)

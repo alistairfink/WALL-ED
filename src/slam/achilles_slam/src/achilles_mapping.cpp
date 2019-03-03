@@ -8,7 +8,9 @@
 
 #define MAP_WIDTH_M 1.829		// Map width in meters
 #define MAP_WIDTH_TILES 6		// Map width in tiles
-#define FOUND_ROW_FACTOR 2	// Divisor for expected # of cells to accept as wall
+#define FOUND_ROW_FACTOR 2		// Divisor for expected # of cells to accept as wall
+#define MIN_TARGET_AREA 0.001	// Threshold area in m^2 to mark a tile as "occupied" e.g. 0.001 = 10cm^2
+#define MIN_UKNOWN_AREA 0.002	// Threshold area in m^2 to mark a tile as "unknown" e.g. 0.001 = 10cm^2
 
 
 /**
@@ -46,6 +48,8 @@ uint32_t achilles_mapping_service::count_horizontal_cells(const nav_msgs::Occupa
 			count++;
 		}
 	}
+
+	// ROS_INFO("Row: %d\tCount: %d", row, count);
 	return count;
 }
 
@@ -71,7 +75,7 @@ uint32_t achilles_mapping_service::count_vertical_cells(const nav_msgs::Occupanc
 			count++;
 		}
 	}
-
+	// ROS_INFO("Column: %d\tCount: %d", column, count);
 	return count;
 }
 
@@ -261,6 +265,14 @@ achilles_mapping_service::~achilles_mapping_service()
 
 achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::OccupancyGrid::ConstPtr &msg, const achilles_mapping_service::walls *course_walls, const uint16_t tile_num) 
 {
+
+	achilles_slam::tile processed_tile;
+
+	// Counts of cell states in tile
+	uint32_t occupancy_count = 0;
+	uint32_t unknown_count = 0;
+	uint32_t empty_count = 0;
+
 	// Determine length and width of one tile
 	// determined separately in case detected walls do not form perfect square
 	uint32_t tile_length = (course_walls->south_wall - course_walls->north_wall - 1) / MAP_WIDTH_TILES;
@@ -284,19 +296,39 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 		{
 			if (msg->data[cell] == 100)
 			{
-				// increment full count
+				occupancy_count++;
 			} 
 			else if (msg->data[cell] == -1)
 			{
-				// increment unknown count
+				unknown_count++;
 			}
 			else
 			{
-				// increment empty count
+				empty_count++;
 			}
 			cell++;
 		}
 	}
+
+	processed_tile.terrain = achilles_slam::tile::TERRAIN_UKNOWN;
+	processed_tile.occupancy_count = occupancy_count;
+
+	// If occupancy_count > occupancy acceptance theshold then set occupied
+	// else likewise for unknown_count
+	if (occupancy_count *  msg->info.resolution * msg->info.resolution > MIN_TARGET_AREA)
+	{
+		processed_tile.target = achilles_slam::tile::TARGET_OCCUPIED;
+	} 
+	else if (unknown_count  *  msg->info.resolution * msg->info.resolution > MIN_UKNOWN_AREA)
+	{
+		processed_tile.target = achilles_slam::tile::TARGET_UKNOWN_UNDERTERMINED;
+	} 
+	else
+	{
+		processed_tile.target = achilles_slam::tile::TARGET_NONE;
+	}
+
+	return processed_tile;
 }
 
 
@@ -325,10 +357,19 @@ bool achilles_mapping_service::get_course_map_srv(achilles_slam::get_course_map:
 		for (uint16_t tile_num = 0 ; tile_num < MAP_WIDTH_TILES*MAP_WIDTH_TILES ; tile_num++)
 		{
 			temp_tile = this->process_tile(msg, &course_walls, tile_num);
-			this->course_map->map.push_back(temp_tile);
+
+			// Update target only if we havent dtermined target yet.
+			this->course_map->map[tile_num].occupancy_count = temp_tile.occupancy_count;
+			if (this->course_map->map[tile_num].target == achilles_slam::tile::TARGET_NONE)
+				this->course_map->map[tile_num].target = temp_tile.target;
+				// Note we dont update the taerrain here cause lidar doesnt tell us that
 		}
 	    
+	    // response from service
+	    resp.silicon_valley = *(this->course_map);
 	}
+
+	return true; // cause why not lol
 }
 
 bool achilles_mapping_service::update_course_map_srv(achilles_slam::update_course_map::Request& req, achilles_slam::update_course_map::Response& resp)

@@ -15,3 +15,6 @@ uint8 TARGET_MANSION				= 3
 uint8 TARGET_CABIN					= 4
 uint8 TARGET_SUPPLIES				= 5
 uint8 TARGET_FIRE					= 6
+
+# uint32_t count of number of occupied occupancy grid cells in tile:
+uint32 occupancy_count

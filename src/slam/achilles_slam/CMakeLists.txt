@@ -208,4 +208,5 @@ add_executable(achilles_mapping
 				src/achilles_mapping.h
 				src/achilles_mapping.cpp
 				src/main.cpp)
+add_dependencies(achilles_mapping ${catkin_EXPORTED_TARGETS})
 target_link_libraries(achilles_mapping ${catkin_LIBRARIES})

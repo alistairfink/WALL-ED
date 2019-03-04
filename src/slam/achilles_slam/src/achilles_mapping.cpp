@@ -228,7 +228,10 @@ achilles_mapping_service::walls achilles_mapping_service::identify_walls(const n
 }
 
 
-
+/**
+* achilles_mapping_service
+* Constructor for the achilles mapping serivce. Constructs empty course_map, reads node params and launches services
+*/
 achilles_mapping_service::achilles_mapping_service()
 {
 	// Course map for this instance

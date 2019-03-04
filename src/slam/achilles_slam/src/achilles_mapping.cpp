@@ -254,6 +254,20 @@ achilles_mapping_service::achilles_mapping_service()
 		temp_tile.terrain = 0;
 		this->course_map->map.push_back(temp_tile);
 	}
+
+	// Create node handle
+	ros::NodeHandle n;
+
+	// Handle parameters
+	n.param<float>("/achilles_mapping/map_width_m", this->map_width_m, 1.829);				// Map width in meters
+	n.param<int>("/achilles_mapping/map_width_tiles", this->map_width_tiles, 6);			// Map width in tiles
+	n.param<int>("/achilles_mapping/found_wall_factor", this->found_wall_factor, 2);		// Divisor for expected # of cells to accept as wall
+	n.param<float>("/achilles_mapping/min_target_area", this->min_target_area, 0.001);		// Threshold area in m^2 to mark a tile as "occupied" e.g. 0.001 = 10cm^2
+	n.param<float>("/achilles_mapping/min_unknown_area", this->min_unknown_area, 0.002);	// Threshold area in m^2 to mark a tile as "unknown" e.g. 0.001 = 10cm^2
+
+	// Launch map services
+	this->get_serv = n.advertiseService("get_course_map", &achilles_mapping_service::get_course_map_srv, this);
+	this->update_serv = n.advertiseService("update_course_map", &achilles_mapping_service::update_course_map_srv, this);
 }
 
 achilles_mapping_service::~achilles_mapping_service()

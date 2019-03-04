@@ -30,6 +30,15 @@ private:
 
 	achilles_slam::tile process_tile(const nav_msgs::OccupancyGrid::ConstPtr &msg, const achilles_mapping_service::walls *course_walls, const uint16_t tile_num);
 
+	ros::ServiceServer get_serv;
+	ros::ServiceServer update_serv;
+
+	// Node parameters
+	float map_width_m;
+	int map_width_tiles;
+	int found_wall_factor;
+	float min_target_area;
+	float min_unknown_area;
 };
 
 

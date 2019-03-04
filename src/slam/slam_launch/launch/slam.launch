@@ -9,7 +9,7 @@
 
 	<include file="$(find slam_launch)/launch/hector_mapping.launch"/>
 
-	<include file="$(find slam_launch)/launch/achilles_mapping.launch"/>
+	<!-- <include file="$(find slam_launch)/launch/achilles_mapping.launch"/> -->
 	 
 
 	<!-- NOT REALLY NEEDED FOR WHAT WE'RE DOING -->

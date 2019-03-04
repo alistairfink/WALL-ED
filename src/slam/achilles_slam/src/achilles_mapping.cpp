@@ -4,13 +4,7 @@
 #include "achilles_slam/get_course_map.h"
 #include "achilles_slam/update_course_map.h"
 #include "achilles_mapping.h"
-#include <math.h> 
-
-#define MAP_WIDTH_M 1.829		// Map width in meters
-#define MAP_WIDTH_TILES 6		// Map width in tiles
-#define FOUND_ROW_FACTOR 2		// Divisor for expected # of cells to accept as wall
-#define MIN_TARGET_AREA 0.001	// Threshold area in m^2 to mark a tile as "occupied" e.g. 0.001 = 10cm^2
-#define MIN_UKNOWN_AREA 0.002	// Threshold area in m^2 to mark a tile as "unknown" e.g. 0.001 = 10cm^2
+#include <math.h>
 
 
 /**
@@ -117,7 +111,7 @@ achilles_mapping_service::walls achilles_mapping_service::identify_walls(const n
 	uint32_t last_west_count = 0;
 
 	// Expected wall length in cells
-	uint32_t actual_length = MAP_WIDTH_M / msg->info.resolution;
+	uint32_t actual_length = this->map_width_m / msg->info.resolution;
 
 	// Loop through rows top down and bottom up simultaneously to find N and S walls
 	// =====================================================================================
@@ -133,7 +127,7 @@ achilles_mapping_service::walls achilles_mapping_service::identify_walls(const n
 			{
 				last_north_count = north_count;
 			}
-			else if (north_count < last_north_count && last_north_count >= actual_length / FOUND_ROW_FACTOR)
+			else if (north_count < last_north_count && last_north_count >= actual_length / this->found_wall_factor)
 			{
 				north_found = true;
 				retVal.north_wall = north_search - 1;
@@ -150,7 +144,7 @@ achilles_mapping_service::walls achilles_mapping_service::identify_walls(const n
 			if (south_count > last_south_count)
 			{
 				last_south_count = south_count;
-			} else if (south_count < last_south_count && last_south_count >= actual_length / FOUND_ROW_FACTOR)
+			} else if (south_count < last_south_count && last_south_count >= actual_length / this->found_wall_factor)
 			{
 				south_found = true;
 				retVal.south_wall = south_search + 1;
@@ -176,7 +170,7 @@ achilles_mapping_service::walls achilles_mapping_service::identify_walls(const n
 			{
 				last_west_count = west_count;
 			}
-			else if (west_count < last_west_count && last_west_count >= actual_length / FOUND_ROW_FACTOR)
+			else if (west_count < last_west_count && last_west_count >= actual_length / this->found_wall_factor)
 			{
 				west_found = true;
 				retVal.west_wall = west_search - 1;
@@ -194,7 +188,7 @@ achilles_mapping_service::walls achilles_mapping_service::identify_walls(const n
 			{
 				last_east_count = east_count;
 			}
-			else if (east_count < last_east_count && last_east_count >= actual_length / FOUND_ROW_FACTOR)
+			else if (east_count < last_east_count && last_east_count >= actual_length / this->found_wall_factor)
 			{
 				east_found = true;
 				retVal.east_wall = east_search + 1;
@@ -240,21 +234,6 @@ achilles_mapping_service::achilles_mapping_service()
 	// Course map for this instance
 	this->course_map = new achilles_slam::course_map;
 
-	// Write width to return message
-	this->course_map->width = MAP_WIDTH_TILES;
-
-	// Tile holder to be pushed into map vector
-	achilles_slam::tile temp_tile;
-	temp_tile.terrain = achilles_slam::tile::TERRAIN_UKNOWN;
-	temp_tile.target = achilles_slam::tile::TARGET_UKNOWN_UNDERTERMINED;
-
-	// Set initialize map to null tiles
-	for (uint16_t i = 0 ; i < MAP_WIDTH_TILES*MAP_WIDTH_TILES ; i++)
-	{
-		temp_tile.terrain = 0;
-		this->course_map->map.push_back(temp_tile);
-	}
-
 	// Create node handle
 	ros::NodeHandle n;
 
@@ -264,6 +243,21 @@ achilles_mapping_service::achilles_mapping_service()
 	n.param<int>("/achilles_mapping/found_wall_factor", this->found_wall_factor, 2);		// Divisor for expected # of cells to accept as wall
 	n.param<float>("/achilles_mapping/min_target_area", this->min_target_area, 0.001);		// Threshold area in m^2 to mark a tile as "occupied" e.g. 0.001 = 10cm^2
 	n.param<float>("/achilles_mapping/min_unknown_area", this->min_unknown_area, 0.002);	// Threshold area in m^2 to mark a tile as "unknown" e.g. 0.001 = 10cm^2
+
+	// Write width to return message
+	this->course_map->width = this->map_width_tiles;
+
+	// Tile holder to be pushed into map vector
+	achilles_slam::tile temp_tile;
+	temp_tile.terrain = achilles_slam::tile::TERRAIN_UKNOWN;
+	temp_tile.target = achilles_slam::tile::TARGET_UKNOWN_UNDERTERMINED;
+
+	// Set initialize map to null tiles
+	for (uint16_t i = 0 ; i < this->map_width_tiles * this->map_width_tiles ; i++)
+	{
+		temp_tile.terrain = 0;
+		this->course_map->map.push_back(temp_tile);
+	}
 
 	// Launch map services
 	this->get_serv = n.advertiseService("get_course_map", &achilles_mapping_service::get_course_map_srv, this);
@@ -292,7 +286,7 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 
 	// Tile length stuff
 	// ==================================================================================================
-	float tile_length = (course_walls->south_wall - course_walls->north_wall - 1) / (float)MAP_WIDTH_TILES;
+	float tile_length = (course_walls->south_wall - course_walls->north_wall - 1) / (float)this->map_width_tiles;
 	uint32_t effective_tile_length;
 	// check if cells per tile length fit perfectly or nah
 	if ((uint32_t)(tile_length*10)%10 == 0)
@@ -302,7 +296,7 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 	else
 	{
 		// If its a tile on the edge of the map dont include wall in tile length
-		if (floor(tile_num/MAP_WIDTH_TILES == 0) || floor(tile_num/MAP_WIDTH_TILES) == MAP_WIDTH_TILES-1)
+		if (floor(tile_num/this->map_width_tiles == 0) || floor(tile_num/this->map_width_tiles) == this->map_width_tiles-1)
 			effective_tile_length = ceil(tile_length);
 		else
 			effective_tile_length = ceil(tile_length) + 1;
@@ -312,7 +306,7 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 
 	// Tile width stuff
 	// ==================================================================================================
-	float tile_width = (course_walls->east_wall - course_walls->west_wall - 1) / (float)MAP_WIDTH_TILES;
+	float tile_width = (course_walls->east_wall - course_walls->west_wall - 1) / (float)this->map_width_tiles;
 	uint32_t effective_tile_width;
 	// check if cells per tile row fit perfectly or nah
 	if ((uint32_t)(tile_width*10)%10 == 0)
@@ -322,7 +316,7 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 	else
 	{
 		// If its a tile on the edge of the map dont include wall in tile width
-		if (tile_num%MAP_WIDTH_TILES == 0 || tile_num%MAP_WIDTH_TILES == MAP_WIDTH_TILES-1)
+		if (tile_num%this->map_width_tiles == 0 || tile_num%this->map_width_tiles == this->map_width_tiles-1)
 			effective_tile_width = ceil(tile_width);
 		else
 			effective_tile_width = ceil(tile_width) + 1;
@@ -332,9 +326,9 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 	// First cell in the tile
 	// +++++++++++++++++++++++++++++
 	// Calc cell pos of first cell in row
-	uint32_t start_cell =   (  (course_walls->north_wall + 1)  +  (floor(tile_num/MAP_WIDTH_TILES) ? ((ceil(tile_length) * floor(tile_num/MAP_WIDTH_TILES))-1) : 0 ))   *   msg->info.width ;
+	uint32_t start_cell =   (  (course_walls->north_wall + 1)  +  (floor(tile_num/this->map_width_tiles) ? ((ceil(tile_length) * floor(tile_num/this->map_width_tiles))-1) : 0 ))   *   msg->info.width ;
 	// Calc cell position of cell's col in row
-	start_cell += (course_walls->west_wall + 1) + ( tile_num%MAP_WIDTH_TILES ? (ceil(tile_width) * (tile_num%MAP_WIDTH_TILES) - 1) : 0 );
+	start_cell += (course_walls->west_wall + 1) + ( tile_num%this->map_width_tiles ? (ceil(tile_width) * (tile_num%this->map_width_tiles) - 1) : 0 );
 	// +++++++++++++++++++++++++++++
 
 	// Index of cell to check
@@ -378,11 +372,11 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 
 	// If occupancy_count > occupancy acceptance theshold then set occupied
 	// else likewise for unknown_count
-	if ((float)(occupancy_count *  msg->info.resolution * msg->info.resolution) > float(MIN_TARGET_AREA))
+	if ((float)(occupancy_count *  msg->info.resolution * msg->info.resolution) > float(this->min_target_area))
 	{
 		processed_tile.target = achilles_slam::tile::TARGET_OCCUPIED;
 	} 
-	else if (unknown_count  *  msg->info.resolution * msg->info.resolution > MIN_UKNOWN_AREA)
+	else if (unknown_count  *  msg->info.resolution * msg->info.resolution > this->min_unknown_area)
 	{
 		processed_tile.target = achilles_slam::tile::TARGET_UKNOWN_UNDERTERMINED;
 	} 
@@ -407,7 +401,7 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 	// Occupancy info
 	ROS_DEBUG("occupancy_count: [%d]", occupancy_count);
 	ROS_DEBUG("occupancy area: [%f]", occupancy_count *  msg->info.resolution * msg->info.resolution);
-	ROS_DEBUG("Min req occ: [%f]", MIN_TARGET_AREA);
+	ROS_DEBUG("Min req occ: [%f]", this->min_target_area);
 	ROS_DEBUG("===================");
 
 	return processed_tile;
@@ -436,7 +430,7 @@ bool achilles_mapping_service::get_course_map_srv(achilles_slam::get_course_map:
         achilles_mapping_service::walls course_walls = this->identify_walls(msg);
 
         // Loop through tiles and process
-		for (uint16_t tile_num = 0 ; tile_num < MAP_WIDTH_TILES*MAP_WIDTH_TILES ; tile_num++)
+		for (uint16_t tile_num = 0 ; tile_num < this->map_width_tiles*this->map_width_tiles ; tile_num++)
 		{
 			temp_tile = this->process_tile(msg, &course_walls, tile_num);
 

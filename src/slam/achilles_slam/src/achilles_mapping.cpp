@@ -267,13 +267,28 @@ achilles_mapping_service::achilles_mapping_service()
 	this->update_serv = n.advertiseService("update_course_map", &achilles_mapping_service::update_course_map_srv, this);
 }
 
+
+/**
+* ~achilles_mapping_service
+* Destructor for achilles_mapping_service class.
+*
+* Just deallocates the map
+*/
 achilles_mapping_service::~achilles_mapping_service()
 {
 	// delete the map
 	delete this->course_map;
 }
 
-
+/**
+* process_tile
+* Processes tile from occupancy grid and returns tile object. 
+*
+* @param msg const pointer to nav_msgs::OccupancyGrid containing occupancy grid as 1D array
+* @param course_walls const pointer to achilles_mapping_service::walls rows and columns of walls
+* @param tile_num integer of the index of the tile to process.
+* @return An instance of achilles_slam::tile containing the processed tile. 
+*/
 achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::OccupancyGrid::ConstPtr &msg, const achilles_mapping_service::walls *course_walls, const uint16_t tile_num) 
 {
 	ROS_DEBUG("TILE: [%d]", tile_num);
@@ -415,7 +430,14 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 
 
 
-
+/**
+* get_course_map_srv
+* Service to get the course map 
+*
+* @param req Its pretty much nothing. the request is empty
+* @param resp A copy of the object's course_map
+* @return Always true i guess. 
+*/
 bool achilles_mapping_service::get_course_map_srv(achilles_slam::get_course_map::Request& req, achilles_slam::get_course_map::Response& resp)
 {
 	// Get occupancy grid from hector and make sure its not null
@@ -459,6 +481,14 @@ bool achilles_mapping_service::get_course_map_srv(achilles_slam::get_course_map:
 	return true; // cause why not lol
 }
 
+/**
+* update_course_map_srv
+* Service to update the course map 
+*
+* @param req a copy of the tile to update and it's index
+* @param resp nothing. no response required
+* @return Always true i guess. 
+*/
 bool achilles_mapping_service::update_course_map_srv(achilles_slam::update_course_map::Request& req, achilles_slam::update_course_map::Response& resp)
 {
 

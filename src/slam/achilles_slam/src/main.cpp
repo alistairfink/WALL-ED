@@ -16,10 +16,6 @@ int main(int argc, char **argv)
 
 	achilles_mapping_service mapping_serv;
 
-	// Subscribe to the /map for occupancy grids from Hector
-	// ros::Subscriber sub = n.subscribe("map", 1000, handle_map);
-
-
 	ros::ServiceServer get_serv = n.advertiseService("get_course_map", &achilles_mapping_service::get_course_map_srv, &mapping_serv);
 
 	ros::ServiceServer update_serv = n.advertiseService("update_course_map", &achilles_mapping_service::update_course_map_srv, &mapping_serv);

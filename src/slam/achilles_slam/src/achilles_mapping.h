@@ -35,11 +35,4 @@ private:
 
 
 
-
-
-
-// void handle_map(const nav_msgs::OccupancyGrid::ConstPtr& msg);
-
-
-
 #endif

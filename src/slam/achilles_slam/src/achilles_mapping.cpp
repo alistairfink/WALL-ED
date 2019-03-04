@@ -49,7 +49,7 @@ uint32_t achilles_mapping_service::count_horizontal_cells(const nav_msgs::Occupa
 		}
 	}
 
-	// ROS_INFO("Row: %d\tCount: %d", row, count);
+	// ROS_DEBUG("Row: %d\tCount: %d", row, count);
 	return count;
 }
 
@@ -75,7 +75,7 @@ uint32_t achilles_mapping_service::count_vertical_cells(const nav_msgs::Occupanc
 			count++;
 		}
 	}
-	// ROS_INFO("Column: %d\tCount: %d", column, count);
+	// ROS_DEBUG("Column: %d\tCount: %d", column, count);
 	return count;
 }
 
@@ -226,10 +226,10 @@ achilles_mapping_service::walls achilles_mapping_service::identify_walls(const n
 	// ===========================================================================================
 
 
-	ROS_INFO("North wall is row [%d]", retVal.north_wall);
-	ROS_INFO("South wall is row [%d]", retVal.south_wall);
-	ROS_INFO("East wall is column [%d]", retVal.east_wall);
-	ROS_INFO("West wall is column [%d]\n\n", retVal.west_wall);
+	ROS_DEBUG("North wall is row [%d]", retVal.north_wall);
+	ROS_DEBUG("South wall is row [%d]", retVal.south_wall);
+	ROS_DEBUG("East wall is column [%d]", retVal.east_wall);
+	ROS_DEBUG("West wall is column [%d]\n\n", retVal.west_wall);
 	return retVal;
 }
 
@@ -265,7 +265,7 @@ achilles_mapping_service::~achilles_mapping_service()
 
 achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::OccupancyGrid::ConstPtr &msg, const achilles_mapping_service::walls *course_walls, const uint16_t tile_num) 
 {
-	ROS_INFO("TILE: [%d]", tile_num);
+	ROS_DEBUG("TILE: [%d]", tile_num);
 	achilles_slam::tile processed_tile;
 
 	// Counts of cell states in tile
@@ -336,9 +336,9 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 		for (uint32_t column_count = 0 ; column_count < effective_tile_width ; column_count++)
 		{
 			if (msg->data[cell] == 100)
-				ROS_INFO("cell: %d  !", cell);
+				ROS_DEBUG("cell: %d  !", cell);
 			else
-				ROS_INFO("cell: %d", cell);
+				ROS_DEBUG("cell: %d", cell);
 
 			// Count occupied/empty/unknown cells
 			if (msg->data[cell] == 100)
@@ -355,7 +355,7 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 			}
 			cell++;
 		}
-		ROS_INFO("- New row -");
+		ROS_DEBUG("- New row -");
 	}
 	// ===========================================
 
@@ -379,22 +379,22 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 
 	
 	// Debug row output
-	ROS_INFO("Start column: [%d]", start_cell%msg->info.width);
-	ROS_INFO("Tile width: [%d]", effective_tile_width);
-	ROS_INFO("End column: [%d]", start_cell%msg->info.width + effective_tile_width - 1 );
-	ROS_INFO("---");
+	ROS_DEBUG("Start column: [%d]", start_cell%msg->info.width);
+	ROS_DEBUG("Tile width: [%d]", effective_tile_width);
+	ROS_DEBUG("End column: [%d]", start_cell%msg->info.width + effective_tile_width - 1 );
+	ROS_DEBUG("---");
 
 	// Debug row output
-	ROS_INFO("Start row: [%d]", start_cell/msg->info.width);
-	ROS_INFO("Tile length: [%d]", effective_tile_length);
-	ROS_INFO("End row: [%d]", start_cell/msg->info.width + effective_tile_length - 1 );
-	ROS_INFO("---");
+	ROS_DEBUG("Start row: [%d]", start_cell/msg->info.width);
+	ROS_DEBUG("Tile length: [%d]", effective_tile_length);
+	ROS_DEBUG("End row: [%d]", start_cell/msg->info.width + effective_tile_length - 1 );
+	ROS_DEBUG("---");
 
 	// Occupancy info
-	ROS_INFO("occupancy_count: [%d]", occupancy_count);
-	ROS_INFO("occupancy area: [%f]", occupancy_count *  msg->info.resolution * msg->info.resolution);
-	ROS_INFO("Min req occ: [%f]", MIN_TARGET_AREA);
-	ROS_INFO("===================");
+	ROS_DEBUG("occupancy_count: [%d]", occupancy_count);
+	ROS_DEBUG("occupancy area: [%f]", occupancy_count *  msg->info.resolution * msg->info.resolution);
+	ROS_DEBUG("Min req occ: [%f]", MIN_TARGET_AREA);
+	ROS_DEBUG("===================");
 
 	return processed_tile;
 }
@@ -445,52 +445,5 @@ bool achilles_mapping_service::update_course_map_srv(achilles_slam::update_cours
 
 }
 
-
-
-
-
-
-
-
-
-
-
-// achilles_slam::course_map achilles_mapping_service::construct_course_map(const nav_msgs::OccupancyGrid::ConstPtr& msg, const walls course_walls)
-// {
-// 	// Course Map to be returned
-// 	achilles_slam::course_map retVal;
-
-// 	// Write width to return message
-// 	retVal.width = MAP_WIDTH_TILES;
-
-// 	// Tile holder to be pushed into map vector
-// 	achilles_slam::tile temp_tile;
-
-// 	for (uint16_t i = 0 ; i < MAP_WIDTH_TILES*MAP_WIDTH_TILES ; i++)
-// 	{
-// 		temp_tile;
-// 		retVal.map.push_back(temp_tile);
-// 	}
-// }
-
-
-// /**
-// * handle_map
-// * Callback for arriving msgs on the map topic. Hands occupancy grid to relevant functions for processing to course map.
-// *
-// * @param msg const pointer to nav_msgs::OccupancyGrid containing occupancy grid as 1D array
-// */
-// void handle_map(const nav_msgs::OccupancyGrid::ConstPtr& msg)
-// {	
-// 	walls course_walls;
-// 	// ROS_INFO("Frame is [%d]", msg->header.seq);
-// 	// ROS_INFO("Resolution is [%f]", msg->info.resolution);
-// 	// ROS_INFO("Width is [%d]", msg->info.width);
-// 	// ROS_INFO("Height is [%d]\n", msg->info.height);
-
-// 	course_walls = identify_walls(msg);
-
-// 	construct_course_map(msg, course_walls);
-// }
 
 

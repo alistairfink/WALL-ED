@@ -13,24 +13,19 @@ void chatterCallback(const std_msgs::Int64::ConstPtr& msg)
 	switch (msg->data)
 	{
 		case forward:
-			md->set_speed(MOTOR_1, 100);
-			md->set_speed(MOTOR_2, 100);
+			md->set_speed(100, 100);
 			break;
 		case back:
-			md->set_speed(MOTOR_1, -100);
-			md->set_speed(MOTOR_2, -100);
+			md->set_speed(-100, -100);
 			break;
 		case turn_left:
-			md->set_speed(MOTOR_1, 100);
-			md->set_speed(MOTOR_2, -100);
+			md->set_speed(100, -100);
 			break;
 		case turn_right:
-			md->set_speed(MOTOR_1, -100);
-			md->set_speed(MOTOR_2, 100);
+			md->set_speed(-100, 100);
 			break;
 		default:
-			md->set_speed(MOTOR_1, 0);
-			md->set_speed(MOTOR_2, 0);
+			md->set_speed(0, 0);
 	}
 }
 

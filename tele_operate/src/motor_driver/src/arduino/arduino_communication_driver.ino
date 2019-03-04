@@ -1,8 +1,6 @@
 #include <string.h>
 #include "DualMC33926MotorShield.h"
 
-const int MOTOR_1 = 1;
-const int MOTOR_2 = 2;
 DualMC33926MotorShield motor_shield;
 
 /**
@@ -24,18 +22,12 @@ void stop_if_fault()
  * @param motor Which motor we're setting the speed of
  * @param speed What to set the speed to
  */
-void motor_speed(int motor, int speed)
+void motor_speed(int motor1Speed, int motor2Speed)
 {
-    if (speed >= -400 && speed <= 400)
+    if (motor1Speed >= -400 && motor1Speed <= 400 && motor2Speed >= -400 && motor2Speed <= 400)
     {
-        if (motor == MOTOR_1)
-        {
-            motor_shield.setM1Speed(speed);
-        }
-        else if (motor == MOTOR_2)
-        {
-            motor_shield.setM2Speed(speed);
-        }
+        motor_shield.setM1Speed(motor1Speed);
+        motor_shield.setM2Speed(motor2Speed);
         stop_if_fault();
     }    
 }

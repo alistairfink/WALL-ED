@@ -9,8 +9,6 @@ namespace motor_abs {
 	 * Motor Constants
 	 * Useful for changing speeds.
 	 */
-	const int16_t MOTOR_1 = 1;
-	const int16_t MOTOR_2 = 2;
 	const int16_t MAX_FORWARD = 400;
 	const int16_t MAX_BACKWARD = -400;
 

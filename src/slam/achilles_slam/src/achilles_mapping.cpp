@@ -226,10 +226,10 @@ achilles_mapping_service::walls achilles_mapping_service::identify_walls(const n
 	// ===========================================================================================
 
 
-	// ROS_INFO("North wall is row [%d]", retVal.north_wall);
-	// ROS_INFO("South wall is row [%d]", retVal.south_wall);
-	// ROS_INFO("East wall is column [%d]", retVal.east_wall);
-	// ROS_INFO("West wall is column [%d]\n\n", retVal.west_wall);
+	ROS_INFO("North wall is row [%d]", retVal.north_wall);
+	ROS_INFO("South wall is row [%d]", retVal.south_wall);
+	ROS_INFO("East wall is column [%d]", retVal.east_wall);
+	ROS_INFO("West wall is column [%d]\n\n", retVal.west_wall);
 	return retVal;
 }
 
@@ -265,6 +265,7 @@ achilles_mapping_service::~achilles_mapping_service()
 
 achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::OccupancyGrid::ConstPtr &msg, const achilles_mapping_service::walls *course_walls, const uint16_t tile_num) 
 {
+	ROS_INFO("TILE: [%d]", tile_num);
 	achilles_slam::tile processed_tile;
 
 	// Counts of cell states in tile
@@ -334,6 +335,11 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 		// Cycle through columns of row 
 		for (uint32_t column_count = 0 ; column_count < effective_tile_width ; column_count++)
 		{
+			if (msg->data[cell] == 100)
+				ROS_INFO("cell: %d  !", cell);
+			else
+				ROS_INFO("cell: %d", cell);
+
 			// Count occupied/empty/unknown cells
 			if (msg->data[cell] == 100)
 			{
@@ -349,28 +355,16 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 			}
 			cell++;
 		}
+		ROS_INFO("- New row -");
 	}
 	// ===========================================
-
-	// ROS_INFO("TILE: [%d]", tile_num);
-	// // Debug row output
-	// ROS_INFO("Start column: [%d]", start_cell%msg->info.width);
-	// ROS_INFO("Tile width: [%d]", effective_tile_width);
-	// ROS_INFO("End column: [%d]", start_cell%msg->info.width + effective_tile_width - 1 );
-	// ROS_INFO("---");
-
-	// // Debug row output
-	// ROS_INFO("Start row: [%d]", start_cell/msg->info.width);
-	// ROS_INFO("Tile length: [%d]", effective_tile_length);
-	// ROS_INFO("End row: [%d]", start_cell/msg->info.width + effective_tile_length - 1 );
-	// ROS_INFO("===================");
 
 	processed_tile.terrain = achilles_slam::tile::TERRAIN_UKNOWN;
 	processed_tile.occupancy_count = occupancy_count;
 
 	// If occupancy_count > occupancy acceptance theshold then set occupied
 	// else likewise for unknown_count
-	if (occupancy_count *  msg->info.resolution * msg->info.resolution > MIN_TARGET_AREA)
+	if ((float)(occupancy_count *  msg->info.resolution * msg->info.resolution) > float(MIN_TARGET_AREA))
 	{
 		processed_tile.target = achilles_slam::tile::TARGET_OCCUPIED;
 	} 
@@ -382,6 +376,25 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 	{
 		processed_tile.target = achilles_slam::tile::TARGET_NONE;
 	}
+
+	
+	// Debug row output
+	ROS_INFO("Start column: [%d]", start_cell%msg->info.width);
+	ROS_INFO("Tile width: [%d]", effective_tile_width);
+	ROS_INFO("End column: [%d]", start_cell%msg->info.width + effective_tile_width - 1 );
+	ROS_INFO("---");
+
+	// Debug row output
+	ROS_INFO("Start row: [%d]", start_cell/msg->info.width);
+	ROS_INFO("Tile length: [%d]", effective_tile_length);
+	ROS_INFO("End row: [%d]", start_cell/msg->info.width + effective_tile_length - 1 );
+	ROS_INFO("---");
+
+	// Occupancy info
+	ROS_INFO("occupancy_count: [%d]", occupancy_count);
+	ROS_INFO("occupancy area: [%f]", occupancy_count *  msg->info.resolution * msg->info.resolution);
+	ROS_INFO("Min req occ: [%f]", MIN_TARGET_AREA);
+	ROS_INFO("===================");
 
 	return processed_tile;
 }
@@ -413,9 +426,9 @@ bool achilles_mapping_service::get_course_map_srv(achilles_slam::get_course_map:
 		{
 			temp_tile = this->process_tile(msg, &course_walls, tile_num);
 
-			// Update target only if we havent dtermined target yet.
+			// Update target only if we havent determined target yet.
 			this->course_map->map[tile_num].occupancy_count = temp_tile.occupancy_count;
-			if (this->course_map->map[tile_num].target == achilles_slam::tile::TARGET_NONE)
+			if (this->course_map->map[tile_num].target == achilles_slam::tile::TARGET_UKNOWN_UNDERTERMINED)
 				this->course_map->map[tile_num].target = temp_tile.target;
 				// Note we dont update the taerrain here cause lidar doesnt tell us that
 		}

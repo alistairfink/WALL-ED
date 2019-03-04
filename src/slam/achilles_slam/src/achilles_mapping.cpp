@@ -429,8 +429,16 @@ bool achilles_mapping_service::get_course_map_srv(achilles_slam::get_course_map:
 			// Update target only if we havent determined target yet.
 			this->course_map->map[tile_num].occupancy_count = temp_tile.occupancy_count;
 			if (this->course_map->map[tile_num].target == achilles_slam::tile::TARGET_UKNOWN_UNDERTERMINED)
+			{
 				this->course_map->map[tile_num].target = temp_tile.target;
+				if (temp_tile.target > achilles_slam::tile::TARGET_NONE)
+					this->course_map->target_list.push_back(tile_num);
 				// Note we dont update the taerrain here cause lidar doesnt tell us that
+
+				// Also this may be a problem if map is requested before lidar finishes picking up all cells.. i.e. if tile
+				// is incorrectly marked as empty initially.. tile target will never update even if objects eventually appear
+			}
+				
 		}
 	    
 	    // response from service

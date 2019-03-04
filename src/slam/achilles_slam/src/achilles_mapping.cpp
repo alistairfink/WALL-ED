@@ -226,10 +226,10 @@ achilles_mapping_service::walls achilles_mapping_service::identify_walls(const n
 	// ===========================================================================================
 
 
-	ROS_INFO("North wall is row [%d]", retVal.north_wall);
-	ROS_INFO("South wall is row [%d]", retVal.south_wall);
-	ROS_INFO("East wall is column [%d]", retVal.east_wall);
-	ROS_INFO("West wall is column [%d]\n\n", retVal.west_wall);
+	// ROS_INFO("North wall is row [%d]", retVal.north_wall);
+	// ROS_INFO("South wall is row [%d]", retVal.south_wall);
+	// ROS_INFO("East wall is column [%d]", retVal.east_wall);
+	// ROS_INFO("West wall is column [%d]\n\n", retVal.west_wall);
 	return retVal;
 }
 
@@ -352,18 +352,18 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 	}
 	// ===========================================
 
-	ROS_INFO("TILE: [%d]", tile_num);
-	// Debug row output
-	ROS_INFO("Start column: [%d]", start_cell%msg->info.width);
-	ROS_INFO("Tile width: [%d]", effective_tile_width);
-	ROS_INFO("End column: [%d]", start_cell%msg->info.width + effective_tile_width - 1 );
-	ROS_INFO("---");
+	// ROS_INFO("TILE: [%d]", tile_num);
+	// // Debug row output
+	// ROS_INFO("Start column: [%d]", start_cell%msg->info.width);
+	// ROS_INFO("Tile width: [%d]", effective_tile_width);
+	// ROS_INFO("End column: [%d]", start_cell%msg->info.width + effective_tile_width - 1 );
+	// ROS_INFO("---");
 
-	// Debug row output
-	ROS_INFO("Start row: [%d]", start_cell/msg->info.width);
-	ROS_INFO("Tile length: [%d]", effective_tile_length);
-	ROS_INFO("End row: [%d]", start_cell/msg->info.width + effective_tile_length - 1 );
-	ROS_INFO("===================");
+	// // Debug row output
+	// ROS_INFO("Start row: [%d]", start_cell/msg->info.width);
+	// ROS_INFO("Tile length: [%d]", effective_tile_length);
+	// ROS_INFO("End row: [%d]", start_cell/msg->info.width + effective_tile_length - 1 );
+	// ROS_INFO("===================");
 
 	processed_tile.terrain = achilles_slam::tile::TERRAIN_UKNOWN;
 	processed_tile.occupancy_count = occupancy_count;

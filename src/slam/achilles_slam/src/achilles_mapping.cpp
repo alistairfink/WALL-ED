@@ -265,6 +265,7 @@ achilles_mapping_service::~achilles_mapping_service()
 
 achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::OccupancyGrid::ConstPtr &msg, const achilles_mapping_service::walls *course_walls, const uint16_t tile_num) 
 {
+	ROS_INFO("TILE: [%d]", tile_num);
 
 	achilles_slam::tile processed_tile;
 
@@ -275,12 +276,36 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 
 	// Determine length and width of one tile
 	// determined separately in case detected walls do not form perfect square
+
+	// Tile length stuff
+	// ==================================================================================================
 	uint32_t tile_length = (course_walls->south_wall - course_walls->north_wall - 1) / MAP_WIDTH_TILES;
-	uint32_t tile_width = (course_walls->east_wall - course_walls->west_wall - 1) / MAP_WIDTH_TILES;
+	// ==================================================================================================
+
+
+	// Tile width stuff
+	// ==================================================================================================
+	float tile_width = (course_walls->east_wall - course_walls->west_wall - 1) / (float)MAP_WIDTH_TILES;
+	uint32_t effective_tile_width;
+	// check if cells per tile fit perfectly or nah
+	if ((uint32_t)(tile_width*10)%10 == 0)
+	{
+		effective_tile_width = tile_width;
+	}
+	else
+	{
+		// If its a tile on the edge of the map
+		if (tile_num%MAP_WIDTH_TILES == 0 || tile_num%MAP_WIDTH_TILES == MAP_WIDTH_TILES-1)
+			effective_tile_width = ceil(tile_width);
+		else
+			effective_tile_width = ceil(tile_width) + 1;
+	}
+	// ==================================================================================================
 
 	// First cell in the tile
 	// jesus christ i dont wanna debug this if it doesnt work
-	uint32_t start_cell = (  ( ((course_walls->north_wall + 1) + (tile_length * floor(tile_num/MAP_WIDTH_TILES))) * msg->info.width)  + ((course_walls->west_wall + 1) + (tile_width * (tile_num%MAP_WIDTH_TILES) )));
+	uint32_t start_cell =   ( ((course_walls->north_wall + 1) + (tile_length * floor(tile_num/MAP_WIDTH_TILES))) * msg->info.width) ;
+	start_cell += (course_walls->west_wall + 1) + ( tile_num ? (ceil(tile_width) * (tile_num%MAP_WIDTH_TILES) - 1) : 0 );
 
 	// Index of cell to check
 	uint32_t cell = 0;
@@ -292,7 +317,7 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 		
 		// Cycle through columns of row 
 		// and count occupied/empty/unknown cells
-		for (uint32_t column_count = 0 ; column_count < tile_width ; column_count++)
+		for (uint32_t column_count = 0 ; column_count < effective_tile_width ; column_count++)
 		{
 			if (msg->data[cell] == 100)
 			{
@@ -309,6 +334,11 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 			cell++;
 		}
 	}
+
+	ROS_INFO("Start column: [%d]", start_cell%msg->info.width);
+	ROS_INFO("Tile width: [%d]", effective_tile_width);
+	ROS_INFO("End column: [%d]\n", start_cell%msg->info.width + effective_tile_width - 1 );
+
 
 	processed_tile.terrain = achilles_slam::tile::TERRAIN_UKNOWN;
 	processed_tile.occupancy_count = occupancy_count;

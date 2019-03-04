@@ -14,10 +14,10 @@ using namespace motor_abs;
  * @param speed What to set the speed to
  * @return Formatted string
  */
-std::string motor_driver::format(int16_t motor, int16_t speed)
+std::string motor_driver::format(int16_t motor_1_speed, int16_t motor_2_speed)
 {
 	std::ostringstream stm;
-	stm << motor << "," << speed << "*";
+	stm << motor_1_speed << "," << motor_2_speed << "*";
 	return stm.str();
 }
 
@@ -51,11 +51,11 @@ bool motor_driver::check_connection()
  * @param motor Which motor we're setting the speed of
  * @param speed What to set the speed to
  */
-void motor_driver::set_speed(int16_t motor, int16_t speed)
+void motor_driver::set_speed(int16_t motor_1_speed, int16_t motor_2_speed)
 {
-	if (speed >= MAX_BACKWARD && speed <= MAX_FORWARD)
+	if (motor_1_speed >= MAX_BACKWARD && motor_1_speed <= MAX_FORWARD && motor_2_speed >= MAX_BACKWARD && motor_2_speed <= MAX_FORWARD)
 	{
-		std::string message = format(motor, speed);
+		std::string message = format(motor_1_speed, motor_2_speed);
 		connection->write(message);
 	}
 }

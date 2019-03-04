@@ -6,26 +6,31 @@
 using namespace motor_abs;
 
 motor_driver *md;
+int prev = -1;
 
 void chatterCallback(const std_msgs::Int64::ConstPtr& msg)
 {
 	ROS_INFO("%d", (int)(msg->data));
-	switch (msg->data)
+	if ((int)(msg->data) != prev)
 	{
-		case forward:
-			md->set_speed(100, 100);
-			break;
-		case back:
-			md->set_speed(-100, -100);
-			break;
-		case turn_left:
-			md->set_speed(100, -100);
-			break;
-		case turn_right:
-			md->set_speed(-100, 100);
-			break;
-		default:
-			md->set_speed(0, 0);
+		prev = (int)(msg->data);
+		switch (msg->data)
+		{
+			case forward:
+				md->set_speed(100, 100);
+				break;
+			case back:
+				md->set_speed(-100, -100);
+				break;
+			case turn_left:
+				md->set_speed(100, -100);
+				break;
+			case turn_right:
+				md->set_speed(-100, 100);
+				break;
+			default:
+				md->set_speed(0, 0);
+		}
 	}
 }
 

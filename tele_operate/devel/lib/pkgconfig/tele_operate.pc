@@ -1,8 +1,0 @@
-prefix=/home/alistairfink/WALL-ED/tele_operate/devel
-
-Name: tele_operate
-Description: Description of tele_operate
-Version: 1.0.0
-Cflags: -I/home/alistairfink/WALL-ED/tele_operate/devel/include -I/home/alistairfink/WALL-ED/tele_operate/src/tele_operate/include
-Libs: -L/home/alistairfink/WALL-ED/tele_operate/devel/lib -ltele_operate -lmotor_driver_lib
-Requires: roscpp rospy std_msgs serial motor_driver message_runtime

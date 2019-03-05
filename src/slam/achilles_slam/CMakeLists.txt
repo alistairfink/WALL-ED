@@ -107,7 +107,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES achilles_slam
-#  CATKIN_DEPENDS nav_msgs roscpp std_msgs
+ CATKIN_DEPENDS nav_msgs roscpp std_msgs message_runtime
 #  DEPENDS system_lib
 )
 
@@ -208,5 +208,7 @@ add_executable(achilles_mapping
 				src/achilles_mapping.h
 				src/achilles_mapping.cpp
 				src/main.cpp)
-add_dependencies(achilles_mapping ${catkin_EXPORTED_TARGETS})
+
 target_link_libraries(achilles_mapping ${catkin_LIBRARIES})
+
+add_dependencies(achilles_mapping achilles_slam_generate_messages_cpp)

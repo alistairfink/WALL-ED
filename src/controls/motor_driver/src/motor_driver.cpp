@@ -41,6 +41,7 @@ motor_driver::motor_driver(std::string port, uint32_t baud)
  */
 bool motor_driver::check_connection()
 {
+	ROS_INFO("Checking connection..%d", connection->isOpen());
 	return connection->isOpen(); 
 }
 
@@ -55,7 +56,9 @@ void motor_driver::set_speed(int16_t motor_1_speed, int16_t motor_2_speed)
 {
 	if (motor_1_speed >= MAX_BACKWARD && motor_1_speed <= MAX_FORWARD && motor_2_speed >= MAX_BACKWARD && motor_2_speed <= MAX_FORWARD)
 	{
+		ROS_INFO("motor 1: %d motor 2: %d", motor_1_speed, motor_2_speed);
 		std::string message = format(motor_1_speed, motor_2_speed);
+		ROS_INFO("Formatted as: %s", message);
 		connection->write(message);
 	}
 }

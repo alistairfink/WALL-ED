@@ -7,7 +7,7 @@ project(lidar_demo)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp sensor_msgs motor_driver)
+find_package(catkin REQUIRED COMPONENTS std_msgs serial roscpp sensor_msgs motor_driver)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -100,8 +100,8 @@ find_package(catkin REQUIRED COMPONENTS roscpp sensor_msgs motor_driver)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES lidar_demo
-#  CATKIN_DEPENDS other_catkin_pkg
+   LIBRARIES lidar_demo motor_driver_lib
+   CATKIN_DEPENDS roscpp sensor_msgs motor_driver std_msgs serial
 #  DEPENDS system_lib
 )
 

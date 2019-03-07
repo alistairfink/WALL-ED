@@ -1,0 +1,3 @@
+[submodule "src/controls/serial"]
+	path = src/controls/serial
+	url = https://github.com/wjwwood/serial.git

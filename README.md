@@ -47,8 +47,20 @@ catkin_make clean
 catkin_make
 source ./devel/setup.bash
 ```
-FILL IN RUN INSTRUCTIONS AFTER CREATING LAUNCH FILES
+
+### Build for Arduino
+From the root directory of the repo:
+```
+cd src/controls/motor_driver/src/arduino
+make
+```
+To upload the code to the arduino run the following command with the arduino plugged in:
+```
+make upload
+```
+
 ### Run
+TODO: ADD INSTRUCTIONS FOR RUNNING LAUNCH FILES AFTER THEY'RE CREATED
 
 ## Coding Standards (for contributors)
 * Please use snake_case for all naming throughout repo (variables, functions, files, directories, etc.)

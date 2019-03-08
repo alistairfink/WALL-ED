@@ -4,3 +4,6 @@
 [submodule "src/slam/rplidar_ros"]
 	path = src/slam/rplidar_ros
 	url = https://github.com/robopeak/rplidar_ros.git
+[submodule "src/controls/serial"]
+	path = src/controls/serial
+	url = https://github.com/wjwwood/serial.git

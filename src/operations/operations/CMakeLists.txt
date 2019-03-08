@@ -102,9 +102,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES operations
-#  CATKIN_DEPENDS achilles_slam roscpp
+   INCLUDE_DIRS include
+   LIBRARIES operations
+   CATKIN_DEPENDS achilles_slam roscpp
 #  DEPENDS system_lib
 )
 
@@ -196,3 +196,11 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+include_directories(include ${catkin_INCLUDE_DIRS})
+
+add_executable(operations
+				include/operations/operations.h
+				src/operations.cpp)
+
+target_link_libraries(operations ${catkin_LIBRARIES})

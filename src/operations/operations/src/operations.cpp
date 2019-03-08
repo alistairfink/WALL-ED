@@ -1,9 +1,8 @@
 #include <stack>
-#include "../include/operations.h"
+#include "ros/ros.h"
+#include "operations/operations.h"
 
-using namespace operations;
-
-void initialize()
+void operations::initialize()
 {
 	missions.push(candle);
 	missions.push(food);
@@ -11,24 +10,24 @@ void initialize()
 	missions.push(people);
 }
 
-void traverse_to_empty()
+void operations::traverse_to_empty()
 {
 	// Path plan
 	// Check if objective is mapped at each step.
 }
 
-void traverse_to_objective()
+void operations::traverse_to_objective()
 {
 	// Call path plan to mapped objective 
 	// When there call objective_tasks()
 }
 
-void grid_traverse()
+void operations::grid_traverse()
 {
 	// If detected then -> objective_tasks()
 }
 
-void objective_tasks()
+void operations::objective_tasks()
 {
 	int curr = missions.top();
 	switch (curr)
@@ -49,26 +48,48 @@ void objective_tasks()
 	// Pop stack. Assumes mission was successful. Idk if we want more oversight here
 }
 
-void mission_people()
+void operations::mission_people()
 {
 	// Do thing for people
 }
 
-void mission_food()
+void operations::mission_food()
 {
 	// Do thing for food
 }
 
-void mission_candle()
+void operations::mission_candle()
 {
 	// Do thing for candle
 }
 
-int main()
+bool operations::object_mapped(int object)
 {
-	initialize();
-	while(!missions.empty())
+
+}
+
+int main(int argc, char **argv)
+{
+	ros::init(argc, argv, "operations");
+
+	operations::initialize();
+	while(!operations::missions.empty())
 	{
+		if (object_mapped(/*top of queue*/))
+	 	{
+			// Path plan to empty -> traverse_to_empty()
+		}
+		else
+		{
+			if ()
+			{
+
+			}
+			else
+			{
+
+			}
+		}
 		// 1. If object mapped?
 		// yes?
 		// 		2. Path plan to empty -> traverse_to_empty()
@@ -84,5 +105,5 @@ int main()
 		//			3. Path plan to objective -> traverse_to_objective()
 	}
 	// Traverse to start
-	return 1;
+	return 0;
 }

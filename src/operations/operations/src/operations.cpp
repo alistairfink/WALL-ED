@@ -4,10 +4,10 @@
 
 void operations::initialize()
 {
-	missions.push(candle);
-	missions.push(food);
-	missions.push(people);
-	missions.push(people);
+	operations::missions.push(operations::candle);
+	operations::missions.push(operations::food);
+	operations::missions.push(operations::mansion);
+	operations::missions.push(operations::cabin);
 }
 
 void operations::traverse_to_empty()
@@ -16,8 +16,9 @@ void operations::traverse_to_empty()
 	// Check if objective is mapped at each step.
 }
 
-void operations::traverse_to_objective()
+void operations::traverse_to_objective(int curr_mission)
 {
+
 	// Call path plan to mapped objective 
 	// When there call objective_tasks()
 }
@@ -29,21 +30,24 @@ void operations::grid_traverse()
 
 void operations::objective_tasks()
 {
-	int curr = missions.top();
+	int curr = operations::missions.top();
 	switch (curr)
 	{
-		case candle:
-			mission_candle();
+		case operations::candle:
+			operations::mission_candle();
 			break;
-		case food:
-			mission_food();
+		case operations::food:
+			operations::mission_food();
 			break;
-		case people:
-			mission_people();
+		case operations::mansion:
+			operations::mission_people();
+			break;
+		case operations::cabin:
+			operations::mission_people();
 			break;
 		default:
 			throw std::exception();
-			// Idk. Shouldn't get here. If it does somethings fucked
+			// Should never  get here. If it does somethings very wrong
 	}
 	// Pop stack. Assumes mission was successful. Idk if we want more oversight here
 }
@@ -63,10 +67,13 @@ void operations::mission_candle()
 	// Do thing for candle
 }
 
+// May want to return pos here.
 bool operations::object_mapped(int object)
 {
-
+	// 
 }
+
+
 
 int main(int argc, char **argv)
 {
@@ -75,34 +82,32 @@ int main(int argc, char **argv)
 	operations::initialize();
 	while(!operations::missions.empty())
 	{
-		if (object_mapped(/*top of queue*/))
+		// Change to pos
+		bool pos = operations::object_mapped(operations::missions.top());
+		if (pos /*Check if pos is returned eventually*/)
 	 	{
-			// Path plan to empty -> traverse_to_empty()
+			operations::traverse_to_objective(operations::missions.top());
 		}
 		else
 		{
-			if ()
+			if (operations::missions.top() == operations::food)
 			{
 
 			}
 			else
 			{
-
+				// how to know where to go?
 			}
 		}
-		// 1. If object mapped?
+		// 1. Is object mapped?
 		// yes?
-		// 		2. Path plan to empty -> traverse_to_empty()
+		// 		2. Path plan to objective -> traverse_to_objective()
 		// no?
 		// 		2. Is curr mission food?
 		//		yes?
-		//			3. Is mapped?
-		//			yes?
-		//				4. Path plan to food -> traverse_to_objective()
-		//			no? 
-		//				4. Grid Traversal -> grid_traverse()
+		//			4. Grid Traversal -> grid_traverse()
 		//		no?
-		//			3. Path plan to objective -> traverse_to_objective()
+		//			3. Path plan to empty -> traverse_to_empty()
 	}
 	// Traverse to start
 	return 0;

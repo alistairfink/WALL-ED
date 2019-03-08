@@ -1,2 +1,2 @@
-CMakeLists.txt linguist-vendored=false
-package.xml linguist-vendored=false
+CMakeLists.txt linguist-vendored
+package.xml linguist-vendored

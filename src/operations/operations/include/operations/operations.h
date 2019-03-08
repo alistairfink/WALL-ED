@@ -1,4 +1,8 @@
+#ifndef OPERATIONS_H_
+#define OPERATIONS_H_
+
 #include <stack>
+#include "ros/ros.h"
 
 namespace operations {
 
@@ -22,3 +26,5 @@ namespace operations {
 	void mission_candle();
 	bool object_mapped(int object);
 }
+
+#endif

@@ -1,6 +1,7 @@
 #include <stack>
 #include "ros/ros.h"
 #include "operations/operations.h"
+#include "./path_plan.h"
 
 void operations::initialize()
 {
@@ -10,22 +11,62 @@ void operations::initialize()
 	operations::missions.push(operations::cabin);
 }
 
-void operations::traverse_to_empty()
+void operations::traverse_to_empty(
+	int curr_mission, 
+	achilles_slam::course_map map, 
+	achilles_slam::coord curr_pos)
 {
-	// Path plan
-	// Check if objective is mapped at each step.
+	// how to find empty tile?
+	achilles_slam::coord dest = null;
+	// how to get invalid?
+	std::vector<achilles_slam::coord> invalid = null;
+	std::queue<achilles_slam::coord> path_plan = path_plan::path_plan_objective(map, curr_pos, dest, invalid);
+
+	while (!path_plan.empty())
+	{
+		achilles_slam::coord curr = path_plan.front();
+		// Do stuff to move to tile here
+		// Check if objective is mapped at each step.
+		path_plan.pop();
+	}
 }
 
-void operations::traverse_to_objective(int curr_mission)
+void operations::traverse_to_objective(
+	int curr_mission, 
+	achilles_slam::course_map map, 
+	achilles_slam::coord curr_pos, 
+	achilles_slam::coord dest)
 {
+	// how to get invalid?
+	std::vector<achilles_slam::coord> invalid = null;
+	std::queue<achilles_slam::coord> path_plan = path_plan::path_plan_objective(map, curr_pos, dest, invalid);
 
-	// Call path plan to mapped objective 
-	// When there call objective_tasks()
+	while (path_plan.back() != path_plan.front())
+	{
+		achilles_slam::coord curr = path_plan.front();
+		// Nav to next tile
+		path_plan.pop():
+	}
+
+	operations::objective_tasks();
 }
 
-void operations::grid_traverse()
+void operations::grid_traverse(
+	achilles_slam::course_map map,
+	achilles_slam::coord curr_pos)
 {
-	// If detected then -> objective_tasks()
+	// how to get invalid?
+	std::vector<achilles_slam::coord> invalid = null;
+	std::queue<achilles_slam::coord> path_plan = path_plan::path_plan_objective(map, curr_pos, invalid);
+
+	while (path_plan.back() != path_plan.front())
+	{
+		achilles_slam::coord curr = path_plan.front();
+		// Nav to next tile
+		path_plan.pop():
+	}
+
+	operations::objective_tasks();
 }
 
 void operations::objective_tasks()
@@ -49,6 +90,8 @@ void operations::objective_tasks()
 			throw std::exception();
 			// Should never  get here. If it does somethings very wrong
 	}
+
+	operations::missions.pop();
 	// Pop stack. Assumes mission was successful. Idk if we want more oversight here
 }
 
@@ -59,7 +102,9 @@ void operations::mission_people()
 
 void operations::mission_food()
 {
-	// Do thing for food
+	// Get sensor data
+	// Check sensor data
+	// complete?
 }
 
 void operations::mission_candle()
@@ -67,10 +112,22 @@ void operations::mission_candle()
 	// Do thing for candle
 }
 
-// May want to return pos here.
-bool operations::object_mapped(int object)
+achilles_slam::coord operations::object_mapped(int object, achilles_slam::course_map map)
 {
-	// 
+	for (int i = 0; i < map.map.size(); i++)
+	{
+		if (map.map[i].target == object)
+		{
+			uint16 x = i/map.width;
+			uint16 y = i%map.width;
+			achilles_slam::coord ret_val;
+			ret_val.x = x;
+			ret_val.y = y;
+			return ret_val;
+		}
+	}
+
+	return null;
 }
 
 
@@ -82,9 +139,9 @@ int main(int argc, char **argv)
 	operations::initialize();
 	while(!operations::missions.empty())
 	{
-		// Change to pos
-		bool pos = operations::object_mapped(operations::missions.top());
-		if (pos /*Check if pos is returned eventually*/)
+		// Get map
+		achilles_slam::coord pos = operations::object_mapped(operations::missions.top(), );
+		if (pos != null)
 	 	{
 			operations::traverse_to_objective(operations::missions.top());
 		}

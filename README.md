@@ -2,6 +2,8 @@
     <img src="./res/wall-ed.png" style="max-width: 90%;">
 </p>
 
+[![pipeline status](https://gitlab.com/alistairfink/WALL-ED/badges/master/pipeline.svg)](https://gitlab.com/alistairfink/WALL-ED/commits/master)
+
 ## Repo Organization
 * Operations Package
   * Operations Node

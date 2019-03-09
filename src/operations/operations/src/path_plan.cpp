@@ -4,21 +4,29 @@
 
 using namespace path_plan;
 
-std::queue<achilles_slam::coord> path_plan_objective(
+std::deque<achilles_slam::coord> path_plan_objective(
 	achilles_slam::course_map map, 
 	achilles_slam::coord start, 
 	achilles_slam::coord dest, 
 	std::vector<achilles_slam::coord> invalid)
 {
-
+	std::deque<achilles_slam::coords> path_plan;
+	while(path_plan.back() != dest)
+	{
+		
+	}
+	
+	return path_plan;
 }
 
-std::queue<achilles_slam::coord> path_plan_grid(
+std::deque<achilles_slam::coord> path_plan_grid(
 	map map, 
 	pos start, 
 	std::vector invalid)
 {
+	std::deque<achilles_slam::coords> path_plan;
 
+	return path_plan;
 }
 
 path_plan_helper::path_plan_helper(

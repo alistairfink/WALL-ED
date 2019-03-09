@@ -314,7 +314,7 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 	else
 	{
 		// If its a tile on the edge of the map dont include wall in tile length
-		if (floor(tile_num/this->map_width_tiles == 0) || floor(tile_num/this->map_width_tiles) == this->map_width_tiles-1)
+		if (tile_num/this->map_width_tiles == 0 || floor(tile_num/this->map_width_tiles) == this->map_width_tiles-1)
 			effective_tile_length = ceil(tile_length);
 		else
 			effective_tile_length = ceil(tile_length) + 1;
@@ -344,7 +344,7 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 	// First cell in the tile
 	// +++++++++++++++++++++++++++++
 	// Calc cell pos of first cell in row
-	uint32_t start_cell =   (  (course_walls->north_wall + 1)  +  (floor(tile_num/this->map_width_tiles) ? ((ceil(tile_length) * floor(tile_num/this->map_width_tiles))-1) : 0 ))   *   msg->info.width ;
+	uint32_t start_cell =   (  (course_walls->north_wall + 1)  +  ((tile_num/this->map_width_tiles) ? ((ceil(tile_length) * (tile_num/this->map_width_tiles))-1) : 0 ))   *   msg->info.width ;
 	// Calc cell position of cell's col in row
 	start_cell += (course_walls->west_wall + 1) + ( tile_num%this->map_width_tiles ? (ceil(tile_width) * (tile_num%this->map_width_tiles) - 1) : 0 );
 	// +++++++++++++++++++++++++++++

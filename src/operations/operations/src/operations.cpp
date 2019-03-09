@@ -19,17 +19,17 @@ void operations::traverse_to_empty(
 	achilles_slam::coord curr_pos)
 {
 	// how to find empty tile?
-	achilles_slam::coord dest = null;
+	achilles_slam::coord dest;
 	// how to get invalid?
-	std::vector<achilles_slam::coord> invalid = null;
-	std::queue<achilles_slam::coord> path_plan = path_plan::path_plan_objective(map, curr_pos, dest, invalid);
+	std::vector<achilles_slam::coord> invalid;
+	std::deque<achilles_slam::coord> path_plan = path_plan::path_plan_objective(map, curr_pos, dest, invalid);
 
 	while (!path_plan.empty())
 	{
 		achilles_slam::coord curr = path_plan.front();
 		// Do stuff to move to tile here
 		// Check if objective is mapped at each step.
-		path_plan.pop();
+		path_plan.pop_front();
 	}
 }
 
@@ -40,14 +40,14 @@ void operations::traverse_to_objective(
 	achilles_slam::coord dest)
 {
 	// how to get invalid?
-	std::vector<achilles_slam::coord> invalid = null;
-	std::queue<achilles_slam::coord> path_plan = path_plan::path_plan_objective(map, curr_pos, dest, invalid);
+	std::vector<achilles_slam::coord> invalid;
+	std::deque<achilles_slam::coord> path_plan = path_plan::path_plan_objective(map, curr_pos, dest, invalid);
 
 	while (path_plan.back() != path_plan.front())
 	{
 		achilles_slam::coord curr = path_plan.front();
 		// Nav to next tile
-		path_plan.pop():
+		path_plan.pop_front();
 	}
 
 	operations::objective_tasks();
@@ -59,13 +59,13 @@ void operations::grid_traverse(
 {
 	// how to get invalid?
 	std::vector<achilles_slam::coord> invalid = null;
-	std::queue<achilles_slam::coord> path_plan = path_plan::path_plan_objective(map, curr_pos, invalid);
+	std::deque<achilles_slam::coord> path_plan = path_plan::path_plan_objective(map, curr_pos, invalid);
 
 	while (path_plan.back() != path_plan.front())
 	{
 		achilles_slam::coord curr = path_plan.front();
 		// Nav to next tile
-		path_plan.pop():
+		path_plan.pop_front();
 	}
 
 	operations::objective_tasks();
@@ -129,7 +129,7 @@ achilles_slam::coord operations::object_mapped(int object, achilles_slam::course
 		}
 	}
 
-	return null;
+	return NULL;
 }
 
 
@@ -143,7 +143,7 @@ int main(int argc, char **argv)
 	{
 		// Get map
 		achilles_slam::coord pos = operations::object_mapped(operations::missions.top(), );
-		if (pos != null)
+		if (pos != NULL)
 	 	{
 			operations::traverse_to_objective(operations::missions.top());
 		}

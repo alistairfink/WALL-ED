@@ -2,6 +2,8 @@
 #include "ros/ros.h"
 #include "operations/operations.h"
 #include "./path_plan.h"
+#include "achilles_slam/coord.h"
+#include "achilles_slam/course_map.h"
 
 void operations::initialize()
 {
@@ -118,8 +120,8 @@ achilles_slam::coord operations::object_mapped(int object, achilles_slam::course
 	{
 		if (map.map[i].target == object)
 		{
-			uint16 x = i/map.width;
-			uint16 y = i%map.width;
+			std::uint16 x = i/map.width;
+			std::uint16 y = i%map.width;
 			achilles_slam::coord ret_val;
 			ret_val.x = x;
 			ret_val.y = y;

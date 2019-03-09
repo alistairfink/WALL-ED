@@ -106,8 +106,8 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-   LIBRARIES achilles_slam
-   CATKIN_DEPENDS nav_msgs roscpp std_msgs message_runtime
+#  LIBRARIES achilles_slam
+ CATKIN_DEPENDS nav_msgs roscpp std_msgs message_runtime
 #  DEPENDS system_lib
 )
 

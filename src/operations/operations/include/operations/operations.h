@@ -3,6 +3,9 @@
 
 #include <stack>
 #include "ros/ros.h"
+#include "operations/operations.h"
+#include "achilles_slam/coord.h"
+#include "achilles_slam/course_map.h"
 
 namespace operations {
 

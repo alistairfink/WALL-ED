@@ -105,7 +105,7 @@ catkin_package(
    INCLUDE_DIRS include
    LIBRARIES operations
    CATKIN_DEPENDS achilles_slam roscpp
-#  DEPENDS system_lib
+   DEPENDS system_lib
 )
 
 ###########
@@ -202,5 +202,7 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 add_executable(operations
 				include/operations/operations.h
 				src/operations.cpp)
+
+#add_dependencies(operations achilles_slam_generate_messages_cpp)
 
 target_link_libraries(operations ${catkin_LIBRARIES})

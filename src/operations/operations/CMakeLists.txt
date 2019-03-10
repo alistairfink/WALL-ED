@@ -201,8 +201,11 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_executable(operations
 				include/operations/operations.h
-				src/operations.cpp)
+				include/operations/path_plan.h
+				src/operations.cpp
+				src/path_plan.cpp)
 
 #add_dependencies(operations achilles_slam_generate_messages_cpp)
 
+add_dependencies(operations ${catkin_EXPORTED_TARGETS})
 target_link_libraries(operations ${catkin_LIBRARIES})

@@ -1,45 +1,47 @@
-#include "ros/ros.h"
-#include "./path_plan.h"
 #include <stack>
+#include "ros/ros.h"
+#include "operations/path_plan.h"
+#include "achilles_slam/coord.h"
+#include "achilles_slam/course_map.h"
 
 using namespace path_plan;
 
-std::deque<achilles_slam::coord> path_plan_objective(
+std::deque<achilles_slam::coord> path_plan::path_plan_objective(
 	achilles_slam::course_map map, 
 	achilles_slam::coord start, 
 	achilles_slam::coord dest, 
 	std::vector<achilles_slam::coord> invalid)
 {
-	std::deque<achilles_slam::coords> path_plan;
-	while(path_plan.back() != dest)
+	std::deque<achilles_slam::coord> path_plan;
+	/*while(path_plan.back() != dest)
 	{
-		
-	}
-	
+
+	}*/
+
 	return path_plan;
 }
 
-std::deque<achilles_slam::coord> path_plan_grid(
-	map map, 
-	pos start, 
-	std::vector invalid)
+std::deque<achilles_slam::coord> path_plan::path_plan_grid(
+	achilles_slam::course_map map, 
+	achilles_slam::coord start, 
+	std::vector<achilles_slam::coord> invalid)
 {
-	std::deque<achilles_slam::coords> path_plan;
+	std::deque<achilles_slam::coord> path_plan;
 
 	return path_plan;
 }
 
 path_plan_helper::path_plan_helper(
-	achilles_slam::coords current_tile,
-	achilles_slam::coords previous_tile,
-	std::uint16 width, 
-	std::vector<achilles_slam::coords> invalid)
+	achilles_slam::coord current_tile,
+	achilles_slam::coord previous_tile,
+	uint16_t width, 
+	std::vector<achilles_slam::coord> invalid)
 {
 	tile = current_tile;
 	if(current_tile.y != 0 &&
 		current_tile.y - 1 != previous_tile.y /*&& Check if invalid has this node*/)
 	{
-		achilles_slam::coords left;
+		achilles_slam::coord left;
 		left.x = current_tile.x;
 		left.y = current_tile.y - 1;
 		neighbours.push(left);
@@ -48,7 +50,7 @@ path_plan_helper::path_plan_helper(
 	if (current_tile.x != 0 &&
 		current_tile.x - 1 != previous_tile.y /*&& Check if invalid has this node*/)
 	{
-		achilles_slam::coords top;
+		achilles_slam::coord top;
 		top.x = current_tile.x - 1;
 		top.y = current_tile.y;
 		neighbours.push(top);
@@ -57,7 +59,7 @@ path_plan_helper::path_plan_helper(
 	if (current_tile.y != width -1 &&
 		current_tile.y + 1 != previous_tile.y /*&& Check if invalid has this node*/)
 	{
-		achilles_slam::coords right;
+		achilles_slam::coord right;
 		right.x = current_tile.x;
 		right.y = current_tile.y + 1;
 		neighbours.push(right);
@@ -66,15 +68,15 @@ path_plan_helper::path_plan_helper(
 	if (current_tile.x != width -1 &&
 		current_tile.x + 1 != previous_tile.x /*&& CHeck if invalid has this node*/)
 	{
-		achilles_slam::coords bottom;
+		achilles_slam::coord bottom;
 		bottom.x = current_tile.x + 1;
 		bottom.y = current_tile.y;
 		neighbours.push(bottom);
 	}
 }
 	
-achilles_slam::coords path_plan_helper::get_next_neighbour()
+achilles_slam::coord path_plan_helper::get_next_neighbour()
 {
-	achilles_slam::coords next = neighbours.pop();
+	achilles_slam::coord next = neighbours.pop();
 	return next;
 }

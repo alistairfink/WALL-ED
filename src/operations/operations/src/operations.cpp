@@ -1,7 +1,7 @@
 #include <stack>
 #include "ros/ros.h"
 #include "operations/operations.h"
-#include "./path_plan.h"
+#include "operations/path_plan.h"
 #include "achilles_slam/coord.h"
 #include "achilles_slam/course_map.h"
 
@@ -22,14 +22,14 @@ void operations::traverse_to_empty(
 	achilles_slam::coord dest;
 	// how to get invalid?
 	std::vector<achilles_slam::coord> invalid;
-	std::deque<achilles_slam::coord> path_plan = path_plan::path_plan_objective(map, curr_pos, dest, invalid);
+	std::deque<achilles_slam::coord> path = path_plan::path_plan_objective(map, curr_pos, dest, invalid);
 
-	while (!path_plan.empty())
+	while (!path.empty())
 	{
-		achilles_slam::coord curr = path_plan.front();
+		achilles_slam::coord curr = path.front();
 		// Do stuff to move to tile here
 		// Check if objective is mapped at each step.
-		path_plan.pop_front();
+		path.pop_front();
 	}
 }
 
@@ -41,14 +41,14 @@ void operations::traverse_to_objective(
 {
 	// how to get invalid?
 	std::vector<achilles_slam::coord> invalid;
-	std::deque<achilles_slam::coord> path_plan = path_plan::path_plan_objective(map, curr_pos, dest, invalid);
+	std::deque<achilles_slam::coord> path = path_plan::path_plan_objective(map, curr_pos, dest, invalid);
 
-	while (path_plan.back() != path_plan.front())
+	/*while (path.back() != path.front())
 	{
-		achilles_slam::coord curr = path_plan.front();
+		achilles_slam::coord curr = path.front();
 		// Nav to next tile
-		path_plan.pop_front();
-	}
+		path.pop_front();
+	}*/
 
 	operations::objective_tasks();
 }
@@ -58,16 +58,16 @@ void operations::grid_traverse(
 	achilles_slam::coord curr_pos)
 {
 	// how to get invalid?
-	std::vector<achilles_slam::coord> invalid = null;
-	std::deque<achilles_slam::coord> path_plan = path_plan::path_plan_objective(map, curr_pos, invalid);
+	//std::vector<achilles_slam::coord> invalid = null;
+	//std::deque<achilles_slam::coord> path_plan = path_plan::path_plan_objective(map, curr_pos, invalid);
 
-	while (path_plan.back() != path_plan.front())
+	/*while (path_plan.back() != path_plan.front())
 	{
 		achilles_slam::coord curr = path_plan.front();
 		// Nav to next tile
 		path_plan.pop_front();
 	}
-
+*/
 	operations::objective_tasks();
 }
 
@@ -114,17 +114,15 @@ void operations::mission_candle()
 	// Do thing for candle
 }
 
-achilles_slam::coord operations::object_mapped(int object, achilles_slam::course_map map)
+achilles_slam::coord* operations::object_mapped(int object, achilles_slam::course_map map)
 {
+	achilles_slam::coord* ret_val = new achilles_slam::coord;
 	for (int i = 0; i < map.map.size(); i++)
 	{
 		if (map.map[i].target == object)
 		{
-			std::uint16 x = i/map.width;
-			std::uint16 y = i%map.width;
-			achilles_slam::coord ret_val;
-			ret_val.x = x;
-			ret_val.y = y;
+			ret_val->x = i/map.width;
+			ret_val->y = i%map.width;
 			return ret_val;
 		}
 	}
@@ -142,7 +140,7 @@ int main(int argc, char **argv)
 	while(!operations::missions.empty())
 	{
 		// Get map
-		achilles_slam::coord pos = operations::object_mapped(operations::missions.top(), );
+		/*achilles_slam::coord pos = operations::object_mapped(operations::missions.top(), );
 		if (pos != NULL)
 	 	{
 			operations::traverse_to_objective(operations::missions.top());
@@ -157,7 +155,7 @@ int main(int argc, char **argv)
 			{
 				// how to know where to go?
 			}
-		}
+		}*/
 		// 1. Is object mapped?
 		// yes?
 		// 		2. Path plan to objective -> traverse_to_objective()

@@ -12,11 +12,28 @@ std::deque<achilles_slam::coord> path_plan::path_plan_objective(
 	achilles_slam::coord dest, 
 	std::vector<achilles_slam::coord> invalid)
 {
-	std::deque<achilles_slam::coord> path_plan;
-	/*while(path_plan.back() != dest)
-	{
+	std::deque<path_plan::path_plan_helper> helper;
+	path_plan::path_plan_helper current(start, start, map.width, invalid);
+	helper.push_back(current);
 
-	}*/
+	while(helper.back().tile.x != dest.x && helper.back().tile.y != dest.y)
+	{
+		if (helper.back().neighbours.empty())
+		{
+			helper.pop_back();
+		}
+
+		path_plan::path_plan_helper next(helper.back().get_next_neighbour(), helper.back().tile, map.width, invalid);
+		helper.push_back(next);
+	}
+
+	std::deque<achilles_slam::coord> path_plan;
+	while (helper.size() > 0)
+	{
+		path_plan::path_plan_helper curr = helper.front();
+		helper.pop_front();
+		path_plan.push_back(curr.tile);
+	}
 
 	return path_plan;
 }
@@ -26,7 +43,29 @@ std::deque<achilles_slam::coord> path_plan::path_plan_grid(
 	achilles_slam::coord start, 
 	std::vector<achilles_slam::coord> invalid)
 {
+	int length = map.width * map.width - invalid.size();
+	std::deque<path_plan::path_plan_helper> helper;
+	path_plan::path_plan_helper current(start, start, map.width, invalid);
+	helper.push_back(current);
+
+	while (helper.size() < length)
+	{
+		if (helper.back().neighbours.empty())
+		{
+			helper.pop_back();
+		}
+
+		path_plan::path_plan_helper next(helper.back().get_next_neighbour(), helper.back().tile, map.width, invalid);
+		helper.push_back(next);
+	}
+
 	std::deque<achilles_slam::coord> path_plan;
+	while (helper.size() > 0)
+	{
+		path_plan::path_plan_helper curr = helper.front();
+		helper.pop_front();
+		path_plan.push_back(curr.tile);
+	}
 
 	return path_plan;
 }
@@ -37,6 +76,7 @@ path_plan_helper::path_plan_helper(
 	uint16_t width, 
 	std::vector<achilles_slam::coord> invalid)
 {
+	// May have to redo if we have a sense of weighting
 	tile = current_tile;
 	if(current_tile.y != 0 &&
 		current_tile.y - 1 != previous_tile.y /*&& Check if invalid has this node*/)
@@ -77,7 +117,10 @@ path_plan_helper::path_plan_helper(
 	
 achilles_slam::coord path_plan_helper::get_next_neighbour()
 {
-	achilles_slam::coord next = neighbours.top();
-	neighbours.pop();
-	return next;
+	if (!neighbours.empty())
+	{
+		achilles_slam::coord next = neighbours.top();
+		neighbours.pop();
+		return next;
+	}
 }

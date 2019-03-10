@@ -14,10 +14,9 @@ namespace path_plan
 
 	class path_plan_helper
 	{
-	private:
+	public:
 		std::stack<achilles_slam::coord> neighbours;
 		achilles_slam::coord tile;
-	public:
 		path_plan_helper(achilles_slam::coord current_tile, achilles_slam::coord previous_tile, uint16_t width, std::vector<achilles_slam::coord> invalid);
 		achilles_slam::coord get_next_neighbour();
 	};

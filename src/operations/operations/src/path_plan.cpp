@@ -77,6 +77,7 @@ path_plan_helper::path_plan_helper(
 	
 achilles_slam::coord path_plan_helper::get_next_neighbour()
 {
-	achilles_slam::coord next = neighbours.pop();
+	achilles_slam::coord next = neighbours.top();
+	neighbours.pop();
 	return next;
 }

@@ -139,8 +139,8 @@ int main(int argc, char **argv)
 	operations::initialize();
 	while(!operations::missions.empty())
 	{
-		// Get map
-		/*achilles_slam::coord pos = operations::object_mapped(operations::missions.top(), );
+		achilles_slam::course_map map;
+		achilles_slam::coord* pos = operations::object_mapped(operations::missions.top(), map);
 		if (pos != NULL)
 	 	{
 			operations::traverse_to_objective(operations::missions.top());
@@ -155,7 +155,10 @@ int main(int argc, char **argv)
 			{
 				// how to know where to go?
 			}
-		}*/
+		}
+
+		delete map;
+		map = NULL;
 		// 1. Is object mapped?
 		// yes?
 		// 		2. Path plan to objective -> traverse_to_objective()

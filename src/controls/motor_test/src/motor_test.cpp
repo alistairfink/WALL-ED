@@ -11,19 +11,25 @@ int main(int argc, char **argv)
 	{
 		while(1);
 	}
-	
+
 	ros::Time::init();
 
 	ros::Duration(5).sleep();
+	md.set_speed(0, 0);
 	md.set_speed(-50, 50);
 	ros::Duration(5).sleep();
+	md.set_speed(0, 0);
 	md.set_speed(50, -50);
 	ros::Duration(5).sleep();
+	md.set_speed(0, 0);
 	md.set_speed(50, 50);
 	ros::Duration(5).sleep();
+	md.set_speed(0, 0);
 	md.set_speed(-50, -50);
 	ros::Duration(5).sleep();
 	md.set_speed(0, 0);
+
+	ros::spin();
 
 	return 0;	
 }

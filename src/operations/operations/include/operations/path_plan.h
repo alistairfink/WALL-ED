@@ -9,9 +9,12 @@
 namespace path_plan 
 {
 	std::vector<achilles_slam::coord> get_invalid(achilles_slam::course_map map, std::vector<achilles_slam::coord> other_invalid);
+
 	std::deque<achilles_slam::coord> path_plan_objective(achilles_slam::course_map map, achilles_slam::coord start, achilles_slam::coord dest, std::vector<achilles_slam::coord> invalid);
 
 	std::deque<achilles_slam::coord> path_plan_grid(achilles_slam::course_map map, achilles_slam::coord start, std::vector<achilles_slam::coord> invalid);
+
+	bool find(std::vector<achilles_slam::coord> list, achilles_slam::coord find_me);
 
 	class path_plan_helper
 	{

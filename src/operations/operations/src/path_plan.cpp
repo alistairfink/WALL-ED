@@ -1,4 +1,5 @@
 #include <stack>
+#include <algorithm>
 #include "ros/ros.h"
 #include "operations/path_plan.h"
 #include "achilles_slam/coord.h"
@@ -107,7 +108,7 @@ path_plan_helper::path_plan_helper(
 		achilles_slam::coord left;
 		left.x = current_tile.x;
 		left.y = current_tile.y - 1;
-		if (std::find(invalid.begin(), invalid.end(), left) == invalid.end())
+		if (!path_plan::find(invalid, left))
 		{
 			neighbours.push(left);
 		}
@@ -119,7 +120,7 @@ path_plan_helper::path_plan_helper(
 		achilles_slam::coord top;
 		top.x = current_tile.x - 1;
 		top.y = current_tile.y;
-		if (std::find(invalid.begin(), invalid.end(), top) == invalid.end())
+		if (!path_plan::find(invalid, top))
 		{
 			neighbours.push(top);
 		}
@@ -131,7 +132,7 @@ path_plan_helper::path_plan_helper(
 		achilles_slam::coord right;
 		right.x = current_tile.x;
 		right.y = current_tile.y + 1;
-		if (std::find(invalid.begin(), invalid.end(), right) == invalid.end())
+		if (!path_plan::find(invalid, right))
 		{
 			neighbours.push(right);
 		}
@@ -143,7 +144,7 @@ path_plan_helper::path_plan_helper(
 		achilles_slam::coord bottom;
 		bottom.x = current_tile.x + 1;
 		bottom.y = current_tile.y;
-		if (std::find(invalid.begin(), invalid.end(), bottom) == invalid.end())
+		if (!path_plan::find(invalid, bottom))
 		{
 			neighbours.push(bottom);
 		}
@@ -158,4 +159,17 @@ achilles_slam::coord path_plan_helper::get_next_neighbour()
 		neighbours.pop();
 		return next;
 	}
+}
+
+bool path_plan::find(std::vector<achilles_slam::coord> list, achilles_slam::coord find_me)
+{
+	for (int i = 0; i < list.size(); i++)
+	{
+		if (list[i].x == find_me.x && list[i].y == find_me.y)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }

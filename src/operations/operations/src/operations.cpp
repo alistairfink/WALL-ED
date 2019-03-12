@@ -143,7 +143,7 @@ int main(int argc, char **argv)
 		achilles_slam::coord* pos = operations::object_mapped(operations::missions.top(), map);
 		if (pos != NULL)
 	 	{
-			operations::traverse_to_objective(operations::missions.top());
+			//operations::traverse_to_objective(operations::missions.top());
 		}
 		else
 		{
@@ -157,8 +157,8 @@ int main(int argc, char **argv)
 			}
 		}
 
-		delete map;
-		map = NULL;
+		delete pos;
+		pos = NULL;
 		// 1. Is object mapped?
 		// yes?
 		// 		2. Path plan to objective -> traverse_to_objective()

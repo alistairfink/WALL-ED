@@ -12,15 +12,15 @@ int main(int argc, char **argv)
 		while(1);
 	}
 
-	ros::Duration(2).sleep();
+	ros::Duration(5).sleep();
 	md.set_speed(-50, 50);
-	ros::Duration(2).sleep();
+	ros::Duration(5).sleep();
 	md.set_speed(50, -50);
-	ros::Duration(2).sleep();
+	ros::Duration(5).sleep();
 	md.set_speed(50, 50);
-	ros::Duration(2).sleep();
+	ros::Duration(5).sleep();
 	md.set_speed(-50, -50);
-	ros::Duration(2).sleep();
+	ros::Duration(5).sleep();
 	md.set_speed(0, 0);
 
 	return 0;	

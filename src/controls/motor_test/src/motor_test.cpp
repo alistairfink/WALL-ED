@@ -11,6 +11,8 @@ int main(int argc, char **argv)
 	{
 		while(1);
 	}
+	
+	ros::Time::init();
 
 	ros::Duration(5).sleep();
 	md.set_speed(-50, 50);

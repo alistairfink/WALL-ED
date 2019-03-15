@@ -44,9 +44,10 @@ void setup() {
 /**
  * loop
  * Arduino loop function. Continuously polls for commands from pi
+ * Serial command expects "motor_1_speed,motor_2_speed,motor_1_speed*motor_2_speed,*"
  */
 void loop() {
-    static int motor_control[2];
+    static int motor_control[3];
     static char buff[30];
     int counter = 0;
     bool dirty = false;
@@ -57,8 +58,18 @@ void loop() {
         if (counter > 30 || buff[counter] == '*') 
         {
             buff[counter] = '\0';
-            motor_control[0]=atoi(strtok(buff,","));
-            motor_control[1]=atoi(strtok(NULL,","));
+            char* mc0 = strtok(buff,",");
+            char* mc1 = strtok(NULL,",");
+            char* mc2 = strtok(NULL,",");
+            if (mc0 == NULL || mc1 == NULL || mc2 == NULL)
+            {
+                Serial.println("false");
+                break;
+            }
+
+            motor_control[0]=atoi(mc0);
+            motor_control[1]=atoi(mc1);
+            motor_control[2]=atoi(mc2);
             dirty = true;
         }
         else
@@ -67,9 +78,10 @@ void loop() {
         }
     }
 
-    if (dirty)
+    if (dirty && motor_control[0]*motor_control[1] == motor_control[2])
     {
         motor_speed(motor_control[0], motor_control[1]);
+        Serial.println("true");
     }
 
     delay(2);

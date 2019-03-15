@@ -17,7 +17,7 @@ using namespace motor_abs;
 std::string motor_driver::format(int16_t motor_1_speed, int16_t motor_2_speed)
 {
 	std::ostringstream stm;
-	stm << motor_1_speed << "," << motor_2_speed << "*";
+	stm << motor_1_speed << "," << motor_2_speed << "," << motor_1_speed*motor_2_speed <<"*";
 	return stm.str();
 }
 
@@ -56,7 +56,12 @@ void motor_driver::set_speed(int16_t motor_1_speed, int16_t motor_2_speed)
 	if (motor_1_speed >= MAX_BACKWARD && motor_1_speed <= MAX_FORWARD && motor_2_speed >= MAX_BACKWARD && motor_2_speed <= MAX_FORWARD)
 	{
 		std::string message = format(motor_1_speed, motor_2_speed);
-		connection->write(message);
+		std::string result = "false";
+		while (result != "true")
+		{
+			connection->write(message);
+		 	result = connection->readline();
+		}
 	}
 }
 

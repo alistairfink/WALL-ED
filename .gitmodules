@@ -2,5 +2,5 @@
 	path = src/controls/serial
 	url = https://github.com/wjwwood/serial.git
 [submodule "WiringPi"]
-	path = WiringPi
+	path = src/controls/catkin_ws
 	url = https://github.com/WiringPi/WiringPi.git

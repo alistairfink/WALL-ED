@@ -64,6 +64,7 @@ void loop() {
             if (mc0 == NULL || mc1 == NULL || mc2 == NULL)
             {
                 Serial.println("false");
+                dirty = false;
                 break;
             }
 

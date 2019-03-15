@@ -1,3 +1,6 @@
 [submodule "src/controls/serial"]
 	path = src/controls/serial
 	url = https://github.com/wjwwood/serial.git
+[submodule "WiringPi"]
+	path = WiringPi
+	url = https://github.com/WiringPi/WiringPi.git

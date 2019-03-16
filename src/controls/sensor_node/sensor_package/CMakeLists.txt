@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   message_generation
-  wiringPi
+  WiringPi
 	 
 )
 
@@ -107,7 +107,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES sensor_package
-  CATKIN_DEPENDS roscpp rospy std_msgs wiringPi
+  CATKIN_DEPENDS roscpp rospy std_msgs WiringPi
   DEPENDS system_lib
 )
 

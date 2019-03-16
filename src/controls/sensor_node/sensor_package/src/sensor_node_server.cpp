@@ -6,7 +6,7 @@
 //  Copyright © 2019 Abdulmalik Ibrahim. All rights reserved.
 //
 
-#include "sensor_data/AddTwoInts.h"
+#include "sensor_package/AddTwoInts.h"
 #include "sensor_node_server.hpp"
 #include "imu.hpp"
 #include "sonar.hpp"
@@ -14,7 +14,7 @@
 #include "ros/ros.h"
 
 //service node
-bool get_sensor_data(sensor_data::AddTwoInts::Request  &req, sensor_data::AddTwoInts::Response &res)
+bool get_sensor_data(sensor_package::AddTwoInts::Request  &req, sensor_package::AddTwoInts::Response &res)
 {
 
    /* if (req.a == 1)

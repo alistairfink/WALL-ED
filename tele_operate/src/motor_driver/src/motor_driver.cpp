@@ -56,12 +56,8 @@ void motor_driver::set_speed(int16_t motor_1_speed, int16_t motor_2_speed)
 	if (motor_1_speed >= MAX_BACKWARD && motor_1_speed <= MAX_FORWARD && motor_2_speed >= MAX_BACKWARD && motor_2_speed <= MAX_FORWARD)
 	{
 		std::string message = format(motor_1_speed, motor_2_speed);
-		std::string result = "false";
-		while (result != "true")
-		{
-			connection->write(message);
-		 	result = connection->readline();
-		}
+		// TODO : Add in motor encoder feedback
+		connection->write(message);
 	}
 }
 

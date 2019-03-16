@@ -12,7 +12,6 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   message_generation
-  wiringPi
 	 
 )
 
@@ -105,10 +104,10 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES sensor_package
-  CATKIN_DEPENDS roscpp rospy std_msgs wiringPi
-  DEPENDS system_lib
+#  INCLUDE_DIRS include
+#  LIBRARIES sensor_data
+#  CATKIN_DEPENDS roscpp rospy std_msgs
+#  DEPENDS system_lib
 )
 
 ###########

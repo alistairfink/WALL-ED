@@ -201,11 +201,11 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test
 add_executable(sensor_node_server src/sensor_node_server.cpp)
-target_link_libraries(sensor_node_server ${catkin_LIBRARIES})
+target_link_libraries(sensor_node_server ${catkin_LIBRARIES} -lwiringPi)
 add_dependencies(sensor_node_server sensor_package_gencpp)
 
 add_executable(sensor_node_client src/sensor_node_client.cpp)
-target_link_libraries(sensor_node_client ${catkin_LIBRARIES})
+target_link_libraries(sensor_node_client ${catkin_LIBRARIES} -lwiringPi)
 add_dependencies(sensor_node_client sensor_package_gencpp)
 
 ##find_library(wiringPi_LIB wiringPi)

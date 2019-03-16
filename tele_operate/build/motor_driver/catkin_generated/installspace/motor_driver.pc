@@ -1,0 +1,8 @@
+prefix=/home/alistairfink/temp/temp2/WALL-ED/tele_operate/install
+
+Name: motor_driver
+Description: Description of motor_driver
+Version: 0.0.0
+Cflags: -I/home/alistairfink/temp/temp2/WALL-ED/tele_operate/install/include
+Libs: -L/home/alistairfink/temp/temp2/WALL-ED/tele_operate/install/lib -lmotor_driver_lib
+Requires: roscpp serial

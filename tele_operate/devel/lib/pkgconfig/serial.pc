@@ -1,0 +1,8 @@
+prefix=/home/alistairfink/temp/temp2/WALL-ED/tele_operate/devel
+
+Name: serial
+Description: Description of serial
+Version: 1.2.1
+Cflags: -I/home/alistairfink/temp/temp2/WALL-ED/tele_operate/src/serial/include
+Libs: -L/home/alistairfink/temp/temp2/WALL-ED/tele_operate/devel/lib -lserial -lrt -lpthread
+Requires: 

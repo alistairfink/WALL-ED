@@ -8,7 +8,7 @@
 
 #include "sensor_node_client.hpp"
 #include "ros/ros.h"
-#include "sensor_data/AddTwoInts.h"
+#include "sensor_package/AddTwoInts.h"
 #include <cstdlib>
 
 int main(int argc, char **argv)
@@ -21,8 +21,8 @@ int main(int argc, char **argv)
     }
     
     ros::NodeHandle n;
-    ros::ServiceClient client = n.serviceClient<sensor_data::AddTwoInts>("sensor_data");
-    sensor_data::AddTwoInts srv;
+    ros::ServiceClient client = n.serviceClient<sensor_package::AddTwoInts>("sensor_data");
+    sensor_package::AddTwoInts srv;
     
     srv.request.input = atoll(argv[1]);
     if (client.call(srv))

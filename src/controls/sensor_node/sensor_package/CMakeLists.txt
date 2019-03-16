@@ -208,4 +208,4 @@ add_dependencies(sensor_node_server sensor_data_gencpp)
 #add_dependencies(sensor_node_client sensor_data_gencpp)
 
 find_library(wiringPi_LIB wiringPi)
-target_link_libraries(sensor_data ${wiringPi_LIB})
+target_link_libraries(sensor_package ${wiringPi_LIB})

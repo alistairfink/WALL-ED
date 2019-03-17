@@ -4,9 +4,14 @@
 #include "operations/path_plan.h"
 #include "achilles_slam/coord.h"
 #include "achilles_slam/course_map.h"
+#include "achilles_slam/get_course_map.h"
 
-void operations::initialize()
+void operations::initialize(achilles_slam::course_map map)
 {
+	int offset = 0;
+	int start_pos = map.width*map.width - 1 - offset;
+	start->x = start_pos/map.width;
+	start->y = start_pos%map.width;
 	operations::missions.push(operations::candle);
 	operations::missions.push(operations::food);
 	operations::missions.push(operations::mansion);
@@ -34,14 +39,13 @@ void operations::traverse_to_empty(
 }
 
 void operations::traverse_to_objective(
-	int curr_mission, 
 	achilles_slam::course_map map, 
-	achilles_slam::coord curr_pos, 
-	achilles_slam::coord dest)
+	achilles_slam::coord* dest)
 {
+	achilles_slam::coord curr_pos = map.robot_pos;
 	// how to get invalid?
 	std::vector<achilles_slam::coord> invalid;
-	std::deque<achilles_slam::coord> path = path_plan::path_plan_objective(map, curr_pos, dest, invalid);
+	std::deque<achilles_slam::coord> path = path_plan::path_plan_objective(map, curr_pos, *dest, invalid);
 
 	/*while (path.back() != path.front())
 	{
@@ -54,8 +58,7 @@ void operations::traverse_to_objective(
 }
 
 void operations::grid_traverse(
-	achilles_slam::course_map map,
-	achilles_slam::coord curr_pos)
+	achilles_slam::course_map map)
 {
 	// how to get invalid?
 	//std::vector<achilles_slam::coord> invalid = null;
@@ -73,6 +76,11 @@ void operations::grid_traverse(
 
 void operations::objective_tasks()
 {
+	if (operations::missions.size() <= 0)
+	{
+		return;
+	}
+
 	int curr = operations::missions.top();
 	switch (curr)
 	{
@@ -117,12 +125,12 @@ void operations::mission_candle()
 achilles_slam::coord* operations::object_mapped(int object, achilles_slam::course_map map)
 {
 	achilles_slam::coord* ret_val = new achilles_slam::coord;
-	for (int i = 0; i < map.map.size(); i++)
+	for (int i = 0; i < map.target_list.size(); i++)
 	{
-		if (map.map[i].target == object)
+		if (map.map[map.target_list[i]].target == object)
 		{
-			ret_val->x = i/map.width;
-			ret_val->y = i%map.width;
+			ret_val->x = map.target_list[i]/map.width;
+			ret_val->y = map.target_list[i]%map.width;
 			return ret_val;
 		}
 	}
@@ -130,26 +138,35 @@ achilles_slam::coord* operations::object_mapped(int object, achilles_slam::cours
 	return NULL;
 }
 
-
+achilles_slam::course_map operations::get_map()
+{
+	achilles_slam::get_course_map map_service;
+	while(!map_client.call(map_service));
+	return map_service.response.silicon_valley;
+}
 
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "operations");
+  	ros::NodeHandle n;
+	operations::map_client = n.serviceClient<achilles_slam::get_course_map>("get_course_map");	
+	
+	achilles_slam::course_map orig_map = operations::get_map(); 
+	operations::initialize(orig_map);
 
-	operations::initialize();
 	while(!operations::missions.empty())
 	{
-		achilles_slam::course_map map;
-		achilles_slam::coord* pos = operations::object_mapped(operations::missions.top(), map);
-		if (pos != NULL)
+		achilles_slam::course_map map = operations::get_map(); // get from map service
+		achilles_slam::coord* obj_pos = operations::object_mapped(operations::missions.top(), map);
+		if (obj_pos != NULL)
 	 	{
-			//operations::traverse_to_objective(operations::missions.top());
+			operations::traverse_to_objective(map, obj_pos);
 		}
 		else
 		{
 			if (operations::missions.top() == operations::food)
 			{
-
+				operations::grid_traverse(map);
 			}
 			else
 			{
@@ -157,8 +174,8 @@ int main(int argc, char **argv)
 			}
 		}
 
-		delete pos;
-		pos = NULL;
+		delete obj_pos;
+		obj_pos = NULL;
 		// 1. Is object mapped?
 		// yes?
 		// 		2. Path plan to objective -> traverse_to_objective()
@@ -169,6 +186,8 @@ int main(int argc, char **argv)
 		//		no?
 		//			3. Path plan to empty -> traverse_to_empty()
 	}
-	// Traverse to start
+	
+	achilles_slam::course_map map = operations::get_map(); // get from map service
+	operations::traverse_to_objective(map, operations::start);
 	return 0;
 }

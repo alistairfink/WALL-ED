@@ -353,28 +353,56 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 	// +++++++++++++++++++++++++++++
 
 	// Index of cell to check
-	uint32_t cell = 0;
+	uint32_t row_start_cell = 0;
+	uint32_t curr_cell = 0;
+
+	uint32_t start_row = 0;
+	uint32_t start_col = 0;
+
+	// Ignore cells adjacent to walls
+	if (tile_num/this->map_width_tiles == 0)
+	{
+		// Top row
+		start_row = 1;
+	}
+	else if (tile_num/this->map_width_tiles + 1 == tile_num/this->map_width_tiles)
+	{
+		// Bottom row
+		effective_tile_length--;
+	}
+	if (tile_num%this->map_width_tiles == 0)
+	{
+		// First column
+		start_col = 1;
+	}
+	else if (tile_num%this->map_width_tiles + 1 == tile_num/this->map_width_tiles)
+	{
+		// Last column
+		effective_tile_width--;
+	}
 
 	// Cycle through rows of tile
 	// ===========================================
-	for (uint32_t row_count = 0 ; row_count < effective_tile_length ; row_count++)
+	for (uint32_t row_count = start_row ; row_count < effective_tile_length ; row_count++)
 	{
-		cell = start_cell + (msg->info.width * row_count);
+		row_start_cell = start_cell + (msg->info.width * row_count);
 		
 		// Cycle through columns of row 
-		for (uint32_t column_count = 0 ; column_count < effective_tile_width ; column_count++)
+		for (uint32_t column_count = start_col ; column_count < effective_tile_width ; column_count++)
 		{
-			if (msg->data[cell] == 100)
-				ROS_DEBUG("cell: %d  !", cell);
+			curr_cell = row_start_cell + column_count;
+
+			if (msg->data[curr_cell] == 100)
+				ROS_DEBUG("cell: %d  !", curr_cell);
 			else
-				ROS_DEBUG("cell: %d", cell);
+				ROS_DEBUG("cell: %d", curr_cell);
 
 			// Count occupied/empty/unknown cells
-			if (msg->data[cell] == 100)
+			if (msg->data[curr_cell] == 100)
 			{
 				occupancy_count++;
 			} 
-			else if (msg->data[cell] == -1)
+			else if (msg->data[curr_cell] == -1)
 			{
 				unknown_count++;
 			}
@@ -382,7 +410,6 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 			{
 				empty_count++;
 			}
-			cell++;
 		}
 		ROS_DEBUG("- New row -");
 	}

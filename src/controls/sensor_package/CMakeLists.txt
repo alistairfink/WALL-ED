@@ -200,6 +200,14 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test
 ##find_library(wiringPi_LIB src/WiringPi)
+include_directories(src/WiringPi)
+
+add_executable(MyExec
+src/imu.cpp
+src/hall_effect.cpp
+src/sonar.cpp
+)
+
 add_executable(sensor_node_server src/sensor_node_server.cpp)
 target_link_libraries(sensor_node_server ${catkin_LIBRARIES})
 add_dependencies(sensor_node_server sensor_package_gencpp)
@@ -208,6 +216,6 @@ add_executable(sensor_node_client src/sensor_node_client.cpp)
 target_link_libraries(sensor_node_client ${catkin_LIBRARIES})
 add_dependencies(sensor_node_client sensor_package_gencpp)
 
-add_definitions(-std=c++0x -lwiringPi -lpthread)
+##add_definitions(-std=c++0x -lwiringPi -lpthread)
 
 ##target_link_libraries(sensor_package ${wiringPi_LIB})

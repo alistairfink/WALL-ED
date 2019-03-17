@@ -180,7 +180,7 @@ int main(int argc, char **argv)
 
 	while(!operations::missions.empty())
 	{
-		achilles_slam::course_map map = operations::get_map(); // get from map service
+		achilles_slam::course_map map = operations::get_map();
 		achilles_slam::coord* obj_pos = operations::object_mapped(operations::missions.top(), map);
 		if (obj_pos != NULL)
 	 	{
@@ -194,24 +194,15 @@ int main(int argc, char **argv)
 			}
 			else
 			{
-				// how to know where to go?
+				operations::traverse_to_empty(operations::missions.top(), map);
 			}
 		}
 
 		delete obj_pos;
 		obj_pos = NULL;
-		// 1. Is object mapped?
-		// yes?
-		// 		2. Path plan to objective -> traverse_to_objective()
-		// no?
-		// 		2. Is curr mission food?
-		//		yes?
-		//			4. Grid Traversal -> grid_traverse()
-		//		no?
-		//			3. Path plan to empty -> traverse_to_empty()
 	}
 	
-	achilles_slam::course_map map = operations::get_map(); // get from map service
+	achilles_slam::course_map map = operations::get_map();
 	operations::traverse_to_objective(map, operations::start);
 	return 0;
 }

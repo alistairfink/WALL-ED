@@ -7,8 +7,8 @@
 //
 
 #include "hall_effect.hpp"
-#include "wiringPiI2C.h"
-#include "wiringPi.h"
+#include "./WiringPi/wiringPi/wiringPiI2C.h"
+#include "./WiringPi/wiringPi/wiringPi.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>

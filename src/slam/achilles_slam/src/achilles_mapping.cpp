@@ -256,6 +256,7 @@ achilles_mapping_service::achilles_mapping_service()
 	achilles_slam::tile temp_tile;
 	temp_tile.terrain = achilles_slam::tile::TERRAIN_UKNOWN;
 	temp_tile.target = achilles_slam::tile::TARGET_UKNOWN_UNDERTERMINED;
+	temp_tile.visited = false;
 
 	// Set initialize map to null tiles
 	for (uint16_t i = 0 ; i < this->map_width_tiles * this->map_width_tiles ; i++)
@@ -471,15 +472,30 @@ bool achilles_mapping_service::get_course_map_srv(achilles_slam::get_course_map:
 
 			// Update target only if we havent determined target yet.
 			this->course_map->map[tile_num].occupancy_count = temp_tile.occupancy_count;
-			if (this->course_map->map[tile_num].target == achilles_slam::tile::TARGET_UKNOWN_UNDERTERMINED)
-			{
-				this->course_map->map[tile_num].target = temp_tile.target;
-				if (temp_tile.target > achilles_slam::tile::TARGET_NONE)
-					this->course_map->target_list.push_back(tile_num);
-				// Note we dont update the taerrain here cause lidar doesnt tell us that
 
-				// Also this may be a problem if map is requested before lidar finishes picking up all cells.. i.e. if tile
-				// is incorrectly marked as empty initially.. tile target will never update even if objects eventually appear
+			// Only update if tile is unvisited
+			if (!this->course_map->map[tile_num].visited)
+			{
+				// If we a tile was marked as occupied and changing to empty
+				if (this->course_map->map[tile_num].target > achilles_slam::tile::TARGET_NONE && temp_tile.target <= achilles_slam::tile::TARGET_NONE)
+				{
+					for (std::vector<uint8_t>::iterator it = this->course_map->target_list.begin() ; it < this->course_map->target_list.end() ; it++)
+					{
+						if (*it == tile_num)
+						{
+							it = this->course_map->target_list.erase(it);
+							break;
+						}
+					}
+				}
+				// If we a tile was unoccupied/unknown and changing to empty
+				if (this->course_map->map[tile_num].target <= achilles_slam::tile::TARGET_NONE && temp_tile.target > achilles_slam::tile::TARGET_NONE)
+				{
+					this->course_map->target_list.push_back(tile_num);
+				}
+				this->course_map->map[tile_num].target = temp_tile.target;
+
+				// Note we dont update the terrain here cause lidar doesnt tell us that
 			}
 				
 		}

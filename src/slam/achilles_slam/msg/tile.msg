@@ -18,3 +18,6 @@ uint8 TARGET_FIRE					= 6
 
 # uint32_t count of number of occupied occupancy grid cells in tile:
 uint32 occupancy_count
+
+# Records if tile is visited
+bool visited

@@ -64,6 +64,7 @@ void loop() {
             if (mc0 == NULL || mc1 == NULL || mc2 == NULL)
             {
                 Serial.println("false");
+                dirty = false;
                 break;
             }
 
@@ -78,7 +79,7 @@ void loop() {
         }
     }
 
-    if (dirty && motor_control[0]*motor_control[1] == motor_control[2])
+    if (dirty && (motor_control[0]^motor_control[1]) == motor_control[2])
     {
         motor_speed(motor_control[0], motor_control[1]);
         Serial.println("true");

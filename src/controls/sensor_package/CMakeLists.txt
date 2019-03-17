@@ -207,8 +207,8 @@ include_directories(
 ##src/hall_effect.cpp
 ##src/sonar.cpp
 ##)
-add_definitions(g++ -L/src/wiringPi -lxyz sensor_node_server.cpp -o sensor_node_server)
-add_definitions(g++ -L/src/wiringPi -lxyz sensor_node_client.cpp -o sensor_node_client)
+add_definitions(g++ -L/src/wiringPi -lxyz src/sensor_node_server.cpp -o sensor_node_server)
+add_definitions(g++ -L/src/wiringPi -lxyz src/sensor_node_client.cpp -o sensor_node_client)
 
 add_executable(sensor_node_server src/sensor_node_server.cpp)
 target_link_libraries(sensor_node_server ${catkin_LIBRARIES} wiringPi)

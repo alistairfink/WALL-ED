@@ -24,9 +24,8 @@ void operations::traverse_to_empty(
 	achilles_slam::course_map map)
 {
 	achilles_slam::coord dest = get_closest_unvisited(map);
-	// how to get invalid?
 	achilles_slam::coord curr_pos = map.robot_pos;
-	std::vector<achilles_slam::coord> invalid;
+	std::vector<achilles_slam::coord> invalid = operations::get_invalid(map, &dest);
 	std::deque<achilles_slam::coord> path = path_plan::path_plan_objective(map, curr_pos, dest, invalid);
 
 	while (!path.empty())
@@ -43,8 +42,7 @@ void operations::traverse_to_objective(
 	achilles_slam::coord* dest)
 {
 	achilles_slam::coord curr_pos = map.robot_pos;
-	// how to get invalid?
-	std::vector<achilles_slam::coord> invalid;
+	std::vector<achilles_slam::coord> invalid = operations::get_invalid(map, dest);
 	std::deque<achilles_slam::coord> path = path_plan::path_plan_objective(map, curr_pos, *dest, invalid);
 
 	while (path.back().x != path.front().x && path.back().y != path.front().y)
@@ -60,8 +58,7 @@ void operations::traverse_to_objective(
 void operations::grid_traverse(
 	achilles_slam::course_map map)
 {
-	// how to get invalid?
-	std::vector<achilles_slam::coord> invalid;
+	std::vector<achilles_slam::coord> invalid = operations::get_invalid(map, NULL);
 	achilles_slam::coord curr_pos = map.robot_pos;
 	std::deque<achilles_slam::coord> path = path_plan::path_plan_grid(map, curr_pos, invalid);
 
@@ -177,7 +174,7 @@ std::vector<achilles_slam::coord> operations::get_invalid(achilles_slam::course_
 		int x = map.target_list[i]/map.width;
 		int y = map.target_list[i]%map.width;
 
-		if (dest->x != x && dest->y != y)
+		if (dest == NULL || dest->x != x && dest->y != y)
 		{
 			achilles_slam::coord temp;
 			temp.x = x;

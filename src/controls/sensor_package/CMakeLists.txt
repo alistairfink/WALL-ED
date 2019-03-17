@@ -208,6 +208,6 @@ add_executable(sensor_node_client src/sensor_node_client.cpp)
 target_link_libraries(sensor_node_client ${catkin_LIBRARIES})
 add_dependencies(sensor_node_client sensor_package_gencpp)
 
-add_definitions(-std=c++0x -L/src/WiringPi.???.(so|a) -lwiringPi -lpthread)
+add_definitions(-std=c++0x -lwiringPi -lpthread)
 
 ##target_link_libraries(sensor_package ${wiringPi_LIB})

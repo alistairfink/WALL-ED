@@ -23,13 +23,14 @@ namespace operations {
 	ros::ServiceClient map_client; 
 
 	void initialize(achilles_slam::course_map map);
-	void traverse_to_empty(int curr_mission, achilles_slam::course_map map, achilles_slam::coord curr_pos);
+	void traverse_to_empty(int curr_mission, achilles_slam::course_map map);
 	void traverse_to_objective(achilles_slam::course_map map, achilles_slam::coord* dest);
 	void grid_traverse(achilles_slam::course_map map);
 	void objective_tasks();
 	void mission_people();
 	void mission_food();
 	void mission_candle();
+	achilles_slam::coord get_closest_unvisited(achilles_slam::course_map map);
 	achilles_slam::course_map get_map();
 	achilles_slam::coord* object_mapped(int object, achilles_slam::course_map map);
 }

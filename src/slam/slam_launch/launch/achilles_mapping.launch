@@ -21,6 +21,9 @@
 
  		<!-- Threshold area in m^2 to mark a tile as "unknown" e.g. 0.001 = 10cm^2 -->
  		<param name="min_unknown_area" value="0.002" type="double"/>
+
+ 		<!-- Ignore occupied cells adjacent to walls? -->
+ 		<param name="ignore_edge_cells" value="true" type="bool"/>
 		
 
 	</node> 

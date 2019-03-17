@@ -39,6 +39,7 @@ private:
 	int found_wall_factor;
 	float min_target_area;
 	float min_unknown_area;
+	bool ignore_edge_cells;
 };
 
 

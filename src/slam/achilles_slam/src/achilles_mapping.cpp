@@ -243,6 +243,7 @@ achilles_mapping_service::achilles_mapping_service()
 	ros::NodeHandle n;
 
 	// Handle parameters
+	n.param<bool>("/achilles_mapping/ignore_edge_cells", this->ignore_edge_cells, false);	// Ignore occupied cells adjacent to walls
 	n.param<float>("/achilles_mapping/map_width_m", this->map_width_m, 1.829);				// Map width in meters
 	n.param<int>("/achilles_mapping/map_width_tiles", this->map_width_tiles, 6);			// Map width in tiles
 	n.param<int>("/achilles_mapping/found_wall_factor", this->found_wall_factor, 2);		// Divisor for expected # of cells to accept as wall
@@ -359,28 +360,30 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 	uint32_t start_row = 0;
 	uint32_t start_col = 0;
 
-	// Ignore cells adjacent to walls
-	if (tile_num/this->map_width_tiles == 0)
+	if (this->ignore_edge_cells)
 	{
-		// Top row
-		start_row = 1;
+		if (tile_num/this->map_width_tiles == 0)
+		{
+			// Top row
+			start_row = 1;
+		}
+		else if (tile_num/this->map_width_tiles + 1 == tile_num/this->map_width_tiles)
+		{
+			// Bottom row
+			effective_tile_length--;
+		}
+		if (tile_num%this->map_width_tiles == 0)
+		{
+			// First column
+			start_col = 1;
+		}
+		else if (tile_num%this->map_width_tiles + 1 == tile_num/this->map_width_tiles)
+		{
+			// Last column
+			effective_tile_width--;
+		}
 	}
-	else if (tile_num/this->map_width_tiles + 1 == tile_num/this->map_width_tiles)
-	{
-		// Bottom row
-		effective_tile_length--;
-	}
-	if (tile_num%this->map_width_tiles == 0)
-	{
-		// First column
-		start_col = 1;
-	}
-	else if (tile_num%this->map_width_tiles + 1 == tile_num/this->map_width_tiles)
-	{
-		// Last column
-		effective_tile_width--;
-	}
-
+		
 	// Cycle through rows of tile
 	// ===========================================
 	for (uint32_t row_count = start_row ; row_count < effective_tile_length ; row_count++)

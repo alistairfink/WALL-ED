@@ -33,6 +33,7 @@ namespace operations {
 	achilles_slam::coord get_closest_unvisited(achilles_slam::course_map map);
 	achilles_slam::course_map get_map();
 	achilles_slam::coord* object_mapped(int object, achilles_slam::course_map map);
+	std::vector<achilles_slam::coord> get_invalid(achilles_slam::course_map map, achilles_slam::coord* dest);
 }
 
 #endif

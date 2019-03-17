@@ -169,6 +169,26 @@ achilles_slam::course_map operations::get_map()
 	return map_service.response.silicon_valley;
 }
 
+std::vector<achilles_slam::coord> operations::get_invalid(achilles_slam::course_map map, achilles_slam::coord* dest)
+{
+	std::vector<achilles_slam::coord> invalid;
+	for (int i = 0; i < map.target_list.size(); i++)
+	{
+		int x = map.target_list[i]/map.width;
+		int y = map.target_list[i]%map.width;
+
+		if (dest->x != x && dest->y != y)
+		{
+			achilles_slam::coord temp;
+			temp.x = x;
+			temp.y = y;
+			invalid.push_back(temp);
+		}
+	}
+
+	return invalid;	
+}
+
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "operations");

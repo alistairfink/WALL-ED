@@ -208,6 +208,9 @@ include_directories(
 ##src/sonar.cpp
 ##)
 add_definitions(-lwiringPi)
+add_executable(imu src/imu.cpp)
+target_link_libraries(imu ${wiringPi_LIB}  -lcrypt -lrt)
+
 add_executable(sensor_node_server src/sensor_node_server.cpp)
 target_link_libraries(sensor_node_server ${catkin_LIBRARIES} ${wiringPi_LIB}  -lcrypt -lrt)
 add_dependencies(sensor_node_server sensor_package_gencpp)

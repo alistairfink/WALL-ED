@@ -6,6 +6,8 @@
 #include "achilles_mapping.h"
 #include <math.h>
 
+#define UNFOUND 0xFFFFFFFF
+
 
 /**
 * Walls struct
@@ -14,10 +16,10 @@
 */
 struct achilles_mapping_service::walls {
 	// Set walls to max length of map cause will we ever actually use max length. These will mean wall not found.
-	uint32_t north_wall = 0xFFFFFFFF;
-	uint32_t south_wall = 0xFFFFFFFF;
-	uint32_t east_wall = 0xFFFFFFFF;
-	uint32_t west_wall = 0xFFFFFFFF;
+	uint32_t north_wall = UNFOUND;
+	uint32_t south_wall = UNFOUND;
+	uint32_t east_wall = UNFOUND;
+	uint32_t west_wall = UNFOUND;
 };
 
 
@@ -445,6 +447,7 @@ bool achilles_mapping_service::get_course_map_srv(achilles_slam::get_course_map:
 	if (msg == NULL)
 	{
         ROS_INFO("No point occupancy grid messages received");
+        return false;
 	}
     else
     {
@@ -453,6 +456,13 @@ bool achilles_mapping_service::get_course_map_srv(achilles_slam::get_course_map:
 
     	// Identify walls of obtained occupancy grid
         achilles_mapping_service::walls course_walls = this->identify_walls(msg);
+
+        // If walls not found return empty map
+        if (course_walls.north_wall == UNFOUND || course_walls.east_wall == UNFOUND)
+        {
+        	resp.silicon_valley = *(this->course_map);
+			return true;
+        }
 
         // Loop through tiles and process
 		for (uint16_t tile_num = 0 ; tile_num < this->map_width_tiles*this->map_width_tiles ; tile_num++)

@@ -9,6 +9,8 @@
 #ifndef DEF_SONAR
 #define DEF_SONAR
 
+float get_sonar_data();
+
 class Sonar
 {
 public:

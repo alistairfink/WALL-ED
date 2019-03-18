@@ -49,6 +49,11 @@ void Sonar::recordPulseLength()
     endTimeUsec = micros();
 }
 
+float get_sonar_data()
+{
+    
+}
+
 /*int main ()
 {
     int trigger = 1

@@ -56,12 +56,12 @@ void rotaryClear(void)
     }
 }
 
-int main(void)
+/*int main(void)
 {
-    //if(wiringPiSetup() < 0){
-     //   fprintf(stderr, "Unable to setup wiringPi:%s\n",strerror(errno));
-      //  return 1;
-   // }
+    if(wiringPiSetup() < 0){
+        fprintf(stderr, "Unable to setup wiringPi:%s\n",strerror(errno));
+        return 1;
+    }
     
     pinMode(RoAPin, INPUT);
     pinMode(RoBPin, INPUT);
@@ -74,4 +74,4 @@ int main(void)
     }
     
     return 0;
-}
+}*/

@@ -230,8 +230,6 @@ sensor_node_server PUBLIC
 src/WiringPi
 wiringPi)
 
-target_link_libraries(sensor_node_server ${src/WiringPi/wiringPi})
-
 ##add_definitions(g++ -L/src/wiringPi -lxyz sensor_node_server -o sensor_node_server)
 ##add_definitions(g++ -L/src/wiringPi -lxyz sensor_node_client -o sensor_node_client)
 

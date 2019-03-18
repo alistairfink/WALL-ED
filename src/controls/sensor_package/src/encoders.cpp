@@ -11,6 +11,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include "wiringPi.h"
+#include "encoders.hpp"
 
 #define  RoAPin    0
 #define  RoBPin    1
@@ -57,10 +58,10 @@ void rotaryClear(void)
 
 int main(void)
 {
-    if(wiringPiSetup() < 0){
-        fprintf(stderr, "Unable to setup wiringPi:%s\n",strerror(errno));
-        return 1;
-    }
+    //if(wiringPiSetup() < 0){
+     //   fprintf(stderr, "Unable to setup wiringPi:%s\n",strerror(errno));
+      //  return 1;
+   // }
     
     pinMode(RoAPin, INPUT);
     pinMode(RoBPin, INPUT);

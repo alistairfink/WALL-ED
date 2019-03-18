@@ -11,6 +11,7 @@
 #include "imu.hpp"
 #include "sonar.hpp"
 #include "hall_effect.hpp"
+#include "encoders.hpp"
 #include "ros/ros.h"
 
 //service node

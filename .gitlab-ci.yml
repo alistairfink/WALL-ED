@@ -5,6 +5,10 @@ cache:
     - ccache/
 
 before_script:
+  - git clone https://github.com/alistairfink/WiringPi-for-CI.git
+  - cd ./WiringPi-for-CI
+  - ./build
+  - cd ..
   - git clone https://gitlab.com/VictorLamoine/ros_gitlab_ci.git
   - source ros_gitlab_ci/gitlab-ci.bash >/dev/null
   - git submodule init

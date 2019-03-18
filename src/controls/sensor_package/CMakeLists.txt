@@ -213,30 +213,7 @@ include_directories(
 ##find_library(WIRINGPI_LIBRARY wiringPi HINTS /src/WiringPi)
 
 
-
-<<<<<<< HEAD
-add_executable(imu src/imu.cpp)
-
-target_include_directories(
-imu PUBLIC 
-src/WiringPi
-wiringPi)
-
-SET(TARGET_H
-    ./WiringPi/wiringPi/wiringPi.h
-    ./WiringPi/wiringPi/wiringPiI2C.h 
-   )
-
-SET(TARGET_SRC
-    ./imu.cpp
-    ./hall_effect.cpp
-    ./sensor_node_server.cpp
-    )
-
-=======
-
 include_directories(${CMAKE_SOURCE_DIR})
->>>>>>> a3fdfe60322ee6bc0a80260c111f73e1379c9c9f
 
 add_executable(sensor_node_server 
     src/sensor_node_server.cpp

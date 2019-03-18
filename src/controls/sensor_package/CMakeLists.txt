@@ -211,7 +211,7 @@ include_directories(
 find_library(WIRINGPI_LIBRARY WiringPi HINTS /src)
 
 add_executable(sensor_node_server src/sensor_node_server.cpp)
-target_link_libraries(sensor_node_server ${catkin_LIBRARIES} PUBLIC ${WIRINGPI_LIBRARY})
+target_link_libraries(sensor_node_server PUBLIC ${catkin_LIBRARIES} ${WIRINGPI_LIBRARY})
 add_dependencies(sensor_node_server sensor_package_gencpp)
 
 add_executable(sensor_node_client src/sensor_node_client.cpp)

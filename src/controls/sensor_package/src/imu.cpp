@@ -9,8 +9,8 @@
 #include "imu.hpp"
 extern "C"
 {
-#include "src/WiringPi/wiringPi/wiringPiI2C.h"
-#include "src/WiringPi/wiringPi/wiringPi.h"
+#include "./WiringPi/wiringPi/wiringPiI2C.h"
+#include "./WiringPi/wiringPi/wiringPi.h"
 }
 
 #include <stdlib.h>

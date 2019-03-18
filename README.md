@@ -22,6 +22,7 @@
 * ROS Kinetic
 * Arduino
 * Arduino-Mk
+* WiringPi
 
 ## Build Instructions
 ### Dependencies
@@ -30,6 +31,8 @@ sudo apt-get install arduino
 sudo apt-get install arduino-mk
 ```
 Follow instructions here to download ROS Kinetic: http://wiki.ros.org/kinetic/Installation/Ubuntu
+
+Follow instructions here to install WiringPi: http://wiringpi.com/reference/setup/
 ### Clone Repo
 ```
 git clone https://github.com/alistairfink/WALL-ED.git

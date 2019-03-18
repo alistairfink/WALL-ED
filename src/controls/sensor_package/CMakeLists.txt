@@ -113,12 +113,14 @@ catkin_package(
 ###########
 ## Build ##
 ###########
+set(wiringPi_include "/usr/local/include")
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+  ${wiringPi_include}
 )
 
 ## Declare a C++ library
@@ -209,26 +211,37 @@ include_directories(
 ##)
 ##add_definitions(-std=c++0x -L/src/WiringPi/wiringPi -lwiringPi -lpthread)
 ##find_library(WIRINGPI_LIBRARY wiringPi HINTS /src/WiringPi)
+
+
+
+
 include_directories(${CMAKE_SOURCE_DIR})
-add_executable(sensor_node_server src/sensor_node_server.cpp)
-target_link_libraries(sensor_node_server PUBLIC ${catkin_LIBRARIES})
+
+add_executable(sensor_node_server 
+    src/sensor_node_server.cpp
+    src/sensor_node_server.hpp
+    src/hall_effect.cpp
+    src/hall_effect.hpp
+    src/sonar.cpp
+    src/sonar.hpp)
+target_link_libraries(sensor_node_server ${catkin_LIBRARIES} wiringPi)
 add_dependencies(sensor_node_server sensor_package_gencpp)
 
-add_executable(sensor_node_client src/sensor_node_client.cpp)
-target_link_libraries(sensor_node_client ${catkin_LIBRARIES})
-add_dependencies(sensor_node_client sensor_package_gencpp)
+#add_executable(sensor_node_client src/sensor_node_client.cpp)
+#target_link_libraries(sensor_node_client ${catkin_LIBRARIES})
+#add_dependencies(sensor_node_client sensor_package_gencpp)
 
-add_library(imu src/imu.cpp)
+#add_library(imu src/imu.cpp)
 
-target_include_directories(
-imu PUBLIC 
-${CMAKE_SOURCE_DIR}/src
-)
+#target_include_directories(
+#imu PUBLIC 
+#${CMAKE_SOURCE_DIR}/src
+#)
 
-target_include_directories(
-sensor_node_server PUBLIC 
-src/WiringPi
-wiringPi)
+#target_include_directories(
+#sensor_node_server PUBLIC 
+#src/WiringPi
+#wiringPi)
 
 ##add_definitions(g++ -L/src/wiringPi -lxyz sensor_node_server -o sensor_node_server)
 ##add_definitions(g++ -L/src/wiringPi -lxyz sensor_node_client -o sensor_node_client)

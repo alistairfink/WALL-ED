@@ -10,6 +10,6 @@
 #define sonar_hpp
 
 #include <stdio.h>
-#include "sonar.cpp"
+
 float get_sonar_data();
 #endif /* sonar_hpp */

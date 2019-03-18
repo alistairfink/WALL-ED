@@ -1,5 +1,6 @@
 #include "ros/ros.h"
 #include "nav_msgs/OccupancyGrid.h"
+#include "geometry_msgs/PoseStamped.h"
 #include "achilles_slam/course_map.h"
 #include "achilles_slam/get_course_map.h"
 #include "achilles_slam/update_course_map.h"
@@ -253,6 +254,9 @@ achilles_mapping_service::achilles_mapping_service()
 	// Write width to return message
 	this->course_map->width = this->map_width_tiles;
 
+	this->course_map->robot_pos.x = this->map_width_tiles;
+	this->course_map->robot_pos.y = this->map_width_tiles;
+
 	// Tile holder to be pushed into map vector
 	achilles_slam::tile temp_tile;
 	temp_tile.terrain = achilles_slam::tile::TERRAIN_UKNOWN;
@@ -265,6 +269,8 @@ achilles_mapping_service::achilles_mapping_service()
 		temp_tile.terrain = 0;
 		this->course_map->map.push_back(temp_tile);
 	}
+
+	this->robot_cell = UNFOUND;
 
 	// Launch map services
 	this->get_serv = n.advertiseService("get_course_map", &achilles_mapping_service::get_course_map_srv, this);
@@ -360,6 +366,17 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 	uint32_t start_row = 0;
 	uint32_t start_col = 0;
 
+	// Set robot pos
+	if (this->robot_cell%msg->info.width >= start_cell%msg->info.width && this->robot_cell%msg->info.width < start_cell%msg->info.width + effective_tile_width)
+	{
+		if (this->robot_cell/msg->info.height >= start_cell/msg->info.height && this->robot_cell/msg->info.height < start_cell/msg->info.height + effective_tile_length)
+		{
+			this->course_map->robot_pos.x = tile_num%this->map_width_tiles;
+			this->course_map->robot_pos.y = tile_num/this->map_width_tiles;
+		}
+	}
+
+	// Ignore cells adjacent to walls if param set
 	if (this->ignore_edge_cells)
 	{
 		if (tile_num/this->map_width_tiles == 0)
@@ -459,7 +476,25 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 }
 
 
+/**
+* get_robot_cell
+* Find the cell the robot is in
+*
+* @return cell of robot
+*/
+uint32_t achilles_mapping_service::get_robot_cell(const nav_msgs::OccupancyGrid::ConstPtr &occ_grid)
+{
+	geometry_msgs::PoseStamped::ConstPtr pose = ros::topic::waitForMessage<geometry_msgs::PoseStamped>("slam_out_pose", ros::Duration(2));
+	if (pose == NULL)
+	{
+		ROS_INFO("No pose data");
+	}
 
+	uint32_t curr_cell = floor((pose->pose.position.y - occ_grid->info.origin.position.y ) / occ_grid->info.resolution) * occ_grid->info.width;
+	curr_cell += floor((pose->pose.position.x - occ_grid->info.origin.position.x ) / occ_grid->info.resolution);
+
+	return curr_cell;
+}
 
 
 
@@ -469,7 +504,7 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 *
 * @param req Its pretty much nothing. the request is empty
 * @param resp A copy of the object's course_map
-* @return Always true i guess. 
+* @return true.. sometimes. if not false.
 */
 bool achilles_mapping_service::get_course_map_srv(achilles_slam::get_course_map::Request& req, achilles_slam::get_course_map::Response& resp)
 {
@@ -487,6 +522,8 @@ bool achilles_mapping_service::get_course_map_srv(achilles_slam::get_course_map:
 
     	// Identify walls of obtained occupancy grid
         achilles_mapping_service::walls course_walls = this->identify_walls(msg);
+
+        this->robot_cell = this->get_robot_cell(msg);
 
         // If walls not found return empty map
         if (course_walls.north_wall == UNFOUND || course_walls.east_wall == UNFOUND)

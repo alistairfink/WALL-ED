@@ -22,6 +22,10 @@ private:
 
 	struct walls;
 
+	uint32_t robot_cell;
+
+	uint32_t get_robot_cell(const nav_msgs::OccupancyGrid::ConstPtr &occ_grid);
+
 	uint32_t count_horizontal_cells(const nav_msgs::OccupancyGrid::ConstPtr& msg, const uint32_t row);
 
 	uint32_t count_vertical_cells(const nav_msgs::OccupancyGrid::ConstPtr& msg, const uint32_t column);

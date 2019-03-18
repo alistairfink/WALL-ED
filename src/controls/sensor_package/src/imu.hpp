@@ -10,7 +10,6 @@
 #define imu_hpp
 
 #include <stdio.h>
-#include "imu.cpp"
 void MPU6050_Init();
 
 short read_raw_data(int addr);

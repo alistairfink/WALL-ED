@@ -207,8 +207,8 @@ include_directories(
 ##src/hall_effect.cpp
 ##src/sonar.cpp
 ##)
-##add_definitions(-std=c++0x -L/src/wiringPi -lwiringPi -lpthread)
-find_library(WIRINGPI_LIBRARY wiringPi HINTS /src/WiringPi)
+add_definitions(-std=c++0x -L/src/WiringPi/wiringPi -lwiringPi -lpthread)
+##find_library(WIRINGPI_LIBRARY wiringPi HINTS /src/WiringPi)
 
 add_executable(sensor_node_server src/sensor_node_server.cpp)
 target_link_libraries(sensor_node_server PUBLIC ${catkin_LIBRARIES} ${WIRINGPI_LIBRARY})
@@ -222,5 +222,3 @@ add_dependencies(sensor_node_client sensor_package_gencpp)
 ##add_definitions(g++ -L/src/wiringPi -lxyz sensor_node_client -o sensor_node_client)
 
 ##add_definitions(-std=c++0x -lwiringPi -lpthread)
-
-##target_link_libraries(sensor_package ${wiringPi_LIB})

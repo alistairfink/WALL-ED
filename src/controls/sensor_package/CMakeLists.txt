@@ -200,7 +200,7 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test
 ##find_library(wiringPi_LIB src/WiringPi)
-##include_directories(src/WiringPi)
+include_directories(src/WiringPi/wiringPi)
 
 ##add_executable(MyExec
 ##src/imu.cpp

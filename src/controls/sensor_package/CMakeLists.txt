@@ -218,7 +218,7 @@ add_executable(sensor_node_client src/sensor_node_client.cpp)
 target_link_libraries(sensor_node_client ${catkin_LIBRARIES})
 add_dependencies(sensor_node_client sensor_package_gencpp)
 
-target_include_directories(sensor_package PRIVATE ${CMAKE_SOURCE_DIR})
+target_include_directories(src PRIVATE ${CMAKE_SOURCE_DIR})
 
 ##add_definitions(g++ -L/src/wiringPi -lxyz sensor_node_server -o sensor_node_server)
 ##add_definitions(g++ -L/src/wiringPi -lxyz sensor_node_client -o sensor_node_client)

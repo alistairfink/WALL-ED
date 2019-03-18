@@ -60,7 +60,7 @@ void motorR(void)
     
     while(!digitalRead(RoAPin)){
         Current_RoB_Status = digitalRead(RoBPin);
-        flag = 1;
+        flagR = 1;
     }
     
     if(flagR == 1){

@@ -8,8 +8,6 @@
 
 #include "sensor_package/AddTwoInts.h"
 #include "sensor_node_server.hpp"
-#include "./WiringPi/wiringPi/wiringPiI2C.h"
-#include "./WiringPi/wiringPi/wiringPi.h"
 #include "imu.hpp"
 #include "sonar.hpp"
 #include "hall_effect.hpp"

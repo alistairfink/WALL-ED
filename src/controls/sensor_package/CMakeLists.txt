@@ -227,23 +227,8 @@ add_executable(sensor_node_server
 target_link_libraries(sensor_node_server ${catkin_LIBRARIES} wiringPi)
 add_dependencies(sensor_node_server sensor_package_gencpp)
 
-#add_executable(sensor_node_client src/sensor_node_client.cpp)
-#target_link_libraries(sensor_node_client ${catkin_LIBRARIES})
-#add_dependencies(sensor_node_client sensor_package_gencpp)
-
-#add_library(imu src/imu.cpp)
-
-#target_include_directories(
-#imu PUBLIC 
-#${CMAKE_SOURCE_DIR}/src
-#)
-
-#target_include_directories(
-#sensor_node_server PUBLIC 
-#src/WiringPi
-#wiringPi)
-
-##add_definitions(g++ -L/src/wiringPi -lxyz sensor_node_server -o sensor_node_server)
-##add_definitions(g++ -L/src/wiringPi -lxyz sensor_node_client -o sensor_node_client)
-
-##add_definitions(-std=c++0x -lwiringPi -lpthread)
+add_executable(sensor_node_client
+     src/sensor_node_client.cpp
+     src/sensor_node_client.hpp)
+target_link_libraries(sensor_node_client ${catkin_LIBRARIES} wiringPi)
+add_dependencies(sensor_node_client sensor_package_gencpp)

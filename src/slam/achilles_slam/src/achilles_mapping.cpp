@@ -584,7 +584,10 @@ bool achilles_mapping_service::get_course_map_srv(achilles_slam::get_course_map:
 */
 bool achilles_mapping_service::update_course_map_srv(achilles_slam::update_course_map::Request& req, achilles_slam::update_course_map::Response& resp)
 {
-
+	this->course_map->map[req.tile_coord].terrain = req.update_tile.terrain;
+	this->course_map->map[req.tile_coord].target = req.update_tile.target;
+	this->course_map->map[req.tile_coord].visited = req.update_tile.visited;
+	return true;
 }
 
 

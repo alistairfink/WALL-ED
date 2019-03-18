@@ -219,7 +219,7 @@ target_link_libraries(sensor_node_client ${catkin_LIBRARIES})
 add_dependencies(sensor_node_client sensor_package_gencpp)
 
 add_executable(imu src/imu.cpp)
-target_include_directories(imu ${CMAKE_SOURCE_DIR})
+include_directories(${CMAKE_SOURCE_DIR})
 target_include_directories(
 imu PUBLIC 
 src/WiringPi

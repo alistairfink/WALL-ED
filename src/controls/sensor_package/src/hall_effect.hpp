@@ -10,7 +10,6 @@
 #define hall_effect_hpp
 
 #include <stdio.h>
-#include "hall_effect.cpp"
 
 bool gpio_setup();
 

@@ -218,6 +218,13 @@ add_executable(sensor_node_client src/sensor_node_client.cpp)
 target_link_libraries(sensor_node_client ${catkin_LIBRARIES})
 add_dependencies(sensor_node_client sensor_package_gencpp)
 
+add_executable(imu src/imu.cpp)
+
+target_include_directories(
+imu PUBLIC 
+src/WiringPi
+wiringPi)
+
 target_include_directories(
 sensor_node_server PUBLIC 
 src/WiringPi

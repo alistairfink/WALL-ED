@@ -219,16 +219,23 @@ target_link_libraries(sensor_node_client ${catkin_LIBRARIES})
 add_dependencies(sensor_node_client sensor_package_gencpp)
 
 add_executable(imu src/imu.cpp)
-include_directories(${CMAKE_SOURCE_DIR})
+
 target_include_directories(
 imu PUBLIC 
 src/WiringPi
 wiringPi)
 
-target_include_directories(
-sensor_node_server PUBLIC 
-src/WiringPi
-wiringPi)
+SET(TARGET_H
+    ./WiringPi/wiringPi/wiringPi.h
+    ./WiringPi/wiringPi/wiringPiI2C.h 
+   )
+
+SET(TARGET_SRC
+    ./imu.cpp
+    ./hall_effect.cpp
+    ./sensor_node_server.cpp
+    )
+
 
 ##add_definitions(g++ -L/src/wiringPi -lxyz sensor_node_server -o sensor_node_server)
 ##add_definitions(g++ -L/src/wiringPi -lxyz sensor_node_client -o sensor_node_client)

@@ -243,6 +243,10 @@ add_executable(sensor_node_server
     src/sensor_node_server.hpp
     src/hall_effect.cpp
     src/hall_effect.hpp
+    src/encoders.cpp
+    src/encoders.hpp
+    src/imu.cpp
+    src/imu.hpp
     src/sonar.cpp
     src/sonar.hpp)
 target_link_libraries(sensor_node_server ${catkin_LIBRARIES} wiringPi)

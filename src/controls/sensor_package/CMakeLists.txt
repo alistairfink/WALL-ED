@@ -210,11 +210,11 @@ include_directories(
 add_definitions(-std=c++0x -L/src/wiringPi -lwiringPi -lpthread)
 
 add_executable(sensor_node_server src/sensor_node_server.cpp)
-target_link_libraries(sensor_node_server ${catkin_LIBRARIES} wiringPi)
+target_link_libraries(sensor_node_server ${catkin_LIBRARIES})
 add_dependencies(sensor_node_server sensor_package_gencpp)
 
 add_executable(sensor_node_client src/sensor_node_client.cpp)
-target_link_libraries(sensor_node_client ${catkin_LIBRARIES} wiringPi)
+target_link_libraries(sensor_node_client ${catkin_LIBRARIES})
 add_dependencies(sensor_node_client sensor_package_gencpp)
 
 ##add_definitions(g++ -L/src/wiringPi -lxyz sensor_node_server -o sensor_node_server)

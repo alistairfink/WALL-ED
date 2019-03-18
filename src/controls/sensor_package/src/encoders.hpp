@@ -11,7 +11,9 @@
 
 #include <stdio.h>
 
-void rotaryDeal(void);
+void motorL(void);
+
+void motorR(void);
 
 void rotaryClear(void);
 

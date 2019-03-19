@@ -13,34 +13,65 @@
 #include "wiringPi.h"
 #include "encoders.hpp"
 
-#define  RoAPin    0
-#define  RoBPin    1
+#define  LoAPin    0 //where the pins connect
+#define  LoBPin    1
+#define  RoAPin    3
+#define  RoBPin    4
+
 #define  RoSPin    2
 
-static volatile int globalCounter = 0 ;
+static volatile int globalCounterL = 0 ;
+static volatile int globalCounterR = 0 ;
 
-unsigned char flag;
+unsigned char flagL;
+unsigned char Last_LoB_Status;
+unsigned char Current_LoB_Status;
+
+unsigned char flagR;
 unsigned char Last_RoB_Status;
 unsigned char Current_RoB_Status;
 
-void rotaryDeal(void)
+void motorL(void)
+{
+    Last_LoB_Status = digitalRead(LoBPin);
+    
+    while(!digitalRead(LoAPin)){
+        Current_LoB_Status = digitalRead(LoBPin);
+        flagL = 1;
+    }
+    
+    if(flagL == 1){
+        flagL = 0;
+        if((Last_LoB_Status == 0)&&(Current_LoB_Status == 1)){
+            globalCounterL ++;
+            printf("globalCounter : %d\n",globalCounterL);
+        }
+        if((Last_LoB_Status == 1)&&(Current_LoB_Status == 0)){
+            globalCounterL --;
+            printf("globalCounter : %d\n",globalCounterL);
+        }
+        
+    }
+}
+
+void motorR(void)
 {
     Last_RoB_Status = digitalRead(RoBPin);
     
     while(!digitalRead(RoAPin)){
         Current_RoB_Status = digitalRead(RoBPin);
-        flag = 1;
+        flagR = 1;
     }
     
-    if(flag == 1){
-        flag = 0;
+    if(flagR == 1){
+        flagR = 0;
         if((Last_RoB_Status == 0)&&(Current_RoB_Status == 1)){
-            globalCounter ++;
-            printf("globalCounter : %d\n",globalCounter);
+            globalCounterR ++;
+            printf("globalCounter : %d\n",globalCounterR);
         }
         if((Last_RoB_Status == 1)&&(Current_RoB_Status == 0)){
-            globalCounter --;
-            printf("globalCounter : %d\n",globalCounter);
+            globalCounterR --;
+            printf("globalCounter : %d\n",globalCounterR);
         }
         
     }
@@ -50,7 +81,7 @@ void rotaryClear(void)
 {
     if(digitalRead(RoSPin) == 0)
     {
-        globalCounter = 0;
+        int globalCounter = 0;
         printf("globalCounter : %d\n",globalCounter);
         delay(1000);
     }

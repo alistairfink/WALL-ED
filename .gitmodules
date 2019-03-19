@@ -7,3 +7,6 @@
 [submodule "src/controls/serial"]
 	path = src/controls/serial
 	url = https://github.com/wjwwood/serial.git
+[submodule "src/slam/laser_filters"]
+	path = src/slam/laser_filters
+	url = https://github.com/ros-perception/laser_filters.git

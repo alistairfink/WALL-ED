@@ -1,10 +1,13 @@
 #include "ros/ros.h"
 #include "nav_msgs/OccupancyGrid.h"
+#include "geometry_msgs/PoseStamped.h"
 #include "achilles_slam/course_map.h"
 #include "achilles_slam/get_course_map.h"
 #include "achilles_slam/update_course_map.h"
 #include "achilles_mapping.h"
 #include <math.h>
+
+#define UNFOUND 0xFFFFFFFF
 
 
 /**
@@ -14,10 +17,10 @@
 */
 struct achilles_mapping_service::walls {
 	// Set walls to max length of map cause will we ever actually use max length. These will mean wall not found.
-	uint32_t north_wall = 0xFFFFFFFF;
-	uint32_t south_wall = 0xFFFFFFFF;
-	uint32_t east_wall = 0xFFFFFFFF;
-	uint32_t west_wall = 0xFFFFFFFF;
+	uint32_t north_wall = UNFOUND;
+	uint32_t south_wall = UNFOUND;
+	uint32_t east_wall = UNFOUND;
+	uint32_t west_wall = UNFOUND;
 };
 
 
@@ -241,6 +244,7 @@ achilles_mapping_service::achilles_mapping_service()
 	ros::NodeHandle n;
 
 	// Handle parameters
+	n.param<bool>("/achilles_mapping/ignore_edge_cells", this->ignore_edge_cells, false);	// Ignore occupied cells adjacent to walls
 	n.param<float>("/achilles_mapping/map_width_m", this->map_width_m, 1.829);				// Map width in meters
 	n.param<int>("/achilles_mapping/map_width_tiles", this->map_width_tiles, 6);			// Map width in tiles
 	n.param<int>("/achilles_mapping/found_wall_factor", this->found_wall_factor, 2);		// Divisor for expected # of cells to accept as wall
@@ -250,10 +254,14 @@ achilles_mapping_service::achilles_mapping_service()
 	// Write width to return message
 	this->course_map->width = this->map_width_tiles;
 
+	this->course_map->robot_pos.x = this->map_width_tiles;
+	this->course_map->robot_pos.y = this->map_width_tiles;
+
 	// Tile holder to be pushed into map vector
 	achilles_slam::tile temp_tile;
 	temp_tile.terrain = achilles_slam::tile::TERRAIN_UKNOWN;
 	temp_tile.target = achilles_slam::tile::TARGET_UKNOWN_UNDERTERMINED;
+	temp_tile.visited = false;
 
 	// Set initialize map to null tiles
 	for (uint16_t i = 0 ; i < this->map_width_tiles * this->map_width_tiles ; i++)
@@ -261,6 +269,8 @@ achilles_mapping_service::achilles_mapping_service()
 		temp_tile.terrain = 0;
 		this->course_map->map.push_back(temp_tile);
 	}
+
+	this->robot_cell = UNFOUND;
 
 	// Launch map services
 	this->get_serv = n.advertiseService("get_course_map", &achilles_mapping_service::get_course_map_srv, this);
@@ -314,7 +324,7 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 	else
 	{
 		// If its a tile on the edge of the map dont include wall in tile length
-		if (floor(tile_num/this->map_width_tiles == 0) || floor(tile_num/this->map_width_tiles) == this->map_width_tiles-1)
+		if (tile_num/this->map_width_tiles == 0 || floor(tile_num/this->map_width_tiles) == this->map_width_tiles-1)
 			effective_tile_length = ceil(tile_length);
 		else
 			effective_tile_length = ceil(tile_length) + 1;
@@ -344,34 +354,75 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 	// First cell in the tile
 	// +++++++++++++++++++++++++++++
 	// Calc cell pos of first cell in row
-	uint32_t start_cell =   (  (course_walls->north_wall + 1)  +  (floor(tile_num/this->map_width_tiles) ? ((ceil(tile_length) * floor(tile_num/this->map_width_tiles))-1) : 0 ))   *   msg->info.width ;
+	uint32_t start_cell =   (  (course_walls->north_wall + 1)  +  ((tile_num/this->map_width_tiles) ? ((ceil(tile_length) * (tile_num/this->map_width_tiles))-1) : 0 ))   *   msg->info.width ;
 	// Calc cell position of cell's col in row
 	start_cell += (course_walls->west_wall + 1) + ( tile_num%this->map_width_tiles ? (ceil(tile_width) * (tile_num%this->map_width_tiles) - 1) : 0 );
 	// +++++++++++++++++++++++++++++
 
 	// Index of cell to check
-	uint32_t cell = 0;
+	uint32_t row_start_cell = 0;
+	uint32_t curr_cell = 0;
 
+	uint32_t start_row = 0;
+	uint32_t start_col = 0;
+
+	// Set robot pos
+	if (this->robot_cell%msg->info.width >= start_cell%msg->info.width && this->robot_cell%msg->info.width < start_cell%msg->info.width + effective_tile_width)
+	{
+		if (this->robot_cell/msg->info.height >= start_cell/msg->info.height && this->robot_cell/msg->info.height < start_cell/msg->info.height + effective_tile_length)
+		{
+			this->course_map->robot_pos.x = tile_num%this->map_width_tiles;
+			this->course_map->robot_pos.y = tile_num/this->map_width_tiles;
+		}
+	}
+
+	// Ignore cells adjacent to walls if param set
+	if (this->ignore_edge_cells)
+	{
+		if (tile_num/this->map_width_tiles == 0)
+		{
+			// Top row
+			start_row = 1;
+		}
+		else if (tile_num/this->map_width_tiles + 1 == tile_num/this->map_width_tiles)
+		{
+			// Bottom row
+			effective_tile_length--;
+		}
+		if (tile_num%this->map_width_tiles == 0)
+		{
+			// First column
+			start_col = 1;
+		}
+		else if (tile_num%this->map_width_tiles + 1 == tile_num/this->map_width_tiles)
+		{
+			// Last column
+			effective_tile_width--;
+		}
+	}
+		
 	// Cycle through rows of tile
 	// ===========================================
-	for (uint32_t row_count = 0 ; row_count < effective_tile_length ; row_count++)
+	for (uint32_t row_count = start_row ; row_count < effective_tile_length ; row_count++)
 	{
-		cell = start_cell + (msg->info.width * row_count);
+		row_start_cell = start_cell + (msg->info.width * row_count);
 		
 		// Cycle through columns of row 
-		for (uint32_t column_count = 0 ; column_count < effective_tile_width ; column_count++)
+		for (uint32_t column_count = start_col ; column_count < effective_tile_width ; column_count++)
 		{
-			if (msg->data[cell] == 100)
-				ROS_DEBUG("cell: %d  !", cell);
+			curr_cell = row_start_cell + column_count;
+
+			if (msg->data[curr_cell] == 100)
+				ROS_DEBUG("cell: %d  !", curr_cell);
 			else
-				ROS_DEBUG("cell: %d", cell);
+				ROS_DEBUG("cell: %d", curr_cell);
 
 			// Count occupied/empty/unknown cells
-			if (msg->data[cell] == 100)
+			if (msg->data[curr_cell] == 100)
 			{
 				occupancy_count++;
 			} 
-			else if (msg->data[cell] == -1)
+			else if (msg->data[curr_cell] == -1)
 			{
 				unknown_count++;
 			}
@@ -379,7 +430,6 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 			{
 				empty_count++;
 			}
-			cell++;
 		}
 		ROS_DEBUG("- New row -");
 	}
@@ -426,7 +476,25 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 }
 
 
+/**
+* get_robot_cell
+* Find the cell the robot is in
+*
+* @return cell of robot
+*/
+uint32_t achilles_mapping_service::get_robot_cell(const nav_msgs::OccupancyGrid::ConstPtr &occ_grid)
+{
+	geometry_msgs::PoseStamped::ConstPtr pose = ros::topic::waitForMessage<geometry_msgs::PoseStamped>("slam_out_pose", ros::Duration(2));
+	if (pose == NULL)
+	{
+		ROS_INFO("No pose data");
+	}
 
+	uint32_t curr_cell = floor((pose->pose.position.y - occ_grid->info.origin.position.y ) / occ_grid->info.resolution) * occ_grid->info.width;
+	curr_cell += floor((pose->pose.position.x - occ_grid->info.origin.position.x ) / occ_grid->info.resolution);
+
+	return curr_cell;
+}
 
 
 
@@ -436,7 +504,7 @@ achilles_slam::tile achilles_mapping_service::process_tile(const nav_msgs::Occup
 *
 * @param req Its pretty much nothing. the request is empty
 * @param resp A copy of the object's course_map
-* @return Always true i guess. 
+* @return true.. sometimes. if not false.
 */
 bool achilles_mapping_service::get_course_map_srv(achilles_slam::get_course_map::Request& req, achilles_slam::get_course_map::Response& resp)
 {
@@ -445,6 +513,7 @@ bool achilles_mapping_service::get_course_map_srv(achilles_slam::get_course_map:
 	if (msg == NULL)
 	{
         ROS_INFO("No point occupancy grid messages received");
+        return false;
 	}
     else
     {
@@ -454,6 +523,15 @@ bool achilles_mapping_service::get_course_map_srv(achilles_slam::get_course_map:
     	// Identify walls of obtained occupancy grid
         achilles_mapping_service::walls course_walls = this->identify_walls(msg);
 
+        this->robot_cell = this->get_robot_cell(msg);
+
+        // If walls not found return empty map
+        if (course_walls.north_wall == UNFOUND || course_walls.east_wall == UNFOUND)
+        {
+        	resp.silicon_valley = *(this->course_map);
+			return true;
+        }
+
         // Loop through tiles and process
 		for (uint16_t tile_num = 0 ; tile_num < this->map_width_tiles*this->map_width_tiles ; tile_num++)
 		{
@@ -461,15 +539,30 @@ bool achilles_mapping_service::get_course_map_srv(achilles_slam::get_course_map:
 
 			// Update target only if we havent determined target yet.
 			this->course_map->map[tile_num].occupancy_count = temp_tile.occupancy_count;
-			if (this->course_map->map[tile_num].target == achilles_slam::tile::TARGET_UKNOWN_UNDERTERMINED)
-			{
-				this->course_map->map[tile_num].target = temp_tile.target;
-				if (temp_tile.target > achilles_slam::tile::TARGET_NONE)
-					this->course_map->target_list.push_back(tile_num);
-				// Note we dont update the taerrain here cause lidar doesnt tell us that
 
-				// Also this may be a problem if map is requested before lidar finishes picking up all cells.. i.e. if tile
-				// is incorrectly marked as empty initially.. tile target will never update even if objects eventually appear
+			// Only update if tile is unvisited
+			if (!this->course_map->map[tile_num].visited)
+			{
+				// If we a tile was marked as occupied and changing to empty
+				if (this->course_map->map[tile_num].target > achilles_slam::tile::TARGET_NONE && temp_tile.target <= achilles_slam::tile::TARGET_NONE)
+				{
+					for (std::vector<uint8_t>::iterator it = this->course_map->target_list.begin() ; it < this->course_map->target_list.end() ; it++)
+					{
+						if (*it == tile_num)
+						{
+							it = this->course_map->target_list.erase(it);
+							break;
+						}
+					}
+				}
+				// If we a tile was unoccupied/unknown and changing to empty
+				if (this->course_map->map[tile_num].target <= achilles_slam::tile::TARGET_NONE && temp_tile.target > achilles_slam::tile::TARGET_NONE)
+				{
+					this->course_map->target_list.push_back(tile_num);
+				}
+				this->course_map->map[tile_num].target = temp_tile.target;
+
+				// Note we dont update the terrain here cause lidar doesnt tell us that
 			}
 				
 		}
@@ -491,7 +584,10 @@ bool achilles_mapping_service::get_course_map_srv(achilles_slam::get_course_map:
 */
 bool achilles_mapping_service::update_course_map_srv(achilles_slam::update_course_map::Request& req, achilles_slam::update_course_map::Response& resp)
 {
-
+	this->course_map->map[req.tile_coord].terrain = req.update_tile.terrain;
+	this->course_map->map[req.tile_coord].target = req.update_tile.target;
+	this->course_map->map[req.tile_coord].visited = req.update_tile.visited;
+	return true;
 }
 
 

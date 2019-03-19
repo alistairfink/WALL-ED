@@ -1,0 +1,4 @@
+uint8 tile_coord			# Index of tile to update
+tile update_tile			# Tile info to update into tile of coord tile_coord
+---
+							# Empty resposne

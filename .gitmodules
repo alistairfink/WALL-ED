@@ -11,3 +11,6 @@
 	path = src/slam/laser_filters
 	url = https://github.com/ros-perception/laser_filters.git
 
+[submodule "src/controls/differential-drive"]
+	path = src/controls/differential-drive
+	url = https://github.com/jfstepha/differential-drive.git

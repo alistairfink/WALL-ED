@@ -10,4 +10,3 @@
 [submodule "src/slam/laser_filters"]
 	path = src/slam/laser_filters
 	url = https://github.com/ros-perception/laser_filters.git
-

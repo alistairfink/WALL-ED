@@ -8,11 +8,11 @@
 
 #define  LoAPin    0 //where the pins connect
 #define  LoBPin    1
-#define  RoAPin    3
-#define  RoBPin    4
-#define  RoSPin    2
+#define  RoAPin    2
+#define  RoBPin    3
+#define  RoSPin    24
 
-#define PUB_FREQ 10 // Publish freq in Hz
+#define PUB_FREQ 50 // Publish freq in Hz
 
 
 /**
@@ -28,6 +28,8 @@ encoder_handler::encoder_handler()
     // Config pins
     pinMode(RoAPin, INPUT);
     pinMode(RoBPin, INPUT);
+    pinMode(LoAPin, INPUT);
+    pinMode(LoBPin, INPUT);
 
     // Create node handle
     ros::NodeHandle n;
@@ -71,21 +73,29 @@ encoder_handler::~encoder_handler()
 */
 int16_t encoder_handler::motor_l(void)
 {
+    static unsigned char flagL;
+    static unsigned char Last_LoB_Status;
+    static unsigned char Current_LoB_Status;
+
     static int16_t globalCounterL = 0 ;
-    this->Last_LoB_Status = digitalRead(LoBPin);
+    Last_LoB_Status = digitalRead(LoBPin);
     
-    while(!digitalRead(LoAPin)){
-        this->Current_LoB_Status = digitalRead(LoBPin);
-        this->flagL = 1;
+    if(!digitalRead(LoAPin)){
+        Current_LoB_Status = digitalRead(LoBPin);
+        flagL = 1;
+    }
+    else
+    {
+        return globalCounterL;
     }
     
-    if(this->flagL == 1){
-        this->flagL = 0;
-        if((this->Last_LoB_Status == 0)&&(this->Current_LoB_Status == 1)){
+    if(flagL == 1){
+        flagL = 0;
+        if((Last_LoB_Status == 0)&&(Current_LoB_Status == 1)){
             globalCounterL ++;
             ROS_INFO("globalCounter : %d\n",globalCounterL);
         }
-        if((this->Last_LoB_Status == 1)&&(this->Current_LoB_Status == 0)){
+        if((Last_LoB_Status == 1)&&(Current_LoB_Status == 0)){
             globalCounterL --;
             ROS_INFO("globalCounter : %d\n",globalCounterL);
         }
@@ -103,21 +113,29 @@ int16_t encoder_handler::motor_l(void)
 */
 int16_t encoder_handler::motor_r(void)
 {
+    static unsigned char flagR;
+    static unsigned char Last_RoB_Status;
+    static unsigned char Current_RoB_Status;
+
     static int16_t globalCounterR = 0 ;
-    this->Last_RoB_Status = digitalRead(RoBPin);
+    Last_RoB_Status = digitalRead(RoBPin);
     
-    while(!digitalRead(RoAPin)){
-        this->Current_RoB_Status = digitalRead(RoBPin);
-        this->flagR = 1;
+    if(!digitalRead(RoAPin)){
+        Current_RoB_Status = digitalRead(RoBPin);
+        flagR = 1;
+    }
+    else
+    {
+        return globalCounterR;
     }
     
-    if(this->flagR == 1){
-        this->flagR = 0;
-        if((this->Last_RoB_Status == 0)&&(this->Current_RoB_Status == 1)){
+    if(flagR == 1){
+        flagR = 0;
+        if((Last_RoB_Status == 0)&&(Current_RoB_Status == 1)){
             globalCounterR ++;
             ROS_INFO("globalCounter : %d\n",globalCounterR);
         }
-        if((this->Last_RoB_Status == 1)&&(this->Current_RoB_Status == 0)){
+        if((Last_RoB_Status == 1)&&(Current_RoB_Status == 0)){
             globalCounterR --;
             ROS_INFO("globalCounter : %d\n",globalCounterR);
         }

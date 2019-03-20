@@ -15,12 +15,12 @@ scan_filter_chain:
     # upper_threshold: 10
 
 # REMOVES BACK SCAN WHEN TIP OF LIDAR IS ATTACHED TO ROBOT
-- name: angle
-  type: LaserScanAngularBoundsFilter
-  params: 
-    # -90 deg to 90 deg (behind us)
-    lower_angle: -1.57
-    upper_angle: 1.57
+# - name: angle
+#   type: LaserScanAngularBoundsFilter
+#   params: 
+#     # -90 deg to 90 deg (behind us)
+#     lower_angle: -1.57
+#     upper_angle: 1.57
     # lower_angle: 1.57
     # upper_angle: 3.14
 

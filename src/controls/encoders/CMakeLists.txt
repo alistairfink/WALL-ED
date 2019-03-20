@@ -209,3 +209,8 @@ add_executable(encoder_handler
 
 target_link_libraries(encoder_handler ${catkin_LIBRARIES} wiringPi)
 
+add_executable(encoder_sim
+				src/encoder_sim.cpp)
+
+target_link_libraries(encoder_sim ${catkin_LIBRARIES})
+

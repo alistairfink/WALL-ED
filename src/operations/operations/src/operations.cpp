@@ -8,6 +8,7 @@
 #include "achilles_slam/coord.h"
 #include "achilles_slam/course_map.h"
 #include "achilles_slam/get_course_map.h"
+#include "achilles_slam/update_course_map.h"
 
 void operations::initialize(achilles_slam::course_map map)
 {
@@ -50,15 +51,26 @@ void operations::traverse_to_objective(
 	while (path.back().x != path.front().x && path.back().y != path.front().y)
 	{
 		achilles_slam::coord curr = path.front();
-		// Nav to next tile
+		// orientation?
+		// 1. turn
+		if (1/*turn left*/)
+		{
+			movement::turn(movement::LEFT, operations::motor);
+		}
+		else if (1/* turn right */)
+		{
+			movement::turn(movement::RIGHT, operations::motor);
+		}
+
+		movement::straight(operations::motor);
+		operations::update_tile(curr, map);
 		path.pop_front();
 	}
 
 	operations::objective_tasks();
 }
 
-void operations::grid_traverse(
-	achilles_slam::course_map map)
+void operations::grid_traverse(achilles_slam::course_map map)
 {
 	std::vector<achilles_slam::coord> invalid = operations::get_invalid(map, NULL);
 	achilles_slam::coord curr_pos = map.robot_pos;
@@ -164,8 +176,19 @@ achilles_slam::coord* operations::object_mapped(int object, achilles_slam::cours
 achilles_slam::course_map operations::get_map()
 {
 	achilles_slam::get_course_map map_service;
-	while(!map_client.call(map_service));
+	while (!map_client.call(map_service));
 	return map_service.response.silicon_valley;
+}
+
+void operations::update_tile(achilles_slam::coord coord, achilles_slam::course_map map)
+{
+	int index = map.width * coord.x + coord.y;
+	achilles_slam::tile tile = map.map[index];
+	tile.visited = true;
+	achilles_slam::update_course_map map_service;
+	map_service.request.tile_coord = index;
+	map_service.request.update_tile = tile;
+	while (!update_map_client.call(map_service));
 }
 
 std::vector<achilles_slam::coord> operations::get_invalid(achilles_slam::course_map map, achilles_slam::coord* dest)
@@ -192,7 +215,8 @@ int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "operations");
   	ros::NodeHandle n;
-	operations::map_client = n.serviceClient<achilles_slam::get_course_map>("get_course_map");	
+	operations::map_client = n.serviceClient<achilles_slam::get_course_map>("get_course_map");
+	operations::update_map_client = n.serviceClient<achilles_slam::update_course_map>("update_course_map");	
 	
 	ros::Subscriber sub = n.subscribe("/scan", 1, movement::get_lidar);
 	operations::motor = new motor_abs::motor_driver("/dev/ttyUSB0", 115200);

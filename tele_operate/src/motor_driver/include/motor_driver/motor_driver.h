@@ -3,6 +3,7 @@
 
 #include "ros/ros.h"
 #include "serial/serial.h"
+#include "geometry_msgs/Twist.h"
 
 namespace motor_abs {
 	/**
@@ -12,18 +13,13 @@ namespace motor_abs {
 	const int16_t MAX_FORWARD = 400;
 	const int16_t MAX_BACKWARD = -400;
 
-	class motor_driver
-	{
-	private:
-		serial::Serial* connection;
-		std::string format(int16_t motor_1_speed, int16_t motor_2_speed);
+	serial::Serial* connection;
+	std::string format(int16_t motor_1_speed, int16_t motor_2_speed);
 
-	public:
-		motor_driver(std::string port, uint32_t baud);
-		bool check_connection();	
-		void set_speed(int16_t motor_1_speed, int16_t motor_2_speed);
-		~motor_driver();
-	};
+	//motor_driver(std::string port, uint32_t baud);
+	bool check_connection();	
+	void set_speed(int16_t motor_1_speed, int16_t motor_2_speed);
+	void translate_vel(const geometry_msgs::Twist::ConstPtr& msg);
 }
 
 #endif

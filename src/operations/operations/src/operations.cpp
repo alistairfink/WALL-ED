@@ -3,6 +3,8 @@
 #include "ros/ros.h"
 #include "operations/operations.h"
 #include "operations/path_plan.h"
+#include "operations/movement.h"
+#include "motor_driver/motor_driver.h"
 #include "achilles_slam/coord.h"
 #include "achilles_slam/course_map.h"
 #include "achilles_slam/get_course_map.h"
@@ -192,7 +194,12 @@ int main(int argc, char **argv)
   	ros::NodeHandle n;
 	operations::map_client = n.serviceClient<achilles_slam::get_course_map>("get_course_map");	
 	
-	achilles_slam::course_map orig_map = operations::get_map(); 
+	ros::Subscriber sub = n.subscribe("/scan", 1, movement::get_lidar);
+	operations::motor = new motor_abs::motor_driver("/dev/ttyUSB0", 115200);
+	//movement::init_move(&n);
+	ros::spin();
+
+	/*achilles_slam::course_map orig_map = operations::get_map(); 
 	operations::initialize(orig_map);
 
 	while(!operations::missions.empty())
@@ -220,6 +227,6 @@ int main(int argc, char **argv)
 	}
 	
 	achilles_slam::course_map map = operations::get_map();
-	operations::traverse_to_objective(map, operations::start);
+	operations::traverse_to_objective(map, operations::start);*/
 	return 0;
 }

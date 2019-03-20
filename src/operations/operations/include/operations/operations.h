@@ -5,6 +5,7 @@
 #include "ros/ros.h"
 #include "operations/path_plan.h"
 #include "achilles_slam/coord.h"
+#include "motor_driver/motor_driver.h"
 #include "achilles_slam/course_map.h"
 #include "achilles_slam/get_course_map.h"
 
@@ -21,6 +22,7 @@ namespace operations {
 	std::stack<int> missions;
 	achilles_slam::coord* start;
 	ros::ServiceClient map_client; 
+	motor_abs::motor_driver* motor;
 
 	void initialize(achilles_slam::course_map map);
 	void traverse_to_empty(int curr_mission, achilles_slam::course_map map);

@@ -220,7 +220,8 @@ int main(int argc, char **argv)
 	
 	ros::Subscriber sub = n.subscribe("/scan", 1, movement::get_lidar);
 	operations::motor = new motor_abs::motor_driver("/dev/ttyUSB0", 115200);
-	movement::turn(movement::LEFT, operations::motor);
+	movement::straight(operations::motor);
+	//movement::turn(movement::LEFT, operations::motor);
 	//movement::init_move(&n);
 	ros::spin();
 

@@ -29,8 +29,8 @@ void movement::turn(int direction, motor_abs::motor_driver* motor)
 	}
 
 	ros::Duration(0.5).sleep();
-	while (std::abs((north + south) - straight) <= tol &&
-		std::abs((east + west) - side) <= tol);
+	while (std::abs((north + south) - side) <= tol &&
+		std::abs((east + west) - straight) <= tol);
 	motor->set_speed(0,0);
 	// check pos?
 }

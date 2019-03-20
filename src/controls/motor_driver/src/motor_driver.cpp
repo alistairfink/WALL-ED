@@ -17,7 +17,7 @@ using namespace motor_abs;
 std::string motor_driver::format(int16_t motor_1_speed, int16_t motor_2_speed)
 {
 	std::ostringstream stm;
-	stm << motor_1_speed << "," << motor_2_speed << "," << (motor_1_speed^motor_2_speed) <<"*";
+	stm << motor_1_speed << "," << motor_2_speed << "," << (motor_1_speed^motor_2_speed) <<",*";
 	return stm.str();
 }
 

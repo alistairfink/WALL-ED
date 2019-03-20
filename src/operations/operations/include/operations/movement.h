@@ -10,6 +10,7 @@ namespace movement {
 	const int RIGHT = 1;
 
 	void turn(int direction, motor_abs::motor_driver* motor);
+	void straight(motor_abs::motor_driver* motor);
 	void get_lidar(const sensor_msgs::LaserScan::ConstPtr& msg);
 }
 

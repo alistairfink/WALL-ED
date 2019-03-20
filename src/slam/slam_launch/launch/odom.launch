@@ -1,10 +1,30 @@
 <?xml version="1.0"?>
 
 <launch>
+	<!-- Ticks per meter -->
+	<param name="ticks_meter" value="4231"/>
+
+	<!-- Encoder min & max. Used to calculate odom when values wrap around. -->
+	<param name="encoder_min" value="-32768"/>
+	<param name="encoder_max" value="32768"/>
+
+	<!-- Limits for considering encoder wrap -->
+	<!-- Lets use defaults for now -->
+	<!-- <param name="wheel_low_wrap" value="50"/>
+	<param name="wheel_high_wrap" value="50"/> -->
  
 	<node pkg="differential_drive" type="diff_tf.py" name="diff_tf" output="screen">
 
+		<!-- The rate at which the tf and odom messages are published (Hz) -->
+		<param name="rate" value="10.0"/>
+
+		<!-- The robot's wheel base in meters. -->
+		<param name="base_width" value="0.153"/>
+
+		<!-- tf frames -->
+		<param name="base_frame_id" value="base_link"/>
+		<param name="odom_frame_id" value="odom"/>
+
 	</node>
- 
 
 </launch>

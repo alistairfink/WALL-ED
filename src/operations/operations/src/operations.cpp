@@ -223,7 +223,7 @@ int main(int argc, char **argv)
 	movement::straight(operations::motor);
 	//movement::turn(movement::LEFT, operations::motor);
 	//movement::init_move(&n);
-	ros::spin();
+	//ros::spin();
 
 	/*achilles_slam::course_map orig_map = operations::get_map(); 
 	operations::initialize(orig_map);

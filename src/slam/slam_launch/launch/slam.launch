@@ -18,7 +18,8 @@
 	<include file="$(find slam_launch)/launch/achilles_mapping.launch"/>
 
 	<include file="$(find slam_launch)/launch/laser_filter.launch"/>
-	 
+
+	<include file="$(find slam_launch)/launch/odom.launch"/>
 
 	<!-- NOT REALLY NEEDED FOR WHAT WE'RE DOING -->
 	<!-- <include file="geotiff_mapper.launch">

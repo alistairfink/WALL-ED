@@ -10,7 +10,6 @@ project(motor_driver)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   serial
-  geometry_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -104,10 +103,17 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
    INCLUDE_DIRS include
-   CATKIN_DEPENDS roscpp serial geometry_msgs
-#   LIBRARIES motor_driver_lib
-#   DEPENDS system_lib
+   CATKIN_DEPENDS roscpp serial
+   LIBRARIES motor_driver_lib
+   DEPENDS system_lib
 )
+
+set(MOTOR_DRIVER_SRCS
+    src/motor_driver.cpp
+    include/motor_driver/motor_driver.h
+)
+
+add_library(motor_driver_lib ${MOTOR_DRIVER_SRCS})
 
 ###########
 ## Build ##
@@ -202,12 +208,12 @@ include_directories(
 # target_link_libraries(driver ${catkin_LIBRARIES})
 # add_executable(motor_driver src/motor_driver.cpp)
 ## Install executable
+install(TARGETS motor_driver_lib
+    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
 
 ## Install headers
+install(FILES include/motor_driver/motor_driver.h
+  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}/motor_driver)
 
-add_executable(motor_driver
-        include/motor_driver/motor_driver.h
-        src/motor_driver.cpp)
-
-add_dependencies(motor_driver ${catkin_EXPORTED_TARGETS})
-target_link_libraries(motor_driver ${catkin_LIBRARIES})

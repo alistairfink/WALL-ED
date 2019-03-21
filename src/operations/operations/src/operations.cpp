@@ -392,14 +392,14 @@ int main(int argc, char **argv)
 	ros::Subscriber orientation = n.subscribe("/slam_out_pose", 1, movement::orientation);
 	operations::motor = new motor_abs::motor_driver("/dev/ttyACM0", 115200);
 
-	/*ros::Duration(5).sleep();
+	ros::Duration(5).sleep();
 	ros::spinOnce();
 	//ros::Duration(5).sleep();
 	//movement::straight(operations::motor);
 	movement::turn(movement::LEFT, operations::motor);
 	//movement::init_move(&n);
 	//ros::spin();
-*/
+/*
 	achilles_slam::course_map orig_map = operations::get_map();
 	// TODO : Change this to launch param
 	int start = 1; 
@@ -431,5 +431,5 @@ int main(int argc, char **argv)
 	
 	achilles_slam::course_map map = operations::get_map();
 	operations::traverse_to_objective(map, operations::start);
-	return 0;
+	return 0;*/
 }

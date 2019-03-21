@@ -392,11 +392,25 @@ int main(int argc, char **argv)
 	ros::Subscriber orientation = n.subscribe("/slam_out_pose", 1, movement::orientation);
 	operations::motor = new motor_abs::motor_driver("/dev/ttyACM0", 115200);
 
-	ros::Duration(5).sleep();
+	ros::Duration(2).sleep();
+//	ROS_INFO("1");
 	ros::spinOnce();
+//	ROS_INFO("2");
 	//ros::Duration(5).sleep();
 	//movement::straight(operations::motor);
 	movement::turn(movement::LEFT, operations::motor);
+	ros::Duration(1).sleep();
+	movement::turn(movement::LEFT, operations::motor);
+	ros::Duration(1).sleep();
+	movement::turn(movement::LEFT, operations::motor);
+	ros::Duration(1).sleep();
+	movement::turn(movement::RIGHT, operations::motor);
+	ros::Duration(1).sleep();
+	movement::turn(movement::RIGHT, operations::motor);
+	ros::Duration(1).sleep();
+	movement::turn(movement::RIGHT, operations::motor);
+	ros::Duration(1).sleep();
+	movement::turn(movement::RIGHT, operations::motor);
 	//movement::init_move(&n);
 	//ros::spin();
 /*

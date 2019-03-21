@@ -17,6 +17,7 @@ const double PI  = 3.141592653589793238463;
 
 void movement::turn(int direction, motor_abs::motor_driver* motor)
 {
+	ROS_INFO("3");
 	ros::spinOnce();
 	double deg_yaw_s = deg_yaw;
 	// degrees
@@ -25,20 +26,23 @@ void movement::turn(int direction, motor_abs::motor_driver* motor)
 
 	if (direction == RIGHT)
 	{
-		desired_angle = deg_yaw_s - 90;
+		desired_angle = deg_yaw_s - 75;
 		motor->set_speed(50 - movement::OFFSET, 50);
-	} 
+	}
 	else if (direction == LEFT)
 	{
-		desired_angle = deg_yaw_s + 90;
+		desired_angle = deg_yaw_s + 75;
 		motor->set_speed(-50 - movement::OFFSET, -50);
 	}
 
+	ROS_INFO("ORIG: %f DESIRED: %f", deg_yaw_s, desired_angle);
 	while (std::abs(desired_angle - deg_yaw) > tol)
 	{
 		ros::spinOnce();
+		ROS_INFO("ORIG: %f DESIRED: %f CURR: %f", deg_yaw_s, desired_angle, deg_yaw);
 	}
 
+	ROS_INFO("DONE");
 	motor->set_speed(0,0);
 }
 

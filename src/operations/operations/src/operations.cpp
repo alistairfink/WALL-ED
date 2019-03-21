@@ -10,17 +10,38 @@
 #include "achilles_slam/get_course_map.h"
 #include "achilles_slam/update_course_map.h"
 
-void operations::initialize(achilles_slam::course_map map)
+void operations::initialize(achilles_slam::course_map map, int start)
 {
 	int offset = 0;
 	int start_pos = 23;//map.width*map.width - 1 - offset;
 	direction = 0;
-	start->x = start_pos/map.width;
-	start->y = start_pos%map.width;
+	operations::start->x = start_pos/map.width;
+	operations::start->y = start_pos%map.width;
 	operations::missions.push(operations::food);
 	operations::missions.push(operations::candle);
 	operations::missions.push(operations::mansion);
 	operations::missions.push(operations::cabin);
+
+	if (start == 1)
+	{
+		operations::sand_index.push(28);
+		operations::sand_index.push(15);
+	}
+	else if (start == 2)
+	{
+		operations::sand_index.push(10);
+		operations::sand_index.push(14);
+	}
+	else if (start == 3)
+	{
+		operations::sand_index.push(28);
+		operations::sand_index.push(20);
+	}
+	else if (start == 4)
+	{
+		operations::sand_index.push(21);
+		operations::sand_index.push(10);
+	}
 }
 
 void operations::traverse_to_empty(
@@ -153,17 +174,81 @@ void operations::traverse_to_objective(
 void operations::grid_traverse(achilles_slam::course_map map)
 {
 	std::vector<achilles_slam::coord> invalid = operations::get_invalid(map, NULL);
-	achilles_slam::coord curr_pos = map.robot_pos;
-	std::deque<achilles_slam::coord> path = path_plan::path_plan_grid(map, curr_pos, invalid);
 
-	while (path.back().x != path.front().x && path.back().y != path.front().y)
+	bool found = false;
+
+	while (operations::sand_index.size() > 0 && !found)
 	{
-		achilles_slam::coord curr = path.front();
-		// Nav to next tile
-		path.pop_front();
+		achilles_slam::coord curr_pos = map.robot_pos;
+		achilles_slam::coord curr = curr_pos;
+		int target_index = operations::sand_index.top();
+		achilles_slam::coord dest;
+		dest.x = target_index/map.width;
+		dest.y = target_index%map.width;
+		std::deque<achilles_slam::coord> path = path_plan::path_plan_objective(map, curr_pos, dest, invalid);
+		while (path.back().x != path.front().x && path.back().y != path.front().y)
+		{
+			achilles_slam::coord next = path.front();
+			
+			int direction_to_go;
+			if (curr.x < next.x)
+			{
+				direction_to_go = DIR_NORTH;
+			}
+			else if (curr.x > next.x)
+			{
+				direction_to_go = DIR_SOUTH;
+			}
+			else if (curr.y < next.y)
+			{
+				direction_to_go = DIR_EAST;
+			}
+			else if (curr.y > next.y)
+			{
+				direction_to_go = DIR_WEST;
+			}
+
+			while (direction != direction_to_go)
+			{
+				if (direction > direction_to_go || (direction == DIR_NORTH && direction_to_go == DIR_WEST))
+				{
+					movement::turn(movement::LEFT, operations::motor);
+					direction--;
+				}
+				else if (direction < direction_to_go || (direction == DIR_WEST && direction_to_go == DIR_NORTH))
+				{
+					movement::turn(movement::RIGHT, operations::motor);
+					direction++;
+				}
+
+				if (direction < 0)
+				{
+					direction = DIR_WEST;
+				}
+				else if (direction > 3)
+				{
+					direction = DIR_NORTH;
+				}
+			}
+
+			movement::straight(movement::NOMINAL, movement::TILE_DIST, operations::motor);
+			operations::update_tile(next, map);
+			path.pop_front();
+			curr = next;
+		}
+
+		operations::sand_index.pop();
+		movement::straight(movement::NOMINAL * -1, movement::TILE_DIST/2, operations::motor);
+		if (1 /*Check Hall Effect*/)
+		{
+			// Turn LED on
+			ros::Duration(1).sleep();
+			found = true;
+		}
+		movement::straight(movement::NOMINAL, movement::TILE_DIST/2, operations::motor);
 	}
 
-	operations::objective_tasks();
+	operations::missions.pop();
 }
 
 void operations::objective_tasks()
@@ -315,8 +400,10 @@ int main(int argc, char **argv)
 	//movement::init_move(&n);
 	//ros::spin();
 */
-	achilles_slam::course_map orig_map = operations::get_map(); 
-	operations::initialize(orig_map);
+	achilles_slam::course_map orig_map = operations::get_map();
+	// TODO : Change this to launch param
+	int start = 1; 
+	operations::initialize(orig_map, start);
 
 	while(!operations::missions.empty())
 	{

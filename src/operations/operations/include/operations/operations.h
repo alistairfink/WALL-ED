@@ -30,8 +30,9 @@ namespace operations {
 	ros::ServiceClient update_map_client;
 	motor_abs::motor_driver* motor;
 	int direction;
+	std::stack<int> sand_index;
 
-	void initialize(achilles_slam::course_map map);
+	void initialize(achilles_slam::course_map map, int start);
 	void traverse_to_empty(int curr_mission, achilles_slam::course_map map);
 	void traverse_to_objective(achilles_slam::course_map map, achilles_slam::coord* dest);
 	void grid_traverse(achilles_slam::course_map map);

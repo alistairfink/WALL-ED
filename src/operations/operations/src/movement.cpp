@@ -4,10 +4,10 @@
 #include "sensor_msgs/LaserScan.h"
 #include <math.h>
 
-float north;
-float east;
-float south;
-float west;
+static float north = 5;
+static float east = 5;
+static float south = 5;
+static float west = 5;
 
 void movement::turn(int direction, motor_abs::motor_driver* motor)
 {
@@ -39,12 +39,17 @@ void movement::straight(motor_abs::motor_driver* motor)
 {
 	float north_s = north;
 	float south_s = south;
-	float dist = 100;
-	float tol = 1;
-	motor->set_speed(100,-100);
-	ros::Duration(0.5).sleep();
-	while (std::abs((north + dist) - north_s) < tol &&
-		std::abs((south - dist) - south_s) < tol);
+	float dist = 1;
+	float tol = 0.01;
+	ROS_INFO("STARTING - NORTH: %f SOUTH: %f", north_s, south_s);
+	motor->set_speed(100-movement::OFFSET,-100);
+	ros::Duration(1).sleep();
+	while (std::abs((north + dist) - north_s) > tol &&
+		std::abs((south - dist) - south_s) > tol)
+{
+ros::spinOnce();
+ROS_INFO("NORTH: %f SOUTH: %f", north, south);
+}
 	motor->set_speed(0,0);	
 	// check pos?
 }

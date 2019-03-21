@@ -217,9 +217,13 @@ int main(int argc, char **argv)
   	ros::NodeHandle n;
 	operations::map_client = n.serviceClient<achilles_slam::get_course_map>("get_course_map");
 	operations::update_map_client = n.serviceClient<achilles_slam::update_course_map>("update_course_map");	
-	
+
 	ros::Subscriber sub = n.subscribe("/scan", 1, movement::get_lidar);
 	operations::motor = new motor_abs::motor_driver("/dev/ttyACM0", 115200);
+
+	ros::Duration(5).sleep();
+	ros::spinOnce();
+	//ros::Duration(5).sleep();
 	movement::straight(operations::motor);
 	//movement::turn(movement::LEFT, operations::motor);
 	//movement::init_move(&n);

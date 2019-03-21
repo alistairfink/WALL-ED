@@ -8,6 +8,7 @@
 namespace movement {
 	const int LEFT = 0;
 	const int RIGHT = 1;
+	const int OFFSET = 6;
 
 	void turn(int direction, motor_abs::motor_driver* motor);
 	void straight(motor_abs::motor_driver* motor);

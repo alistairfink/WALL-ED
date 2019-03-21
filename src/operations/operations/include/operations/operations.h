@@ -19,11 +19,17 @@ namespace operations {
 		cabin = 4,
 	};
 
+	const int DIR_NORTH = 0;
+	const int DIR_EAST = 1;
+	const int DIR_SOUTH = 2;
+	const int DIR_WEST = 3;
+
 	std::stack<int> missions;
 	achilles_slam::coord* start;
 	ros::ServiceClient map_client; 
 	ros::ServiceClient update_map_client;
 	motor_abs::motor_driver* motor;
+	int direction;
 
 	void initialize(achilles_slam::course_map map);
 	void traverse_to_empty(int curr_mission, achilles_slam::course_map map);

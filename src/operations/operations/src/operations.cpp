@@ -48,23 +48,57 @@ void operations::traverse_to_objective(
 	std::vector<achilles_slam::coord> invalid = operations::get_invalid(map, dest);
 	std::deque<achilles_slam::coord> path = path_plan::path_plan_objective(map, curr_pos, *dest, invalid);
 
+	achilles_slam::coord curr = curr_pos;
+
 	while (path.back().x != path.front().x && path.back().y != path.front().y)
 	{
-		achilles_slam::coord curr = path.front();
-		// orientation?
-		// 1. turn
-		if (1/*turn left*/)
+		achilles_slam::coord next = path.front();
+		
+		int direction_to_go;
+		if (curr.x < next.x)
 		{
-			movement::turn(movement::LEFT, operations::motor);
+			direction_to_go = DIR_NORTH;
 		}
-		else if (1/* turn right */)
+		else if (curr.x > next.x)
 		{
-			movement::turn(movement::RIGHT, operations::motor);
+			direction_to_go = DIR_SOUTH;
+		}
+		else if (curr.y < next.y)
+		{
+			direction_to_go = DIR_EAST;
+		}
+		else if (curr.y > next.y)
+		{
+			direction_to_go = DIR_WEST;
+		}
+
+		while (direction != direction_to_go)
+		{
+			if (direction > direction_to_go || (direction == DIR_NORTH && direction_to_go == DIR_WEST))
+			{
+				movement::turn(movement::LEFT, operations::motor);
+				direction--;
+			}
+			else if (direction < direction_to_go || (direction == DIR_WEST && direction_to_go == DIR_NORTH))
+			{
+				movement::turn(movement::RIGHT, operations::motor);
+				direction++;
+			}
+
+			if (direction < 0)
+			{
+				direction = DIR_WEST;
+			}
+			else if (direction > 3)
+			{
+				direction = DIR_NORTH;
+			}
 		}
 
 		movement::straight(operations::motor);
-		operations::update_tile(curr, map);
+		operations::update_tile(next, map);
 		path.pop_front();
+		curr = next;
 	}
 
 	operations::objective_tasks();
@@ -143,7 +177,7 @@ achilles_slam::coord operations::get_closest_unvisited(achilles_slam::course_map
 	{
 		int x = i/map.width;
 		int y = i%map.width;
-		if (x != curr.x && y != curr.y /* TODO : && unvisited*/)
+		if (x != curr.x && y != curr.y && !map.map[i].visited)
 		{
 			if (std::abs(curr.x - x) + std::abs(curr.y - y) < closeset)
 			{
@@ -225,8 +259,8 @@ int main(int argc, char **argv)
 	ros::Duration(5).sleep();
 	ros::spinOnce();
 	//ros::Duration(5).sleep();
-	movement::straight(operations::motor);
-	//movement::turn(movement::LEFT, operations::motor);
+	//movement::straight(operations::motor);
+	movement::turn(movement::LEFT, operations::motor);
 	//movement::init_move(&n);
 	//ros::spin();
 

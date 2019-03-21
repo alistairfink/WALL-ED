@@ -9,10 +9,10 @@
 #define  LoAPin    0 //where the pins connect
 #define  LoBPin    1
 #define  RoAPin    2
-#define  RoBPin    3
+#define  RoBPin    26
 #define  RoSPin    24
 
-#define PUB_FREQ 50 // Publish freq in Hz
+#define PUB_FREQ 100 // Publish freq in Hz
 
 
 /**
@@ -81,6 +81,10 @@ int16_t encoder_handler::motor_l(void)
 	Last_LoB_Status = digitalRead(LoBPin);
 
 	volatile int temp_read = digitalRead(LoAPin);
+	volatile int temp_read2 = digitalRead(LoBPin);
+	ROS_INFO("LEFT pin A is %d ", temp_read);
+	ROS_INFO("LEFT pin B is %d", temp_read2);
+	ROS_INFO("-----------------");
 	
 	if(!temp_read){
 		Current_LoB_Status = digitalRead(LoBPin);
@@ -119,7 +123,10 @@ int16_t encoder_handler::motor_r(void)
 	static int16_t globalCounterR = 0 ;
 	Last_RoB_Status = digitalRead(RoBPin);
 	
-	volatile int temp_read = digitalRead(RoBPin);
+	volatile int temp_read = digitalRead(RoAPin);
+	volatile int temp_read2 = digitalRead(RoBPin);
+	ROS_INFO("RIGHT pin A is %d ", temp_read);
+	ROS_INFO("RIGHT pin B is %d\n", temp_read2);
 	
 	if(!temp_read){
 		Current_RoB_Status = digitalRead(RoBPin);

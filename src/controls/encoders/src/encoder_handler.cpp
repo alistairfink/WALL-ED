@@ -36,7 +36,11 @@ encoder_handler::encoder_handler()
 	ros::Publisher encoder_left_publisher = n.advertise<std_msgs::Int16>("lwheel", 100);
 	ros::Publisher encoder_right_publisher = n.advertise<std_msgs::Int16>("rwheel", 100);
 
-	ros::Rate loop_rate(PUB_FREQ); 
+	// Get the freq param
+	int pub_frequency;
+	n.param<int>("/encoder_handler/pub_frequency", pub_frequency, 200);
+
+	ros::Rate loop_rate(pub_frequency); 
 
 	while (ros::ok())
 	{

@@ -31,9 +31,6 @@ int main(int argc, char **argv)
 		{
 			ROS_INFO("response data: %ld", (long int)srv.response.hall);	
 		}
-	
-		else
-			ROS_INFO("response data: %ld", (float)srv.response.sonar);
     }
     
     else

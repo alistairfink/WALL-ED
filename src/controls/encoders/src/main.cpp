@@ -10,6 +10,8 @@
 */
 int main(int argc, char **argv)
 {
+	setenv("WIRINGPI_GPIOMEM", "1", 1);
+
 	ros::init(argc, argv, "encoder_handler");
 	
 	encoder_handler encoder_publisher;

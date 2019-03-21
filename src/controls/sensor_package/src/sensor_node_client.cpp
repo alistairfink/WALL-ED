@@ -34,19 +34,19 @@ int main(int argc, char **argv)
         
         else if (srv.request.input == 2)
         {
-		ROS_INFO("response data: %ld", (long int)srv.response.fanOn)
+		ROS_INFO("response data: %ld", (long int)srv.response.fanOn);
         }
 	    
 	else if (srv.request.input == 3)
 	{
-		ROS_INFO("response data: %ld", (long int)srv.response.fanOff)
+		ROS_INFO("response data: %ld", (long int)srv.response.fanOff);
     	}
     
-    else
-    {
-        ROS_ERROR("Failed to call service add_two_ints");
-        return 1;
-    }
+    	else
+    	{
+        	ROS_ERROR("Failed to call service add_two_ints");
+        	return 1;
+    	}
     
     return 0;
 }

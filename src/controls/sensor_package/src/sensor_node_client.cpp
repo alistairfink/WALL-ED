@@ -27,16 +27,20 @@ int main(int argc, char **argv)
     srv.request.input = atoll(argv[1]);
     if (client.call(srv))
     {
-		if(srv.request.input == 1)
-		{
-			ROS_INFO("response data: %ld", (long int)srv.response.hall);	
-		}
+	if(srv.request.input == 1)
+	{
+		ROS_INFO("response data: %ld", (long int)srv.response.hall);	
+	}
         
-        else if (srv.request.input ==2)
+        else if (srv.request.input == 2)
         {
-            ROS_INFO("response data: %ld", (long int)srv.response.fan)
+		ROS_INFO("response data: %ld", (long int)srv.response.fanOn)
         }
-    }
+	    
+	else if (srv.request.input == 3)
+	{
+		ROS_INFO("response data: %ld", (long int)srv.response.fanOff)
+    	}
     
     else
     {

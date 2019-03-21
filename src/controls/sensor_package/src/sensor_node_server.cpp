@@ -13,35 +13,26 @@
 #include "hall_effect.hpp"
 #include "encoders.hpp"
 #include "ros/ros.h"
+#include "fan.hpp"
 
 //service node
 bool get_sensor_data(sensor_package::AddTwoInts::Request  &req, sensor_package::AddTwoInts::Response &res)
 {
-
-   /* if (req.a == 1)
-	{
-		int *a = poll_imu(data);
-
-		for(int i =0; i<5; i++)
-			{
-				res.sum = a[i];
-			}
-		//res.arry = a;
-		//res.sum = a;
-	}*/
-    
     if (req.input == 1)
-	{
+    {
 		res.hall = hall_output();
 	}
-        
-    else if (req.input == 2)
-	{
-        res.sonar = get_sonar_data();
-	}
-        
+    else if(req.input == 2)
+    {
+        res.fanOn = turnOnFan();
+    }
+    else if (req.input == 3)
+    {
+        res.fanOff = turnOffFan();
+    }
+    
     ROS_INFO("request: sensor=%ld", (long int)req.input);
-    ROS_INFO("sending back response: [%ld]", (long int)res.hall, (float)res.sonar);
+    ROS_INFO("sending back response: [%ld]", (long int)res.hall, (long int)res.fanOn, (long int)res.fanOff );
     return true;
     
 }

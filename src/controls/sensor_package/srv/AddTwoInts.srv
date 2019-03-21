@@ -1,4 +1,5 @@
 int64 input
 ---
 int64 hall
-float64 sonar
+int64 fanOn
+int64 fanOff

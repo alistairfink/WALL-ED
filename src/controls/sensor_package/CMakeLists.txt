@@ -225,7 +225,9 @@ add_executable(sensor_node_server
     src/imu.cpp
     src/imu.hpp
     src/sonar.cpp
-    src/sonar.hpp)
+    src/sonar.hpp
+    src/fan.cpp
+    src/fan.hpp)
 target_link_libraries(sensor_node_server ${catkin_LIBRARIES} wiringPi)
 add_dependencies(sensor_node_server sensor_package_gencpp)
 

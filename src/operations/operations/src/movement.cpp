@@ -3,11 +3,16 @@
 #include "motor_driver/motor_driver.h"
 #include "sensor_msgs/LaserScan.h"
 #include <math.h>
+#include "geometry_msgs/PoseStamped.h"
+#include "geometry_msgs/Pose.h"
+#include "geometry_msgs/Quaternion.h"
+#include "tf/transform_datatypes.h"
 
 static float north = 5;
 static float east = 5;
 static float south = 5;
 static float west = 5;
+static double yaw = 0;
 
 void movement::turn(int direction, motor_abs::motor_driver* motor)
 {
@@ -41,17 +46,21 @@ void movement::straight(motor_abs::motor_driver* motor)
 	float south_s = south;
 	float dist = 1;
 	float tol = 0.01;
-	ROS_INFO("STARTING - NORTH: %f SOUTH: %f", north_s, south_s);
 	motor->set_speed(100-movement::OFFSET,-100);
 	ros::Duration(1).sleep();
 	while (std::abs((north + dist) - north_s) > tol &&
 		std::abs((south - dist) - south_s) > tol)
-{
-ros::spinOnce();
-ROS_INFO("NORTH: %f SOUTH: %f", north, south);
-}
+	{
+		ros::spinOnce();
+	}
 	motor->set_speed(0,0);	
-	// check pos?
+}
+
+void movement::orientation(const geometry_msgs::PoseStamped::ConstPtr& msg)
+{
+	tf::Pose pose;
+	tf::poseMsgToTF(msg->pose, pose);
+	yaw = tf::getYaw(pose.getRotation());
 }
 
 void movement::get_lidar(const sensor_msgs::LaserScan::ConstPtr& msg)

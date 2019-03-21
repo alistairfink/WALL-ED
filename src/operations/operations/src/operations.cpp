@@ -216,9 +216,10 @@ int main(int argc, char **argv)
 	ros::init(argc, argv, "operations");
   	ros::NodeHandle n;
 	operations::map_client = n.serviceClient<achilles_slam::get_course_map>("get_course_map");
-	operations::update_map_client = n.serviceClient<achilles_slam::update_course_map>("update_course_map");	
+	operations::update_map_client = n.serviceClient<achilles_slam::update_course_map>("update_course_map");
 
-	ros::Subscriber sub = n.subscribe("/scan", 1, movement::get_lidar);
+	ros::Subscriber laser = n.subscribe("/scan", 1, movement::get_lidar);
+	ros::Subscriber orientation = n.subscribe("/slam_out_pose", 1, movement::orientation);
 	operations::motor = new motor_abs::motor_driver("/dev/ttyACM0", 115200);
 
 	ros::Duration(5).sleep();

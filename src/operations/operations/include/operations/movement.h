@@ -4,6 +4,7 @@
 #include "ros/ros.h"
 #include "motor_driver/motor_driver.h"
 #include "sensor_msgs/LaserScan.h"
+#include "geometry_msgs/PoseStamped.h"
 
 namespace movement {
 	const int LEFT = 0;
@@ -12,6 +13,7 @@ namespace movement {
 
 	void turn(int direction, motor_abs::motor_driver* motor);
 	void straight(motor_abs::motor_driver* motor);
+	void orientation(const geometry_msgs::PoseStamped::ConstPtr& msg);
 	void get_lidar(const sensor_msgs::LaserScan::ConstPtr& msg);
 }
 

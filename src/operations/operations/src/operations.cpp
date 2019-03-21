@@ -13,11 +13,12 @@
 void operations::initialize(achilles_slam::course_map map)
 {
 	int offset = 0;
-	int start_pos = map.width*map.width - 1 - offset;
+	int start_pos = 23;//map.width*map.width - 1 - offset;
+	direction = 0;
 	start->x = start_pos/map.width;
 	start->y = start_pos%map.width;
-	operations::missions.push(operations::candle);
 	operations::missions.push(operations::food);
+	operations::missions.push(operations::candle);
 	operations::missions.push(operations::mansion);
 	operations::missions.push(operations::cabin);
 }
@@ -31,12 +32,57 @@ void operations::traverse_to_empty(
 	std::vector<achilles_slam::coord> invalid = operations::get_invalid(map, &dest);
 	std::deque<achilles_slam::coord> path = path_plan::path_plan_objective(map, curr_pos, dest, invalid);
 
+	achilles_slam::coord curr = curr_pos;
+
 	while (!path.empty())
 	{
-		achilles_slam::coord curr = path.front();
-		// Do stuff to move to tile here
-		// Check if objective is mapped at each step.
+		achilles_slam::coord next = path.front();
+		
+		int direction_to_go;
+		if (curr.x < next.x)
+		{
+			direction_to_go = DIR_NORTH;
+		}
+		else if (curr.x > next.x)
+		{
+			direction_to_go = DIR_SOUTH;
+		}
+		else if (curr.y < next.y)
+		{
+			direction_to_go = DIR_EAST;
+		}
+		else if (curr.y > next.y)
+		{
+			direction_to_go = DIR_WEST;
+		}
+
+		while (direction != direction_to_go)
+		{
+			if (direction > direction_to_go || (direction == DIR_NORTH && direction_to_go == DIR_WEST))
+			{
+				movement::turn(movement::LEFT, operations::motor);
+				direction--;
+			}
+			else if (direction < direction_to_go || (direction == DIR_WEST && direction_to_go == DIR_NORTH))
+			{
+				movement::turn(movement::RIGHT, operations::motor);
+				direction++;
+			}
+
+			if (direction < 0)
+			{
+				direction = DIR_WEST;
+			}
+			else if (direction > 3)
+			{
+				direction = DIR_NORTH;
+			}
+		}
+
+		movement::straight(movement::NOMINAL, movement::TILE_DIST, operations::motor);
+		operations::update_tile(next, map);
 		path.pop_front();
+		curr = next;
 	}
 }
 
@@ -95,7 +141,7 @@ void operations::traverse_to_objective(
 			}
 		}
 
-		movement::straight(operations::motor);
+		movement::straight(movement::NOMINAL, movement::TILE_DIST, operations::motor);
 		operations::update_tile(next, map);
 		path.pop_front();
 		curr = next;
@@ -130,15 +176,15 @@ void operations::objective_tasks()
 	int curr = operations::missions.top();
 	switch (curr)
 	{
-		case operations::candle:
-			operations::mission_candle();
-			break;
 		case operations::food:
 			operations::mission_food();
 			break;
+		case operations::candle:
+			//operations::mission_candle();
+			//break;
 		case operations::mansion:
-			operations::mission_people();
-			break;
+			//operations::mission_people();
+			//break;
 		case operations::cabin:
 			operations::mission_people();
 			break;
@@ -153,11 +199,15 @@ void operations::objective_tasks()
 
 void operations::mission_people()
 {
-	// Do thing for people
+	float starting_dist = movement::roll_up(0.05, movement::NOMINAL, operations::motor);
+	// turn fan on.
+	// signal led
+	movement::roll_up(starting_dist, -1*movement::NOMINAL, operations::motor);
 }
 
 void operations::mission_food()
 {
+	// lol
 	// Get sensor data
 	// Check sensor data
 	// complete?
@@ -165,6 +215,7 @@ void operations::mission_food()
 
 void operations::mission_candle()
 {
+	// lmao
 	// Do thing for candle
 }
 
@@ -256,15 +307,15 @@ int main(int argc, char **argv)
 	ros::Subscriber orientation = n.subscribe("/slam_out_pose", 1, movement::orientation);
 	operations::motor = new motor_abs::motor_driver("/dev/ttyACM0", 115200);
 
-	ros::Duration(5).sleep();
+	/*ros::Duration(5).sleep();
 	ros::spinOnce();
 	//ros::Duration(5).sleep();
 	//movement::straight(operations::motor);
 	movement::turn(movement::LEFT, operations::motor);
 	//movement::init_move(&n);
 	//ros::spin();
-
-	/*achilles_slam::course_map orig_map = operations::get_map(); 
+*/
+	achilles_slam::course_map orig_map = operations::get_map(); 
 	operations::initialize(orig_map);
 
 	while(!operations::missions.empty())
@@ -292,6 +343,6 @@ int main(int argc, char **argv)
 	}
 	
 	achilles_slam::course_map map = operations::get_map();
-	operations::traverse_to_objective(map, operations::start);*/
+	operations::traverse_to_objective(map, operations::start);
 	return 0;
 }

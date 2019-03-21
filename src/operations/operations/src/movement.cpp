@@ -17,17 +17,18 @@ const double PI  = 3.141592653589793238463;
 
 void movement::turn(int direction, motor_abs::motor_driver* motor)
 {
+	ros::spinOnce();
 	double deg_yaw_s = deg_yaw;
 	// degrees
 	float tol = 5;
 	double desired_angle = deg_yaw_s;
 
-	if (direction == LEFT)
+	if (direction == RIGHT)
 	{
 		desired_angle = deg_yaw_s - 90;
 		motor->set_speed(50 - movement::OFFSET, 50);
 	} 
-	else if (direction == RIGHT)
+	else if (direction == LEFT)
 	{
 		desired_angle = deg_yaw_s + 90;
 		motor->set_speed(-50 - movement::OFFSET, -50);
@@ -41,14 +42,14 @@ void movement::turn(int direction, motor_abs::motor_driver* motor)
 	motor->set_speed(0,0);
 }
 
-void movement::straight(motor_abs::motor_driver* motor)
+void movement::straight(int speed, float dist, motor_abs::motor_driver* motor)
 {
+	ros::spinOnce();
 	float north_s = north;
 	float south_s = south;
 	// meters
-	float dist = 1;
 	float tol = 0.01;
-	motor->set_speed(100-movement::OFFSET, -100);
+	motor->set_speed(speed-movement::OFFSET, -speed);
 	ros::Duration(1).sleep();
 	while (std::abs((north + dist) - north_s) > tol &&
 		std::abs((south - dist) - south_s) > tol)
@@ -71,4 +72,19 @@ void movement::get_lidar(const sensor_msgs::LaserScan::ConstPtr& msg)
 	east = msg->ranges[90];
 	south = msg->ranges[180];
 	west = msg->ranges[270];
+}
+
+float movement::roll_up(float dist_from_target, int speed, motor_abs::motor_driver* motor)
+{
+	ros::spinOnce();
+	float starting = north;
+	float tol = 0.01;
+	motor->set_speed(speed-movement::OFFSET, -speed);
+	while (std::abs(north - dist_from_target) > tol)
+	{
+		ros::spinOnce();
+	}
+
+	motor->set_speed(0,0);
+	return starting;
 }

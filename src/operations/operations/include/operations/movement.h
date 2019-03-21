@@ -10,11 +10,14 @@ namespace movement {
 	const int LEFT = 0;
 	const int RIGHT = 1;
 	const int OFFSET = 6;
+	const float TILE_DIST = 0.3;
+	const int NOMINAL = 150;
 
 	void turn(int direction, motor_abs::motor_driver* motor);
-	void straight(motor_abs::motor_driver* motor);
+	void straight(int speed, float dist, motor_abs::motor_driver* motor);
 	void orientation(const geometry_msgs::PoseStamped::ConstPtr& msg);
 	void get_lidar(const sensor_msgs::LaserScan::ConstPtr& msg);
+	float roll_up(float dist_from_target, int speed, motor_abs::motor_driver* motor);
 }
 
 #endif

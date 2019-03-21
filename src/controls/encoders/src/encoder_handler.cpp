@@ -1,18 +1,16 @@
 #include "ros/ros.h"
-#include <string.h>
-#include <errno.h>
-#include <stdlib.h>
 #include "wiringPi.h"
 #include "encoder_handler.h"
 #include "std_msgs/Int16.h"
 
-#define  LoAPin    0 //where the pins connect
-#define  LoBPin    1
-#define  RoAPin    2
-#define  RoBPin    26
-#define  RoSPin    24
+// Pi the pins connect
+#define  LEFT_A_PIN		0
+#define  LEFT_B_PIN		1
+#define  RIGHT_A_PIN	2
+#define  RIGHT_B_PIN	26
+#define  RoSPin			24
 
-#define PUB_FREQ 100 // Publish freq in Hz
+#define PUB_FREQ 200 	// Publish freq in Hz
 
 
 /**
@@ -26,10 +24,10 @@ encoder_handler::encoder_handler()
 	}
 
 	// Config pins
-	pinMode(RoAPin, INPUT);
-	pinMode(RoBPin, INPUT);
-	pinMode(LoAPin, INPUT);
-	pinMode(LoBPin, INPUT);
+	pinMode(RIGHT_A_PIN, INPUT);
+	pinMode(RIGHT_B_PIN, INPUT);
+	pinMode(LEFT_A_PIN, INPUT);
+	pinMode(LEFT_B_PIN, INPUT);
 
 	// Create node handle
 	ros::NodeHandle n;
@@ -65,47 +63,83 @@ encoder_handler::~encoder_handler()
 }
 
 
+// FOR DEBUG
+// =====================================
+// unsigned char get_a()
+// {
+// 	static int count = 0;
+
+// 	count = count % 4;
+
+// 	switch (count++){
+// 		case 0: return 0;
+// 		break;
+// 		case 1: return 1;
+// 		break;
+// 		case 2: return 1;
+// 		break;
+// 		case 3: return 0;
+// 		break;
+// 	}
+// }
+// unsigned char get_b()
+// {
+// 	static int count = 0;
+
+// 	count = count % 4;
+
+// 	switch (count++){
+// 		case 0: return 0;
+// 		break;
+// 		case 1: return 0;
+// 		break;
+// 		case 2: return 1;
+// 		break;
+// 		case 3: return 1;
+// 		break;
+// 	}
+// }
+// =====================================
+
+
+
 /**
 * motor_l
 * Gets encoder reading for left motor
 *
 * @return signed 16bit int for encoder reading
 */
-int16_t encoder_handler::motor_l(void)
-{
-	static unsigned char flagL;
-	static unsigned char Last_LoB_Status;
-	static unsigned char Current_LoB_Status;
+int16_t encoder_handler::motor_l()
+{	
+	static int16_t encoder_count = 0 ;
 
-	static int16_t globalCounterL = 0 ;
-	Last_LoB_Status = digitalRead(LoBPin);
+	// FOR DEBUG
+	// volatile unsigned char curr_a_state = get_a();
+	// volatile unsigned char curr_b_state = get_b();
 
-	volatile int temp_read = digitalRead(LoAPin);
-	volatile int temp_read2 = digitalRead(LoBPin);
-	ROS_INFO("LEFT pin A is %d ", temp_read);
-	ROS_INFO("LEFT pin B is %d", temp_read2);
-	ROS_INFO("-----------------");
-	
-	if(!temp_read){
-		Current_LoB_Status = digitalRead(LoBPin);
-		flagL = 1;
-		return globalCounterL;
+	volatile unsigned char curr_b_state = digitalRead(RIGHT_B_PIN);
+
+	static unsigned char last_b_state = curr_b_state;
+
+	if (curr_b_state == last_b_state)
+	{
+		return encoder_count;
 	}
-	
-	if(flagL == 1){
-		flagL = 0;
-		if((Last_LoB_Status == 0)&&(Current_LoB_Status == 1)){
-			globalCounterL ++;
-			ROS_DEBUG("globalCounter : %d\n",globalCounterL);
+	else
+	{
+		volatile unsigned char curr_a_state = digitalRead(RIGHT_A_PIN);
+		if (curr_b_state == curr_a_state)
+		{
+			encoder_count++;
 		}
-		if((Last_LoB_Status == 1)&&(Current_LoB_Status == 0)){
-			globalCounterL --;
-			ROS_DEBUG("globalCounter : %d\n",globalCounterL);
+		else
+		{
+			encoder_count--;
 		}
-		
-	}
 
-	return globalCounterL;
+		last_b_state = curr_b_state;
+		return encoder_count;
+	}
 }
 
 /**
@@ -114,40 +148,37 @@ int16_t encoder_handler::motor_l(void)
 *
 * @return signed 16bit int for encoder reading
 */
-int16_t encoder_handler::motor_r(void)
+int16_t encoder_handler::motor_r()
 {
-	static unsigned char flagR;
-	static unsigned char Last_RoB_Status;
-	static unsigned char Current_RoB_Status;
+	static int16_t encoder_count = 0 ;
 
-	static int16_t globalCounterR = 0 ;
-	Last_RoB_Status = digitalRead(RoBPin);
-	
-	volatile int temp_read = digitalRead(RoAPin);
-	volatile int temp_read2 = digitalRead(RoBPin);
-	ROS_INFO("RIGHT pin A is %d ", temp_read);
-	ROS_INFO("RIGHT pin B is %d\n", temp_read2);
-	
-	if(!temp_read){
-		Current_RoB_Status = digitalRead(RoBPin);
-		flagR = 1;
-		return globalCounterR;
+	// FOR DEBUG
+	// volatile unsigned char curr_a_state = get_a();
+	// volatile unsigned char curr_b_state = get_b();
+
+	volatile unsigned char curr_b_state = digitalRead(LEFT_B_PIN);
+
+	static unsigned char last_b_state = curr_b_state;
+
+	if (curr_b_state == last_b_state)
+	{
+		return encoder_count;
 	}
+	else
+	{
+		volatile unsigned char curr_a_state = digitalRead(LEFT_A_PIN);
+		if (curr_b_state == curr_a_state)
+		{
+			encoder_count++;
+		}
+		else
+		{
+			encoder_count--;
+		}
 
-	if(flagR == 1){
-		flagR = 0;
-		if((Last_RoB_Status == 0)&&(Current_RoB_Status == 1)){
-			globalCounterR ++;
-			ROS_DEBUG("globalCounter : %d\n",globalCounterR);
-		}
-		if((Last_RoB_Status == 1)&&(Current_RoB_Status == 0)){
-			globalCounterR --;
-			ROS_DEBUG("globalCounter : %d\n",globalCounterR);
-		}
-		
+		last_b_state = curr_b_state;
+		return encoder_count;
 	}
-
-	return globalCounterR;
 }
 
 
@@ -155,12 +186,12 @@ int16_t encoder_handler::motor_r(void)
 * rotary_clear
 * Clears current encoder reading?
 */
-void encoder_handler::rotary_clear(void)
+void encoder_handler::rotary_clear()
 {
 	if(digitalRead(RoSPin) == 0)
 	{
 		int globalCounter = 0;
-		ROS_INFO("globalCounter : %d\n",globalCounter);
+		ROS_DEBUG("globalCounter : %d\n",globalCounter);
 		delay(1000);
 	}
 }

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<launch>
+
+	<env name="ROSCONSOLE_CONFIG_FILE"
+       value="$(find slam_launch)/cfg/custom_rosconsole.conf"/>
+ 
+	<node pkg="achilles_slam" type="achilles_mapping" name="achilles_mapping" output="screen">
+
+		<!-- Map width in meters -->
+ 		<param name="map_width_m" value="1.829" type="double"/>
+
+ 		<!-- Map width in tiles -->
+ 		<param name="map_width_tiles" value="6" type="int"/>
+
+ 		<!-- Divisor for expected # of cells to accept as wall -->
+ 		<param name="found_wall_factor" value="2" type="int"/>
+
+ 		<!-- Threshold area in m^2 to mark a tile as "occupied" e.g. 0.001 = 10cm^2 -->
+ 		<param name="min_target_area" value="0.001" type="double"/>
+
+ 		<!-- Threshold area in m^2 to mark a tile as "unknown" e.g. 0.001 = 10cm^2 -->
+ 		<param name="min_unknown_area" value="0.002" type="double"/>
+
+ 		<!-- Ignore occupied cells adjacent to walls? -->
+ 		<param name="ignore_edge_cells" value="true" type="bool"/>
+		
+
+	</node> 
+
+</launch>

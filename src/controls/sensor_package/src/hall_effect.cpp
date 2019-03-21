@@ -41,8 +41,11 @@ int hall_output()
     int hallpin4 = 24;
     int ledpin = 4;
     
-   if(digitalRead(hallpin) == 0 || digitalRead(hallpin2) == 0 || digitalRead(hallpin3) == 0 || digitalRead(hallpin4) == 0 ) //0 input at hall_pin means magnet detected 
+   if(digitalRead(hallpin) == 0 || digitalRead(hallpin2) == 0 || digitalRead(hallpin3) == 0 || digitalRead(hallpin4) == 0 )
+   {
+       digitalWrite(ledpin, 1);
         return 1;
+   }
     else
         return 0;
 }

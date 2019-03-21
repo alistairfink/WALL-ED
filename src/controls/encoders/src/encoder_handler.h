@@ -12,14 +12,6 @@ private:
 	int16_t motor_l(void);
 	int16_t motor_r(void);
 	void rotary_clear(void);
-
-	// unsigned char flagL;
-	// unsigned char Last_LoB_Status;
-	// unsigned char Current_LoB_Status;
-
-	// unsigned char flagR;
-	// unsigned char Last_RoB_Status;
-	// unsigned char Current_RoB_Status;
 };
 
 #endif

@@ -7,5 +7,10 @@
 	<!-- Launch for encoder_handler node -->
 	<include file="$(find controls_launch)/launch/encoder_handler.launch"/>
 
+	<!-- Launch for rplidar node -->
+	<include file="$(find rplidar_ros)/launch/rplidar.launch"/>
+
+
+
 
 </launch>

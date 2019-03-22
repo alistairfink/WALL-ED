@@ -497,7 +497,7 @@ int main(int argc, char **argv)
 	ros::Duration(1).sleep();
 	
 
-/*	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		achilles_slam::course_map curr_map = operations::get_map();
 		int next_targ = operations::get_next_target(curr_map);
@@ -506,7 +506,7 @@ int main(int argc, char **argv)
 		targ->y = next_targ%curr_map.width;
 		operations::traverse_to_objective(curr_map, targ);
 	}
-
+/*
 	achilles_slam::course_map end_map = operations::get_map();
 	achilles_slam::coord* starting = new achilles_slam::coord;
 	starting->x = 23/end_map.width;

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<launch>
+    <param name="/start_position" value="3"/> 
+	<node name="operations" pkg="operations" type="operations">
+	</node>
+	<include file="$(find slam_launch)/launch/slam.launch"/>
+    <include file="$(find controls_launch)/launch/controls.launch"/>
+</launch>

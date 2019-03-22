@@ -411,12 +411,12 @@ int main(int argc, char **argv)
 	operations::motor = new motor_abs::motor_driver("/dev/ttyACM0", 115200);
 
 	ros::Duration(2).sleep();
-//	ROS_INFO("1");
-	ros::spin();
-//	ROS_INFO("2");
-	//ros::Duration(5).sleep();
-	//movement::straight(operations::motor);
-	movement::turn(movement::LEFT, operations::DIR_WEST, operations::motor);
+	ros::spinOnce();
+	// Straight Test
+	//movement::straight(movement::NOMINAL, movement::TILE_DIST, operations::motor);
+
+	// Turn Test
+	/*movement::turn(movement::LEFT, operations::DIR_WEST, operations::motor);
 	ros::Duration(1).sleep();
 	movement::turn(movement::LEFT, operations::DIR_SOUTH, operations::motor);
 	ros::Duration(1).sleep();
@@ -428,9 +428,10 @@ int main(int argc, char **argv)
 	ros::Duration(1).sleep();
 	movement::turn(movement::RIGHT, operations::DIR_NORTH, operations::motor);
 	ros::Duration(1).sleep();
-	movement::turn(movement::RIGHT, operations::DIR_EAST, operations::motor);
-	//movement::init_move(&n);
-	//ros::spin();
+	movement::turn(movement::RIGHT, operations::DIR_EAST, operations::motor);*/
+
+	// Get Close Test
+	movement::roll_up(0.05, movement::NOMINAL, operations::motor);
 /*
 	achilles_slam::course_map orig_map = operations::get_map();
 	// TODO : Change this to launch param

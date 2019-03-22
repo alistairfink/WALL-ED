@@ -24,7 +24,7 @@ void movement::turn(int direction, int direction_to_go, motor_abs::motor_driver*
 	ros::spinOnce();
 	double deg_yaw_s = deg_yaw;
 	// degrees
-	double tol = 2;
+	double tol = 30;
 	double desired_angle = 0;
 
 	if (direction_to_go == movement::DIR_NORTH)
@@ -53,14 +53,11 @@ void movement::turn(int direction, int direction_to_go, motor_abs::motor_driver*
 		motor->set_speed(-50 - movement::OFFSET, -50);
 	}
 
-	ROS_INFO("ORIG: %f DESIRED: %f", deg_yaw_s, desired_angle);
 	while (std::abs(desired_angle - deg_yaw) > tol)
 	{
 		ros::spinOnce();
-		ROS_INFO("ORIG: %f DESIRED: %f CURR: %f", deg_yaw_s, desired_angle, deg_yaw);
 	}
 
-	ROS_INFO("DONE");
 	motor->set_speed(0,0);
 }
 

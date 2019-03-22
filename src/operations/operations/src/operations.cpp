@@ -419,6 +419,16 @@ int main(int argc, char **argv)
 	ros::Subscriber orientation = n.subscribe("/slam_out_pose", 1, movement::orientation);
 	operations::motor = new motor_abs::motor_driver("/dev/ttyACM0", 115200);
 
+	ros::Duration(5).sleep();
+	movement::straight(movement::NOMINAL, movement::TILE_DIST*3, operations::motor);
+	operations::use_controls(2);
+	motor->set_speed(50,50);
+	ros::Duration(30).sleep();
+	motor->set_speed(0,0);
+	operations::use_controls(3);
+	operations::use_controls(4);
+	ros::Duration(2).sleep();
+	operations::use_controls(5);
 	/*operations::direction = operations::DIR_WEST;
 	achilles_slam::coord current;
 	current.x = 3;
@@ -445,7 +455,7 @@ int main(int argc, char **argv)
 	movement::turn(movement::RIGHT, operations::DIR_NORTH, operations::motor);
 	ros::Duration(1).sleep();
 	movement::turn(movement::RIGHT, operations::DIR_EAST, operations::motor);*/
-
+/*
 	operations::direction = operations::DIR_WEST;
 	achilles_slam::course_map map = operations::get_map();
 	int tempx = map.robot_pos.x;
@@ -457,7 +467,7 @@ int main(int argc, char **argv)
 	dest->y = goal%map.width;
 	ROS_INFO("Done Setup");
 	operations::traverse_to_objective(map, dest);
-
+*/
 /*
 	achilles_slam::course_map orig_map = operations::get_map();
 	operations::initialize(orig_map, operations::starting_tile);

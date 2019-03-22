@@ -132,59 +132,7 @@ void operations::traverse_to_objective(
 	while (path.back().x != path.front().x && path.back().y != path.front().y)
 	{
 		achilles_slam::coord next = path.front();
-		
-		int direction_to_go;
-		if (curr.x < next.x)
-		{
-			direction_to_go = DIR_NORTH;
-		}
-		else if (curr.x > next.x)
-		{
-			direction_to_go = DIR_SOUTH;
-		}
-		else if (curr.y < next.y)
-		{
-			direction_to_go = DIR_EAST;
-		}
-		else if (curr.y > next.y)
-		{
-			direction_to_go = DIR_WEST;
-		}
-
-		while (direction != direction_to_go)
-		{
-			if (direction > direction_to_go || (direction == DIR_NORTH && direction_to_go == DIR_WEST))
-			{
-				int next_dir = direction--;
-				if (next_dir < 0)
-				{
-					next_dir = DIR_WEST;
-				}
-
-				movement::turn(movement::LEFT, next_dir, operations::motor);
-				direction--;
-			}
-			else if (direction < direction_to_go || (direction == DIR_WEST && direction_to_go == DIR_NORTH))
-			{
-				int next_dir = direction++;
-				if (next_dir > 3)
-				{
-					next_dir = DIR_NORTH;
-				}
-
-				movement::turn(movement::RIGHT, next_dir, operations::motor);
-				direction++;
-			}
-
-			if (direction < 0)
-			{
-				direction = DIR_WEST;
-			}
-			else if (direction > 3)
-			{
-				direction = DIR_NORTH;
-			}
-		}
+		operations::turn_properly(curr, next)
 
 		movement::straight(movement::NOMINAL, movement::TILE_DIST, operations::motor);
 		operations::update_tile(next, map);
@@ -416,15 +364,13 @@ void operations::turn_properly(achilles_slam::coord curr, achilles_slam::coord n
 	{
 		direction_to_go = DIR_WEST;
 	}
-	ROS_INFO("DIR: %i TOGO: %i", direction, direction_to_go);
+
 	if (operations::direction > direction_to_go || (operations::direction == DIR_NORTH && direction_to_go == DIR_WEST))
 	{
-		ROS_INFO("LeFT");
 		movement::turn(movement::RIGHT, direction_to_go, operations::motor);
 	}
 	else if (operations::direction < direction_to_go || (operations::direction == DIR_WEST && direction_to_go == DIR_NORTH))
 	{
-ROS_INFO("RIGHT");
 		movement::turn(movement::LEFT, direction_to_go, operations::motor);
 	}
 
@@ -463,14 +409,14 @@ int main(int argc, char **argv)
 	ros::Subscriber orientation = n.subscribe("/slam_out_pose", 1, movement::orientation);
 	operations::motor = new motor_abs::motor_driver("/dev/ttyACM0", 115200);
 
-	operations::direction = operations::DIR_WEST;
+	/*operations::direction = operations::DIR_WEST;
 	achilles_slam::coord current;
 	current.x = 3;
 	current.y = 3;
 	achilles_slam::coord next;
 	next.x = 4;
 	next.y = 3;
-	operations::turn_properly(current, next);
+	operations::turn_properly(current, next);*/
 	//ros::spinOnce();
 	// Straight Test
 	//movement::straight(movement::NOMINAL, movement::TILE_DIST, operations::motor);
@@ -490,20 +436,8 @@ int main(int argc, char **argv)
 	ros::Duration(1).sleep();
 	movement::turn(movement::RIGHT, operations::DIR_EAST, operations::motor);*/
 
-	/*operations::direction = operations::DIR_WEST;
-	achilles_slam::course_map map;
-	map.width = 6;
-	achilles_slam::coord test_start;
-	int t = 23;
-	test_start.x = t/map.width;
-	test_start.y = t%map.width;
-	map.robot_pos = test_start;
-
-	for (int i = 0; i < 36; i++)
-	{
-		achilles_slam::tile temp;
-		map.map.push_back(temp);
-	}
+	operations::direction = operations::DIR_WEST;
+	achilles_slam::course_map map = operations::get_map();
 
 	int goal = 7;
 	achilles_slam::coord* dest = new achilles_slam::coord;
@@ -511,7 +445,6 @@ int main(int argc, char **argv)
 	dest->y = goal%map.width;
 
 	operations::traverse_to_objective(map, dest);
-*/
 
 /*
 	achilles_slam::course_map orig_map = operations::get_map();

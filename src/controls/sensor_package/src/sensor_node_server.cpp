@@ -13,35 +13,29 @@
 #include "hall_effect.hpp"
 #include "encoders.hpp"
 #include "ros/ros.h"
+#include "fan.hpp"
+#include "LED.hpp"
 
 //service node
 bool get_sensor_data(sensor_package::AddTwoInts::Request  &req, sensor_package::AddTwoInts::Response &res)
 {
-
-   /* if (req.a == 1)
-	{
-		int *a = poll_imu(data);
-
-		for(int i =0; i<5; i++)
-			{
-				res.sum = a[i];
-			}
-		//res.arry = a;
-		//res.sum = a;
-	}*/
-    
     if (req.input == 1)
-	{
 		res.hall = hall_output();
-	}
-        
-    else if (req.input == 2)
-	{
-        res.sonar = get_sonar_data();
-	}
-        
+    
+    else if(req.input == 2)
+        res.fanOn = turnOnFan();
+    
+    else if (req.input == 3)
+        res.fanOff = turnOffFan();
+    
+    else if (req.input == 4)
+        res.LEDOn = turnOnLED();
+    
+    else if (req.input == 5)
+        res.LEDOff = turnOffLED();
+    
     ROS_INFO("request: sensor=%ld", (long int)req.input);
-    ROS_INFO("sending back response: [%ld]", (long int)res.hall, (float)res.sonar);
+    ROS_INFO("sending back response: [%ld]", (long int)res.hall, (long int)res.fanOn, (long int)res.fanOff, (long int)res.LEDOn, (long int)res.LEDOff);
     return true;
     
 }
@@ -50,8 +44,8 @@ int main(int argc, char **argv)
 {
    // MPU6050_Init();
     
-    //if(!(gpio_setup()))
-    //    return 1;
+    if(!(GPIO_setup()))
+        return 1;
     
     ros::init(argc, argv, "sensor_node_server");
     ros::NodeHandle n;

@@ -411,7 +411,7 @@ int main(int argc, char **argv)
 	operations::motor = new motor_abs::motor_driver("/dev/ttyACM0", 115200);
 
 	ros::Duration(2).sleep();
-	ros::spinOnce();
+	//ros::spinOnce();
 	// Straight Test
 	//movement::straight(movement::NOMINAL, movement::TILE_DIST, operations::motor);
 
@@ -430,9 +430,29 @@ int main(int argc, char **argv)
 	ros::Duration(1).sleep();
 	movement::turn(movement::RIGHT, operations::DIR_EAST, operations::motor);*/
 
-	// Get Close Test
-	float starting_dist = movement::roll_up(0.05, movement::NOMINAL, operations::motor);
-	movement::roll_up(starting_dist, -1*movement::NOMINAL, operations::motor);
+	operations::direction = operations::DIR_WEST;
+	achilles_slam::course_map map;
+	map.width = 6;
+	achilles_slam::coord test_start;
+	int t = 23;
+	test_start.x = t/map.width;
+	test_start.y = t%map.width;
+	map.robot_pos = test_start;
+
+	for (int i = 0; i < 36; i++)
+	{
+		achilles_slam::tile temp;
+		map.map.push_back(temp);
+	}
+
+	int goal = 7;
+	achilles_slam::coord* dest = new achilles_slam::coord;
+	dest->x = goal/map.width;
+	dest->y = goal%map.width;
+
+	operations::traverse_to_objective(map, dest);
+
+
 /*
 	achilles_slam::course_map orig_map = operations::get_map();
 	// TODO : Change this to launch param

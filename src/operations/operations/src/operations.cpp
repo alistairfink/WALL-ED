@@ -300,7 +300,7 @@ void operations::objective_tasks()
 	// Pop stack. Assumes mission was successful. Idk if we want more oversight here
 }
 
-int operations::mission_people(action)
+int operations::mission_people(int action)
 {
 	float starting_dist = movement::roll_up(0.05, movement::NOMINAL, operations::motor);
 	// turn fan on.

@@ -38,7 +38,7 @@ namespace operations {
 	void traverse_to_objective(achilles_slam::course_map map, achilles_slam::coord* dest);
 	void grid_traverse(achilles_slam::course_map map);
 	void objective_tasks();
-	int mission_people();
+	int mission_people(int input);
 	void mission_food();
 	void mission_candle();
 	achilles_slam::coord get_closest_unvisited(achilles_slam::course_map map);

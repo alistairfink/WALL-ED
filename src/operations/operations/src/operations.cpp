@@ -12,6 +12,7 @@
 #include "sensor_package/AddTwoInts.h"
 #include "sensor_msgs/LaserScan.h"
 #include "path_plan_v2.h"
+#include "wiringPi.h"
 
 void operations::initialize(achilles_slam::course_map map, int start)
 {
@@ -526,22 +527,22 @@ int main(int argc, char **argv)
 	operations::motor->set_speed(speed-movement::OFFSET, -speed);
 	ros::Duration(6.5).sleep();
 	operations::motor->set_speed(0,0);
-	operations::motor->set_speed(-100, 100);
+	operations::motor->set_speed(100, 100);
 	ros::Duration(1.2).sleep();
 	operations::motor->set_speed(0,0);
 	operations::motor->set_speed(speed-movement::OFFSET, -speed);
 	ros::Duration(1.62).sleep();
 	operations::motor->set_speed(0,0);
-	operations::motor->set_speed(-100, 100);
+	operations::motor->set_speed(100, 100);
 	ros::Duration(2.4).sleep();
 	operations::motor->set_speed(speed-movement::OFFSET, -speed);
 	ros::Duration(8.1).sleep();
 	operations::motor->set_speed(0,0);
-	operations::motor->set_speed(-100, 100);
+	operations::motor->set_speed(-100, -100);
 	ros::Duration(1.2).sleep();
 	operations::motor->set_speed(0,0);
 
-
+	//pinMode(5, OUTPUT)
 	/*
 	int first = 19;
 	int second = 31;

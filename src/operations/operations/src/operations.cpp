@@ -89,8 +89,8 @@ void operations::traverse_to_objective(
 	while (path.front() != 6*dest->y + dest->x)
 	{
 		achilles_slam::coord next;
-		next.x = path.back()/map.width;
-		next.y = path.back()&map.width;
+		next.x = path.back()%map.width;
+		next.y = path.back()/map.width;
 		ROS_INFO("CURRENT: X %i Y %i, NEXT: X %i Y %i", curr.x, curr.y, next.x, next.y);
 		operations::turn_properly(curr, next);
 

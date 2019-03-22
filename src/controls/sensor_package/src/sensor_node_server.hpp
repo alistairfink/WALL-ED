@@ -13,4 +13,5 @@
 void get_imu_data();
 int get_hall_effect_data();
 void get_ultrasonic_data();
+bool get_sensor_data(sensor_package::AddTwoInts::Request  &req, sensor_package::AddTwoInts::Response &res);
 #endif /* sensor_node_server_hpp */

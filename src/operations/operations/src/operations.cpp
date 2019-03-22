@@ -9,6 +9,7 @@
 #include "achilles_slam/course_map.h"
 #include "achilles_slam/get_course_map.h"
 #include "achilles_slam/update_course_map.h"
+#include "sensor_package/sensor_node_server.h"
 
 void operations::initialize(achilles_slam::course_map map, int start)
 {
@@ -312,7 +313,7 @@ int operations::mission_people(int action)
     ros::ServiceClient perform_action = n.serviceClient<sensor_package::AddTwoInts>("perform_action");
     sensor_package::AddTwoInts srv;
     
-    srv.request = input;
+    srv.request = action;
     while(!perform_action.call(srv));
     
     if(srv.request == 1)

@@ -16,6 +16,8 @@ namespace path_plan
 
 	bool find(std::vector<achilles_slam::coord> list, achilles_slam::coord find_me);
 
+	std::vector<int> get_adjacent(int tile_num);
+
 	class path_plan_helper
 	{
 	public:

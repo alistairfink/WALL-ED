@@ -173,3 +173,30 @@ bool path_plan::find(std::vector<achilles_slam::coord> list, achilles_slam::coor
 
 	return false;
 }
+
+std::vector<int> path_plan::get_adjacent(int tile_num)
+{
+	int width = 6;
+	std::vector<int> returnVals;
+	if (tile_num%width != 0)
+	{
+		returnVals.push_back(tile_num - 1);
+	}
+
+	if (tile_num%width != 5)
+	{
+		returnVals.push_back(tile_num + 1);
+	}
+
+	if (tile_num/width != 0)
+	{
+		returnVals.push_back(tile_num - 6);
+	}
+
+	if (tile_num/width != 5)
+	{
+		returnVals.push_back(tile_num + 6);
+	}
+
+	return returnVals;
+}

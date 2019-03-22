@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   motor_driver
   geometry_msgs
   tf
+  sensor_package
 )
 
 ## System dependencies are found with CMake's conventions
@@ -107,7 +108,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
    INCLUDE_DIRS include
    LIBRARIES operations
-   CATKIN_DEPENDS achilles_slam roscpp motor_driver geometry_msgs tf
+   CATKIN_DEPENDS achilles_slam roscpp motor_driver geometry_msgs tf sensor_package
    DEPENDS system_lib
 )
 

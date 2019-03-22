@@ -132,7 +132,7 @@ void operations::traverse_to_objective(
 	while (path.back().x != path.front().x && path.back().y != path.front().y)
 	{
 		achilles_slam::coord next = path.front();
-		operations::turn_properly(curr, next)
+		operations::turn_properly(curr, next);
 
 		movement::straight(movement::NOMINAL, movement::TILE_DIST, operations::motor);
 		operations::update_tile(next, map);

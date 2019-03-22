@@ -44,6 +44,7 @@ private:
 	float min_target_area;
 	float min_unknown_area;
 	bool ignore_edge_cells;
+	int start_pos;
 };
 
 

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(sensor_package C CXX)
+project(tele_operate)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -10,9 +10,10 @@ project(sensor_package C CXX)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
+  serial
+  motor_driver
   std_msgs
-  message_generation
-	 
+  genmsg
 )
 
 ## System dependencies are found with CMake's conventions
@@ -49,17 +50,21 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
+add_message_files(
+    DIRECTORY
+    msg
+    FILES
 #   Message1.msg
+    Control.msg
 #   Message2.msg
-# )
+)
 
 ## Generate services in the 'srv' folder
- add_service_files(
-   FILES
-   AddTwoInts.srv
- )
+# add_service_files(
+#   FILES
+#   Service1.srv
+#   Service2.srv
+# )
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -69,9 +74,9 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
- generate_messages(
-   DEPENDENCIES
-   std_msgs
+generate_messages(
+    DEPENDENCIES
+    std_msgs
 )
 
 ################################################
@@ -104,28 +109,26 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES sensor_data
-#  CATKIN_DEPENDS roscpp rospy std_msgs
-#  DEPENDS system_lib
+  #INCLUDE_DIRS include
+  LIBRARIES tele_operate motor_driver_lib
+  CATKIN_DEPENDS roscpp rospy std_msgs serial motor_driver message_runtime
+  DEPENDS system_lib
 )
 
 ###########
 ## Build ##
 ###########
-set(wiringPi_include "/usr/local/include")
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
-  ${wiringPi_include}
 )
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/sensor_data.cpp
+#   src/${PROJECT_NAME}/tele_operate.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -136,14 +139,13 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/sensor_data_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/tele_operate_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
 ## e.g. "rosrun someones_pkg node" instead of "rosrun someones_pkg someones_pkg_node"
-##set_target_properties(sensor_data_server PROPERTIES LINKER_LANGUAGE CXX)
-##set_target_properties(sensor_data_client PROPERTIES LINKER_LANGUAGE CXX)
+# set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
@@ -194,48 +196,19 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_sensor_data.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_tele_operate.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
 
 ## Add folders to be run by python nosetests
-# catkin_add_nosetests(test
-##find_library(wiringPi_LIB src/WiringPi)
-##include_directories(src/WiringPi/wiringPi)
-
-##add_executable(MyExec
-##src/imu.cpp
-##src/hall_effect.cpp
-##src/sonar.cpp
-##)
-##add_definitions(-std=c++0x -L/src/WiringPi/wiringPi -lwiringPi -lpthread)
-##find_library(WIRINGPI_LIBRARY wiringPi HINTS /src/WiringPi)
+# catkin_add_nosetests(test)
 
 
-include_directories(${CMAKE_SOURCE_DIR})
+add_executable(controller src/controller.cpp)
+target_link_libraries(controller ${catkin_LIBRARIES})
+add_dependencies(controller tele_operate_generate_messages_cpp)
 
-#add_executable(hall 
-#		src/hall_effect.cpp
-#		src/hall_effect.hpp)
-
-#target_link_libraries(hall ${catkin_LIBRARIES} wiringPi)
-#add_dependencies(hall sensor_package_gencpp)
-
-add_executable(sensor_node_server 
-    src/sensor_node_server.cpp
-    src/sensor_node_server.hpp
-    src/hall_effect.cpp
-    src/hall_effect.hpp
-    src/fan.cpp
-    src/fan.hpp
-    src/LED.cpp
-    src/LED.hpp)
-target_link_libraries(sensor_node_server ${catkin_LIBRARIES} wiringPi)
-add_dependencies(sensor_node_server sensor_package_gencpp)
-
-add_executable(sensor_node_client
-     src/sensor_node_client.cpp
-     src/sensor_node_client.hpp)
-target_link_libraries(sensor_node_client ${catkin_LIBRARIES} wiringPi)
-add_dependencies(sensor_node_client sensor_package_gencpp)
+add_executable(listener src/listener.cpp)
+target_link_libraries(listener ${catkin_LIBRARIES})
+add_dependencies(listener tele_operate_generate_messages_cpp)

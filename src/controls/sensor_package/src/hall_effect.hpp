@@ -11,7 +11,7 @@
 
 #include <stdio.h>
 
-bool gpio_setup();
+bool GPIO_setup();
 
 int hall_output();
 

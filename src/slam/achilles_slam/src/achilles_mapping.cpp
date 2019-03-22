@@ -250,6 +250,7 @@ achilles_mapping_service::achilles_mapping_service()
 	n.param<int>("/achilles_mapping/found_wall_factor", this->found_wall_factor, 2);		// Divisor for expected # of cells to accept as wall
 	n.param<float>("/achilles_mapping/min_target_area", this->min_target_area, 0.001);		// Threshold area in m^2 to mark a tile as "occupied" e.g. 0.001 = 10cm^2
 	n.param<float>("/achilles_mapping/min_unknown_area", this->min_unknown_area, 0.002);	// Threshold area in m^2 to mark a tile as "unknown" e.g. 0.001 = 10cm^2
+	n.param<int>("/start_position", this->start_pos, 1);									// Start position in the course
 
 	// Write width to return message
 	this->course_map->width = this->map_width_tiles;
@@ -259,15 +260,99 @@ achilles_mapping_service::achilles_mapping_service()
 
 	// Tile holder to be pushed into map vector
 	achilles_slam::tile temp_tile;
-	temp_tile.terrain = achilles_slam::tile::TERRAIN_UKNOWN;
+	temp_tile.terrain = achilles_slam::tile::TERRAIN_FLAT;
 	temp_tile.target = achilles_slam::tile::TARGET_UKNOWN_UNDERTERMINED;
 	temp_tile.visited = false;
 
 	// Set initialize map to null tiles
 	for (uint16_t i = 0 ; i < this->map_width_tiles * this->map_width_tiles ; i++)
 	{
-		temp_tile.terrain = 0;
 		this->course_map->map.push_back(temp_tile);
+	}
+
+	// Set tile terrains
+	if (this->start_pos == 1)
+	{
+		// ROCKS
+		this->course_map->map[2].terrain = achilles_slam::tile::TERRAIN_GRAVEL;
+		this->course_map->map[17].terrain = achilles_slam::tile::TERRAIN_GRAVEL;
+		this->course_map->map[25].terrain = achilles_slam::tile::TERRAIN_GRAVEL;
+
+		// SAND
+		this->course_map->map[7].terrain = achilles_slam::tile::TERRAIN_SAND;
+		this->course_map->map[15].terrain = achilles_slam::tile::TERRAIN_SAND;
+		this->course_map->map[28].terrain = achilles_slam::tile::TERRAIN_SAND;
+
+		// DROPS
+		this->course_map->map[10].terrain = achilles_slam::tile::TERRAIN_WATER;
+		this->course_map->map[18].terrain = achilles_slam::tile::TERRAIN_WATER;
+		this->course_map->map[33].terrain = achilles_slam::tile::TERRAIN_WATER;
+
+		uint8_t temp_bad_zones[6] = {2, 17, 25, 10, 18, 33};
+		this->course_map->bad_zones.insert(this->course_map->bad_zones.end(), temp_bad_zones, temp_bad_zones+6);
+	} 
+	else if (this->start_pos == 2)
+	{
+		// ROCKS
+		this->course_map->map[2].terrain = achilles_slam::tile::TERRAIN_GRAVEL;
+		this->course_map->map[18].terrain = achilles_slam::tile::TERRAIN_GRAVEL;
+		this->course_map->map[28].terrain = achilles_slam::tile::TERRAIN_GRAVEL;
+
+		// SAND
+		this->course_map->map[10].terrain = achilles_slam::tile::TERRAIN_SAND;
+		this->course_map->map[14].terrain = achilles_slam::tile::TERRAIN_SAND;
+		this->course_map->map[25].terrain = achilles_slam::tile::TERRAIN_SAND;
+
+		// DROPS
+		this->course_map->map[7].terrain = achilles_slam::tile::TERRAIN_WATER;
+		this->course_map->map[17].terrain = achilles_slam::tile::TERRAIN_WATER;
+		this->course_map->map[33].terrain = achilles_slam::tile::TERRAIN_WATER;
+
+		uint8_t temp_bad_zones[6] = {2, 18, 28, 7, 17, 33};
+		this->course_map->bad_zones.insert(this->course_map->bad_zones.end(), temp_bad_zones, temp_bad_zones+6);
+
+	}
+	else if (this->start_pos == 3)
+	{
+		// ROCKS
+		this->course_map->map[10].terrain = achilles_slam::tile::TERRAIN_GRAVEL;
+		this->course_map->map[18].terrain = achilles_slam::tile::TERRAIN_GRAVEL;
+		this->course_map->map[33].terrain = achilles_slam::tile::TERRAIN_GRAVEL;
+
+		// SAND
+		this->course_map->map[7].terrain = achilles_slam::tile::TERRAIN_SAND;
+		this->course_map->map[20].terrain = achilles_slam::tile::TERRAIN_SAND;
+		this->course_map->map[28].terrain = achilles_slam::tile::TERRAIN_SAND;
+
+		// DROPS
+		this->course_map->map[17].terrain = achilles_slam::tile::TERRAIN_WATER;
+		this->course_map->map[2].terrain = achilles_slam::tile::TERRAIN_WATER;
+		this->course_map->map[25].terrain = achilles_slam::tile::TERRAIN_WATER;
+
+		uint8_t temp_bad_zones[6] = {10, 18, 33, 17, 2, 25};
+		this->course_map->bad_zones.insert(this->course_map->bad_zones.end(), temp_bad_zones, temp_bad_zones+6);
+
+	}
+	else if (this->start_pos == 4)
+	{
+		// ROCKS
+		this->course_map->map[17].terrain = achilles_slam::tile::TERRAIN_GRAVEL;
+		this->course_map->map[7].terrain = achilles_slam::tile::TERRAIN_GRAVEL;
+		this->course_map->map[33].terrain = achilles_slam::tile::TERRAIN_GRAVEL;
+
+		// SAND
+		this->course_map->map[10].terrain = achilles_slam::tile::TERRAIN_SAND;
+		this->course_map->map[21].terrain = achilles_slam::tile::TERRAIN_SAND;
+		this->course_map->map[25].terrain = achilles_slam::tile::TERRAIN_SAND;
+
+		// DROPS
+		this->course_map->map[2].terrain = achilles_slam::tile::TERRAIN_WATER;
+		this->course_map->map[18].terrain = achilles_slam::tile::TERRAIN_WATER;
+		this->course_map->map[28].terrain = achilles_slam::tile::TERRAIN_WATER;
+
+		uint8_t temp_bad_zones[6] = {17, 7, 33, 2, 18, 28};
+		this->course_map->bad_zones.insert(this->course_map->bad_zones.end(), temp_bad_zones, temp_bad_zones+6);
+
 	}
 
 	this->robot_cell = UNFOUND;

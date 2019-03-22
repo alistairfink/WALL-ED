@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<launch>
+ 
+	<node pkg="tele_operate" type="controller" name="controller" output="screen"/>
+
+	<node pkg="tele_operate" type="listener" name="listener" output="screen"/>
+
+</launch>

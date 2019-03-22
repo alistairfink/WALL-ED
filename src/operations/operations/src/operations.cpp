@@ -81,22 +81,25 @@ void operations::traverse_to_empty(
 		{
 			if (direction > direction_to_go || (direction == DIR_NORTH && direction_to_go == DIR_WEST))
 			{
-				movement::turn(movement::LEFT, operations::motor);
+				int next_dir = direction--;
+				if (next_dir < 0)
+				{
+					next_dir = DIR_WEST;
+				}
+
+				movement::turn(movement::LEFT, next_dir, operations::motor);
 				direction--;
 			}
 			else if (direction < direction_to_go || (direction == DIR_WEST && direction_to_go == DIR_NORTH))
 			{
-				movement::turn(movement::RIGHT, operations::motor);
-				direction++;
-			}
+				int next_dir = direction++;
+				if (next_dir > 3)
+				{
+					next_dir = DIR_NORTH;
+				}
 
-			if (direction < 0)
-			{
-				direction = DIR_WEST;
-			}
-			else if (direction > 3)
-			{
-				direction = DIR_NORTH;
+				movement::turn(movement::RIGHT, next_dir, operations::motor);
+				direction++;
 			}
 		}
 
@@ -143,22 +146,25 @@ void operations::traverse_to_objective(
 		{
 			if (direction > direction_to_go || (direction == DIR_NORTH && direction_to_go == DIR_WEST))
 			{
-				movement::turn(movement::LEFT, operations::motor);
+				int next_dir = direction--;
+				if (next_dir < 0)
+				{
+					next_dir = DIR_WEST;
+				}
+
+				movement::turn(movement::LEFT, next_dir, operations::motor);
 				direction--;
 			}
 			else if (direction < direction_to_go || (direction == DIR_WEST && direction_to_go == DIR_NORTH))
 			{
-				movement::turn(movement::RIGHT, operations::motor);
-				direction++;
-			}
+				int next_dir = direction++;
+				if (next_dir > 3)
+				{
+					next_dir = DIR_NORTH;
+				}
 
-			if (direction < 0)
-			{
-				direction = DIR_WEST;
-			}
-			else if (direction > 3)
-			{
-				direction = DIR_NORTH;
+				movement::turn(movement::RIGHT, next_dir, operations::motor);
+				direction++;
 			}
 		}
 
@@ -212,12 +218,24 @@ void operations::grid_traverse(achilles_slam::course_map map)
 			{
 				if (direction > direction_to_go || (direction == DIR_NORTH && direction_to_go == DIR_WEST))
 				{
-					movement::turn(movement::LEFT, operations::motor);
+					int next_dir = direction--;
+					if (next_dir < 0)
+					{
+						next_dir = DIR_WEST;
+					}
+
+					movement::turn(movement::LEFT, next_dir, operations::motor);
 					direction--;
 				}
 				else if (direction < direction_to_go || (direction == DIR_WEST && direction_to_go == DIR_NORTH))
 				{
-					movement::turn(movement::RIGHT, operations::motor);
+					int next_dir = direction++;
+					if (next_dir > 3)
+					{
+						next_dir = DIR_NORTH;
+					}
+
+					movement::turn(movement::RIGHT, next_dir, operations::motor);
 					direction++;
 				}
 
@@ -398,19 +416,19 @@ int main(int argc, char **argv)
 //	ROS_INFO("2");
 	//ros::Duration(5).sleep();
 	//movement::straight(operations::motor);
-	movement::turn(movement::LEFT, operations::motor);
+	movement::turn(movement::LEFT, operations::DIR_WEST, operations::motor);
 	ros::Duration(1).sleep();
-	movement::turn(movement::LEFT, operations::motor);
+	movement::turn(movement::LEFT, operations::DIR_SOUTH, operations::motor);
 	ros::Duration(1).sleep();
-	movement::turn(movement::LEFT, operations::motor);
+	movement::turn(movement::LEFT, operations::DIR_EAST, operations::motor);
 	ros::Duration(1).sleep();
-	movement::turn(movement::RIGHT, operations::motor);
+	movement::turn(movement::RIGHT, operations::DIR_SOUTH, operations::motor);
 	ros::Duration(1).sleep();
-	movement::turn(movement::RIGHT, operations::motor);
+	movement::turn(movement::RIGHT, operations::DIR_WEST, operations::motor);
 	ros::Duration(1).sleep();
-	movement::turn(movement::RIGHT, operations::motor);
+	movement::turn(movement::RIGHT, operations::DIR_NORTH, operations::motor);
 	ros::Duration(1).sleep();
-	movement::turn(movement::RIGHT, operations::motor);
+	movement::turn(movement::RIGHT, operations::DIR_EAST, operations::motor);
 	//movement::init_move(&n);
 	//ros::spin();
 /*

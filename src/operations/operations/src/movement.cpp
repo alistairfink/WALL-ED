@@ -2,6 +2,7 @@
 #include "operations/movement.h"
 #include "motor_driver/motor_driver.h"
 #include "sensor_msgs/LaserScan.h"
+//#include "operations/operations.h"
 #include <math.h>
 #include "geometry_msgs/PoseStamped.h"
 #include "geometry_msgs/Quaternion.h"
@@ -15,23 +16,37 @@ static double deg_yaw = 0;
 
 const double PI  = 3.141592653589793238463;
 
-void movement::turn(int direction, motor_abs::motor_driver* motor)
+void movement::turn(int direction, int direction_to_go, motor_abs::motor_driver* motor)
 {
-	ROS_INFO("3");
 	ros::spinOnce();
 	double deg_yaw_s = deg_yaw;
 	// degrees
-	float tol = 5;
-	double desired_angle = deg_yaw_s;
+	double tol = 2;
+	double desired_angle = 0;
+
+	if (direction_to_go == movement::DIR_NORTH)
+	{
+		desired_angle = 0;
+	}
+	else if (direction_to_go == movement::DIR_EAST)
+	{
+		desired_angle = 90;
+	}
+	else if (direction_to_go == movement::DIR_SOUTH)
+	{
+		desired_angle = 180;
+	}
+	else if (direction_to_go == movement::DIR_WEST)
+	{
+		desired_angle = -90;
+	}
 
 	if (direction == RIGHT)
 	{
-		desired_angle = deg_yaw_s - 75;
 		motor->set_speed(50 - movement::OFFSET, 50);
 	}
 	else if (direction == LEFT)
 	{
-		desired_angle = deg_yaw_s + 75;
 		motor->set_speed(-50 - movement::OFFSET, -50);
 	}
 

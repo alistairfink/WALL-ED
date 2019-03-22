@@ -36,7 +36,7 @@ void chatterCallback(const std_msgs::Int64::ConstPtr& msg)
 
 int main(int argc, char **argv)
 {
-	md = new motor_driver("/dev/ttyUSB0", 115200);
+	md = new motor_driver("/dev/ttyACM0", 115200);
 
 	if (!md->check_connection())
 	{

@@ -3,3 +3,5 @@ int64 input
 int64 hall
 int64 fanOn
 int64 fanOff
+int64 LEDOn
+int64 LEDOff

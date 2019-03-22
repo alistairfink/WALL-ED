@@ -14,25 +14,28 @@
 #include "encoders.hpp"
 #include "ros/ros.h"
 #include "fan.hpp"
+#include "LED.hpp"
 
 //service node
 bool get_sensor_data(sensor_package::AddTwoInts::Request  &req, sensor_package::AddTwoInts::Response &res)
 {
     if (req.input == 1)
-    {
 		res.hall = hall_output();
-	}
+    
     else if(req.input == 2)
-    {
         res.fanOn = turnOnFan();
-    }
+    
     else if (req.input == 3)
-    {
         res.fanOff = turnOffFan();
-    }
+    
+    else if (req.input == 4)
+        res.LEDon = turnOnLED();
+    
+    else if (req.input == 5)
+        res.LEDOff = turnOffLED();
     
     ROS_INFO("request: sensor=%ld", (long int)req.input);
-    ROS_INFO("sending back response: [%ld]", (long int)res.hall, (long int)res.fanOn, (long int)res.fanOff );
+    ROS_INFO("sending back response: [%ld]", (long int)res.hall, (long int)res.fanOn, (long int)res.fanOff, (long int)res.LEDon, (long int)res.LEDOff);
     return true;
     
 }

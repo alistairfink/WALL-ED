@@ -8,10 +8,13 @@
 #include "geometry_msgs/Quaternion.h"
 #include "tf/transform_datatypes.h"
 
-static float north = 5;
-static float east = 5;
-static float south = 5;
-static float west = 5;
+static float north = 0;
+static float east = 0;
+static float south = 0;
+static float west = 0;
+static float sum_front = 0;
+static float sum_left = 0;
+static float sum_right = 0;
 static double deg_yaw = 0;
 
 const double PI  = 3.141592653589793238463;
@@ -91,6 +94,7 @@ void movement::get_lidar(const sensor_msgs::LaserScan::ConstPtr& msg)
 	east = msg->ranges[90];
 	south = msg->ranges[180];
 	west = msg->ranges[270];
+	ROS_INFO("NORTH = %f, SOUTH: %f", north, south);
 }
 
 float movement::roll_up(float dist_from_target, int speed, motor_abs::motor_driver* motor)

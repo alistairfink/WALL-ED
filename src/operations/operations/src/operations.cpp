@@ -412,7 +412,7 @@ int main(int argc, char **argv)
 
 	ros::Duration(2).sleep();
 //	ROS_INFO("1");
-	ros::spinOnce();
+	ros::spin();
 //	ROS_INFO("2");
 	//ros::Duration(5).sleep();
 	//movement::straight(operations::motor);

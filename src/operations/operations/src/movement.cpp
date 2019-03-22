@@ -33,7 +33,7 @@ void movement::turn(int direction, int direction_to_go, motor_abs::motor_driver*
 	}
 	else if (direction_to_go == movement::DIR_NORTH)
 	{
-		desired_angle = 90;
+		desired_angle = -90;
 	}
 	else if (direction_to_go == movement::DIR_EAST)
 	{
@@ -41,15 +41,17 @@ void movement::turn(int direction, int direction_to_go, motor_abs::motor_driver*
 	}
 	else if (direction_to_go == movement::DIR_SOUTH)
 	{
-		desired_angle = -90;
+		desired_angle = 90;
 	}
-
+	ROS_INFO("Des Angle %i", desired_angle);
 	if (direction == RIGHT)
 	{
+ROS_INFO("RIGHT");
 		motor->set_speed(50 - movement::OFFSET, 50);
 	}
 	else if (direction == LEFT)
 	{
+ROS_INFO("LEFT");
 		motor->set_speed(-50 - movement::OFFSET, -50);
 	}
 
@@ -57,7 +59,7 @@ void movement::turn(int direction, int direction_to_go, motor_abs::motor_driver*
 	{
 		ros::spinOnce();
 	}
-
+	ROS_INFO("START: %f END: %f", deg_yaw_s, deg_yaw);
 	motor->set_speed(0,0);
 }
 

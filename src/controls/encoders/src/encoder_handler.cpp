@@ -122,6 +122,10 @@ int16_t encoder_handler::motor_l()
 	// volatile unsigned char curr_b_state = get_b();
 
 	volatile unsigned char curr_b_state = digitalRead(RIGHT_B_PIN);
+	volatile unsigned char curr_a_state = digitalRead(RIGHT_A_PIN);
+
+	// ROS_INFO("A is %d", curr_a_state);
+	// ROS_INFO("B is %d\n", curr_b_state);
 
 	static unsigned char last_b_state = curr_b_state;
 
@@ -131,7 +135,7 @@ int16_t encoder_handler::motor_l()
 	}
 	else
 	{
-		volatile unsigned char curr_a_state = digitalRead(RIGHT_A_PIN);
+		// volatile unsigned char curr_a_state = digitalRead(RIGHT_A_PIN);
 		if (curr_b_state == curr_a_state)
 		{
 			encoder_count++;

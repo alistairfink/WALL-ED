@@ -32,12 +32,13 @@ bool path_plan::find_path(uint8_t current, uint8_t target, achilles_slam::course
 				path->push_front(current);
 				return true;
 			}
-			else
-			{
-				return false;
-			}
+			// else
+			// {
+			// 	return false;
+			// }
 		}
 	}
+	return false;
 
 }
 
@@ -52,7 +53,7 @@ std::deque <uint8_t> path_plan::get_path_to_target(uint8_t target, uint8_t curre
 	}
 	else
 	{
-		ROS_WARN("CANNOT FIND PATH TO TARGET");
+		ROS_INFO("CANNOT FIND PATH TO TARGET");
 	}
 }
 

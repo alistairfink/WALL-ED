@@ -522,6 +522,27 @@ int main(int argc, char **argv)
 	movement::turn(movement::LEFT, operations::DIR_WEST, operations::motor);
 	ros::Duration(1).sleep();
 */
+	int speed = 100; 
+	operations::motor->set_speed(speed-movement::OFFSET, -speed);
+	ros::Duration(6.5).sleep();
+	operations::motor->set_speed(0,0);
+	operations::motor->set_speed(-100, 100);
+	ros::Duration(1.2).sleep();
+	operations::motor->set_speed(0,0);
+	operations::motor->set_speed(speed-movement::OFFSET, -speed);
+	ros::Duration(1.62).sleep();
+	operations::motor->set_speed(0,0);
+	operations::motor->set_speed(-100, 100);
+	ros::Duration(2.4).sleep();
+	operations::motor->set_speed(speed-movement::OFFSET, -speed);
+	ros::Duration(8.1).sleep();
+	operations::motor->set_speed(0,0);
+	operations::motor->set_speed(-100, 100);
+	ros::Duration(1.2).sleep();
+	operations::motor->set_speed(0,0);
+
+
+	/*
 	int first = 19;
 	int second = 31;
 	int third = 3;
@@ -542,7 +563,7 @@ int main(int argc, char **argv)
 	achilles_slam::coord* targ3 = new achilles_slam::coord;
 	targ3->x = third/map3.width;
 	targ3->y = third%map3.width;
-	operations::traverse_to_objective(map3, targ3);
+	operations::traverse_to_objective(map3, targ3);*/
 /*
 	achilles_slam::course_map end_map = operations::get_map();
 	achilles_slam::coord* starting = new achilles_slam::coord;

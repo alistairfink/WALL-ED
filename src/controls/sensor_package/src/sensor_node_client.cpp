@@ -27,26 +27,20 @@ int main(int argc, char **argv)
     srv.request.input = atoll(argv[1]);
     if (client.call(srv))
     {
-        if(srv.request.input == 1)
-            ROS_INFO("response data: %ld", (long int)srv.response.hall);
-        
-        else if (srv.request.input == 2)
-            ROS_INFO("response data: %ld", (long int)srv.response.fanOn);
-	    
-        else if (srv.request.input == 3)
-            ROS_INFO("response data: %ld", (long int)srv.response.fanOff);
-        
-        else if (srv.request.input == 4)
-            ROS_INFO("response data: %ld", (long int)srv.response.LEDOn);
-        
-        else if (srv.request.input == 5)
-            ROS_INFO("response data: %ld", (long int)srv.response.LEDOff);
-    
-    	else
-    	{
-        	ROS_ERROR("Failed to call service add_two_ints");
-        	return 1;
-    	}
+		if(srv.request.input == 1)
+		{
+			ROS_INFO("response data: %ld", (long int)srv.response.hall);	
+		}
+	
+		else
+			ROS_INFO("response data: %ld", (float)srv.response.sonar);
     }
+    
+    else
+    {
+        ROS_ERROR("Failed to call service add_two_ints");
+        return 1;
+    }
+    
     return 0;
 }

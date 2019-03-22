@@ -1,3 +1,12 @@
+[submodule "src/slam/hector_slam"]
+	path = src/slam/hector_slam
+	url = https://github.com/tu-darmstadt-ros-pkg/hector_slam.git
+[submodule "src/slam/rplidar_ros"]
+	path = src/slam/rplidar_ros
+	url = https://github.com/robopeak/rplidar_ros.git
 [submodule "src/controls/serial"]
 	path = src/controls/serial
 	url = https://github.com/wjwwood/serial.git
+[submodule "src/slam/laser_filters"]
+	path = src/slam/laser_filters
+	url = https://github.com/ros-perception/laser_filters.git

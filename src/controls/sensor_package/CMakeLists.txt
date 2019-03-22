@@ -215,22 +215,17 @@ include_directories(
 
 include_directories(${CMAKE_SOURCE_DIR})
 
-#add_executable(hall 
-#		src/hall_effect.cpp
-#		src/hall_effect.hpp)
-
-#target_link_libraries(hall ${catkin_LIBRARIES} wiringPi)
-#add_dependencies(hall sensor_package_gencpp)
-
 add_executable(sensor_node_server 
     src/sensor_node_server.cpp
     src/sensor_node_server.hpp
     src/hall_effect.cpp
     src/hall_effect.hpp
-    src/fan.cpp
-    src/fan.hpp
-    src/LED.cpp
-    src/LED.hpp)
+    src/encoders.cpp
+    src/encoders.hpp
+    src/imu.cpp
+    src/imu.hpp
+    src/sonar.cpp
+    src/sonar.hpp)
 target_link_libraries(sensor_node_server ${catkin_LIBRARIES} wiringPi)
 add_dependencies(sensor_node_server sensor_package_gencpp)
 

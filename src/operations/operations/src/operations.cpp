@@ -80,8 +80,8 @@ void operations::traverse_to_objective(
 	std::deque<uint8_t> path = path_plan::get_path_to_target(6*curr_pos.y+curr_pos.x, 0, &map);
 	path.pop_back();
 	achilles_slam::coord curr = curr_pos;
-	achilles_slam::coord curr.x = curr_pos.y;
-	achilles_slam::coord curr.y = curr_pos.x;
+	curr.x = curr_pos.y;
+	curr.y = curr_pos.x;
 
 	for (int i = 0; i < path.size(); i++)
 	{

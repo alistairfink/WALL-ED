@@ -37,10 +37,10 @@ int main(int argc, char **argv)
             ROS_INFO("response data: %ld", (long int)srv.response.fanOff);
         
         else if (srv.request.input == 4)
-            ROS_INFO("response data: %ld", (long int)srv.response.LEDon);
+            ROS_INFO("response data: %ld", (long int)srv.response.LEDOn);
         
         else if (srv.request.input == 5)
-            ROS_INFO("response data: %ld", (long int)srv.response.LEDoff);
+            ROS_INFO("response data: %ld", (long int)srv.response.LEDOff);
     
     	else
     	{

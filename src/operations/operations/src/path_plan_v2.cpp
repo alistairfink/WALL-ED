@@ -5,7 +5,7 @@
 
 using namespace path_plan;
 
-bool path_plan::find_path(uint8_t current, uint8_t target, const achilles_slam::course_map::ConstPtr &map, std::vector<bool>* visited, std::deque <uint8_t>* path)
+bool path_plan::find_path(uint8_t current, uint8_t target, achilles_slam::course_map* map, std::vector<bool>* visited, std::deque <uint8_t>* path)
 {
 	// Reached end of the path and curr tile is target
 	if (current == target)
@@ -41,7 +41,7 @@ bool path_plan::find_path(uint8_t current, uint8_t target, const achilles_slam::
 
 }
 
-std::deque <uint8_t> path_plan::get_path_to_target(uint8_t target, uint8_t current, const achilles_slam::course_map::ConstPtr &map)
+std::deque <uint8_t> path_plan::get_path_to_target(uint8_t target, uint8_t current, achilles_slam::course_map* map)
 {
 	std::vector<bool> visited(36, false);
 	std::deque <uint8_t> path;

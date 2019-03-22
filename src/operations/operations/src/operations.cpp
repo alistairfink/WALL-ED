@@ -10,6 +10,7 @@
 #include "achilles_slam/get_course_map.h"
 #include "achilles_slam/update_course_map.h"
 #include "sensor_package/AddTwoInts.h"
+#include "path_plan_v2.h"
 
 void operations::initialize(achilles_slam::course_map map, int start)
 {
@@ -75,13 +76,15 @@ void operations::traverse_to_objective(
 {
 	achilles_slam::coord curr_pos = map.robot_pos;
 	std::vector<achilles_slam::coord> invalid = operations::get_invalid(map, dest);
-	std::deque<achilles_slam::coord> path = path_plan::path_plan_objective(map, curr_pos, *dest, invalid);
+	std::deque<uint8_t> path = path_plan::get_path_to_target(6*curr_pos.x+curr_pos.y, 6*dest->x+dest->y, &map);
 	path.pop_front();
 	achilles_slam::coord curr = curr_pos;
 
-	while (path.back().x != path.front().x && path.back().y != path.front().y)
+	while (path.front() != 6*dest->x + dest->y)
 	{
-		achilles_slam::coord next = path.front();
+		achilles_slam::coord next;
+		next.x = path.front()/map.width;
+		next.y = path.front()&map.width;
 		ROS_INFO("CURRENT: X %i Y %i, NEXT: X %i Y %i", curr.x, curr.y, next.x, next.y);
 		operations::turn_properly(curr, next);
 

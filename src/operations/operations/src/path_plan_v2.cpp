@@ -23,16 +23,20 @@ bool path_plan::find_path(uint8_t current, uint8_t target, achilles_slam::course
 	// Recurse through adjacent tiles
 	for (std::vector<uint8_t>::iterator it = adjacent_tiles.begin() ; it != adjacent_tiles.end() ; it++)
 	{
-		// Only check if tile is unvisited and flat
-		if (!(*visited)[*it] && map->map[*it].terrain == achilles_slam::tile::TERRAIN_FLAT)
+		if (*it == target || map->map[*it].target < achilles_slam::tile::TARGET_OCCUPIED)
 		{
-			// Recurse through tile
-			if (find_path(*it, target, map, visited, path))
+			// Only check if tile is unvisited and flat
+			if (!(*visited)[*it] && map->map[*it].terrain == achilles_slam::tile::TERRAIN_FLAT)
 			{
-				path->push_front(current);
-				return true;
+				// Recurse through tile
+				if (find_path(*it, target, map, visited, path))
+				{
+					path->push_front(current);
+					return true;
+				}
 			}
 		}
+			
 	}
 	return false;
 

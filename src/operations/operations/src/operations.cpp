@@ -132,6 +132,7 @@ void operations::traverse_to_objective(
 	while (path.back().x != path.front().x && path.back().y != path.front().y)
 	{
 		achilles_slam::coord next = path.front();
+		ROS_INFO("CURRENT: X %i Y %i, NEXT: X %i Y %i", curr.x, curr.y, next.x, next.y);
 		operations::turn_properly(curr, next);
 
 		movement::straight(movement::NOMINAL, movement::TILE_DIST, operations::motor);
@@ -364,7 +365,7 @@ void operations::turn_properly(achilles_slam::coord curr, achilles_slam::coord n
 	{
 		direction_to_go = DIR_WEST;
 	}
-
+	ROS_INFO("DIRECTION TO GO: %i", direction_to_go);
 	if (operations::direction > direction_to_go || (operations::direction == DIR_NORTH && direction_to_go == DIR_WEST))
 	{
 		movement::turn(movement::RIGHT, direction_to_go, operations::motor);
@@ -438,12 +439,14 @@ int main(int argc, char **argv)
 
 	operations::direction = operations::DIR_WEST;
 	achilles_slam::course_map map = operations::get_map();
-
+	int tempx = map.robot_pos.x;
+	map.robot_pos.x = map.robot_pos.y;
+	map.robot_pos.y = tempx;
 	int goal = 7;
 	achilles_slam::coord* dest = new achilles_slam::coord;
 	dest->x = goal/map.width;
 	dest->y = goal%map.width;
-
+	ROS_INFO("Done Setup");
 	operations::traverse_to_objective(map, dest);
 
 /*

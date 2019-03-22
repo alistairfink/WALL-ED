@@ -8,10 +8,7 @@
 
 #include "sensor_package/AddTwoInts.h"
 #include "sensor_node_server.hpp"
-#include "imu.hpp"
-#include "sonar.hpp"
 #include "hall_effect.hpp"
-#include "encoders.hpp"
 #include "ros/ros.h"
 #include "fan.hpp"
 #include "LED.hpp"

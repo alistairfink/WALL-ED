@@ -80,6 +80,8 @@ void operations::traverse_to_objective(
 	std::deque<uint8_t> path = path_plan::get_path_to_target(6*curr_pos.y+curr_pos.x, 0, &map);
 	path.pop_back();
 	achilles_slam::coord curr = curr_pos;
+	achilles_slam::coord curr.x = curr_pos.y;
+	achilles_slam::coord curr.y = curr_pos.x;
 
 	for (int i = 0; i < path.size(); i++)
 	{
@@ -89,8 +91,8 @@ void operations::traverse_to_objective(
 	while (path.front() != 6*dest->y + dest->x)
 	{
 		achilles_slam::coord next;
-		next.x = path.back()%map.width;
-		next.y = path.back()/map.width;
+		next.y = path.back()%map.width;
+		next.x = path.back()/map.width;
 		ROS_INFO("CURRENT: X %i Y %i, NEXT: X %i Y %i", curr.x, curr.y, next.x, next.y);
 		operations::turn_properly(curr, next);
 

@@ -10,7 +10,7 @@
 	<!-- Launch for rplidar node -->
 	<include file="$(find rplidar_ros)/launch/rplidar.launch"/>
 
-
-
+	<!-- Launch for rplidar node -->
+	<include file="$(find controls_launch)/launch/tele_op.launch"/>
 
 </launch>

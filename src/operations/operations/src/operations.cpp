@@ -309,7 +309,7 @@ int operations::mission_people()
    
     /* service for actions(turn on LED, FAN, check hall)*/
     ros::NodeHandle n;
-    ros::ServiceClient perform_action = n.serviceClient<sensor_package::AddTwoInts>("sensor_data");
+    ros::ServiceClient perform_action = n.serviceClient<sensor_package::AddTwoInts>("perform_action");
     sensor_package::AddTwoInts srv;
     
     while(!perform_action.call(srv));

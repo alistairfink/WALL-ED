@@ -34,13 +34,14 @@ namespace operations {
 	motor_abs::motor_driver* motor;
 	int direction;
 	std::stack<int> sand_index;
+	std::vector<int> completed;
 
 	void initialize(achilles_slam::course_map map, int start);
 	void traverse_to_empty(int curr_mission, achilles_slam::course_map map);
 	void traverse_to_objective(achilles_slam::course_map map, achilles_slam::coord* dest);
 	void grid_traverse(achilles_slam::course_map map);
-	void objective_tasks();
-	void mission_people();
+	void objective_tasks(uint8_t next);
+	void mission_people(uint8_t next);
 	void mission_food();
 	void mission_candle();
 	void turn_properly(achilles_slam::coord current, achilles_slam::coord next);
@@ -50,6 +51,7 @@ namespace operations {
 	achilles_slam::coord* object_mapped(int object, achilles_slam::course_map map);
 	std::vector<achilles_slam::coord> get_invalid(achilles_slam::course_map map, achilles_slam::coord* dest);
 	int64_t use_controls(int64_t value);
+	int get_next_target(achilles_slam::course_map map);
 }
 
 #endif

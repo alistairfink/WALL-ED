@@ -44,11 +44,11 @@ void movement::turn(int direction, int direction_to_go, motor_abs::motor_driver*
 		desired_angle = 90;
 	}
 	ROS_INFO("Desired Angle: %i", desired_angle);
-	if (direction == RIGHT)
+	if (direction == LEFT)
 	{
 		motor->set_speed(50 - movement::OFFSET, 50);
 	}
-	else if (direction == LEFT)
+	else if (direction == RIGHT)
 	{
 		motor->set_speed(-50 - movement::OFFSET, -50);
 	}

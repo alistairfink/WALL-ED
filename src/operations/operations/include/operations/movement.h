@@ -11,7 +11,7 @@ namespace movement {
 	const int RIGHT = 1;
 	const int OFFSET = 6;
 	const float TILE_DIST = 0.3;
-	const int NOMINAL = 150;
+	const int NOMINAL = 100;
 	const int DIR_NORTH = 0;
 	const int DIR_EAST = 1;
 	const int DIR_SOUTH = 2;

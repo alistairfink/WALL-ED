@@ -102,7 +102,7 @@ void operations::traverse_to_objective(
 		curr = next;
 	}
 
-	operations::objective_tasks();
+	operations::objective_tasks(path.front());
 }
 
 void operations::grid_traverse(achilles_slam::course_map map)
@@ -197,8 +197,12 @@ void operations::grid_traverse(achilles_slam::course_map map)
 	operations::missions.pop();
 }
 
-void operations::objective_tasks()
+void operations::objective_tasks(uint8_t next)
 {
+	if (operations::completed.size() < 3 || operations::completed.size() == 0)
+	{
+		operations::mission_people(next);
+	}/*
 	if (operations::missions.size() <= 0)
 	{
 		return;
@@ -217,30 +221,31 @@ void operations::objective_tasks()
 			//operations::mission_people();
 			//break;
 		case operations::cabin:
-			operations::mission_people();
+			operations::mission_people(next);
 			break;
 		default:
 			throw std::exception();
 			// Should never  get here. If it does somethings very wrong
 	}
 
-	operations::missions.pop();
+	operations::missions.pop();*/
 	// Pop stack. Assumes mission was successful. Idk if we want more oversight here
 }
 
-void operations::mission_people()
+void operations::mission_people(uint8_t next)
 {
 	achilles_slam::course_map map = operations::get_map();
-	achilles_slam::coord* obj_pos = operations::object_mapped(operations::missions.top(), map);
-	operations::turn_properly(map.robot_pos, *obj_pos);
+	//achilles_slam::coord* obj_pos = operations::object_mapped(operations::missions.top(), map);
+	achilles_slam::coord dest;
+	dest.x = next/map.width;
+	dest.y = next%map.width;
+	operations::turn_properly(map.robot_pos, dest);
 	operations::use_controls(2);
 	ros::Duration(30).sleep();
 	operations::use_controls(3);
 	operations::use_controls(4);
 	ros::Duration(3).sleep();
 	operations::use_controls(5);
-	delete obj_pos;
-	obj_pos = NULL;
 }
 
 void operations::mission_food()
@@ -302,9 +307,9 @@ achilles_slam::course_map operations::get_map()
 	while (!map_client.call(map_service));
 	achilles_slam::course_map map = map_service.response.silicon_valley;
 	ROS_INFO("SKYE x=%d y=%d", map.robot_pos.x , map.robot_pos.y);
-	int tempx = map.robot_pos.x;
+	/*int tempx = map.robot_pos.x;
 	map.robot_pos.x = map.robot_pos.y;
-	map.robot_pos.y = tempx;
+	map.robot_pos.y = tempx;*/
 	return map;
 }
 
@@ -408,6 +413,35 @@ int64_t operations::use_controls(int64_t value)
     }
 }
 
+int operations::get_next_target(achilles_slam::course_map map)
+{
+	int highest = 0;
+	int count = 0;
+	for (int i = 0; i < map.target_list.size(); i++)
+	{
+		if (map.map[map.target_list[i]].occupancy_count > count)
+		{
+			bool visited = false;
+			for (int j = 0; j < operations::completed.size(); j++)
+			{
+				if (operations::completed[j] == map.target_list[i])
+				{
+					visited = true;
+				}
+			}
+
+			if (!visited)
+			{
+				highest = map.target_list[i];
+				count = map.map[map.target_list[i]].occupancy_count;
+			}
+		}
+	}	
+
+	operations::completed.push_back(highest);
+	return highest;
+}
+
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "operations");
@@ -450,7 +484,57 @@ int main(int argc, char **argv)
 
 	operations::direction = operations::DIR_WEST;
 	achilles_slam::course_map map = operations::get_map();
-	int tempx = map.robot_pos.x;
+	achilles_slam::coord* middle = new achilles_slam::coord;
+	middle->x = 21/map.width;
+	middle->y = 21%map.width;
+	operations::traverse_to_objective(map, middle);
+	movement::turn(movement::LEFT, operations::DIR_SOUTH, operations::motor);
+	ros::Duration(1).sleep();
+	movement::turn(movement::LEFT, operations::DIR_EAST, operations::motor);
+	ros::Duration(1).sleep();
+	movement::turn(movement::LEFT, operations::DIR_WEST, operations::motor);
+	ros::Duration(1).sleep();
+	movement::turn(movement::LEFT, operations::DIR_NORTH, operations::motor);
+	ros::Duration(1).sleep();
+	
+
+/*	for (int i = 0; i < 3; i++)
+	{
+		achilles_slam::course_map curr_map = operations::get_map();
+		int next_targ = operations::get_next_target(curr_map);
+		achilles_slam::coord* targ = new achilles_slam::coord;
+		targ->x = next_targ/curr_map.width;
+		targ->y = next_targ%curr_map.width;
+		operations::traverse_to_objective(curr_map, targ);
+	}
+
+	achilles_slam::course_map end_map = operations::get_map();
+	achilles_slam::coord* starting = new achilles_slam::coord;
+	starting->x = 23/end_map.width;
+	starting->y = 23%end_map.width;
+	operations::traverse_to_objective(end_map, starting);
+	achilles_slam::course_map final_map = operations::get_map();
+	operations::turn_properly(final_map.robot_pos, *starting);
+	movement::straight(movement::NOMINAL, movement::TILE_DIST, operations::motor);
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*	int tempx = map.robot_pos.x;
 	map.robot_pos.x = map.robot_pos.y;
 	map.robot_pos.y = tempx;
 	int goal = 7;
@@ -459,7 +543,7 @@ int main(int argc, char **argv)
 	dest->y = goal%map.width;
 	ROS_INFO("Done Setup");
 	operations::traverse_to_objective(map, dest);
-
+*/
 /*
 	achilles_slam::course_map orig_map = operations::get_map();
 	operations::initialize(orig_map, operations::starting_tile);

@@ -41,8 +41,8 @@ int main(int argc, char **argv)
 {
    // MPU6050_Init();
     
-    //if(!(gpio_setup()))
-    //    return 1;
+    if(!(GPIO_setup()))
+        return 1;
     
     ros::init(argc, argv, "sensor_node_server");
     ros::NodeHandle n;

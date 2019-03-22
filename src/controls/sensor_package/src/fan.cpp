@@ -9,7 +9,6 @@ using namespace std;
 
 int turnOnFan(){
     
-    wiringPiSetup();
     pinMode (5, OUTPUT);
     digitalWrite(5, HIGH);
     
@@ -18,7 +17,6 @@ int turnOnFan(){
 
 int turnOffFan(){
     
-    wiringPiSetup();
     pinMode (5, OUTPUT);
     digitalWrite(5, LOW);
     

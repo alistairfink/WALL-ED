@@ -30,6 +30,7 @@ namespace operations {
 	achilles_slam::coord* start;
 	ros::ServiceClient map_client; 
 	ros::ServiceClient update_map_client;
+	ros::ServiceClient controls_client;
 	motor_abs::motor_driver* motor;
 	int direction;
 	std::stack<int> sand_index;
@@ -48,6 +49,7 @@ namespace operations {
 	void update_tile(achilles_slam::coord coord, achilles_slam::course_map map);
 	achilles_slam::coord* object_mapped(int object, achilles_slam::course_map map);
 	std::vector<achilles_slam::coord> get_invalid(achilles_slam::course_map map, achilles_slam::coord* dest);
+	int64_t use_controls(int64_t value);
 }
 
 #endif

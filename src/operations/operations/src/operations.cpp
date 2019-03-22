@@ -9,6 +9,7 @@
 #include "achilles_slam/course_map.h"
 #include "achilles_slam/get_course_map.h"
 #include "achilles_slam/update_course_map.h"
+#include "sensor_package/AddTwoInts.h"
 
 void operations::initialize(achilles_slam::course_map map, int start)
 {
@@ -218,10 +219,17 @@ void operations::objective_tasks()
 
 void operations::mission_people()
 {
-	float starting_dist = movement::roll_up(0.05, movement::NOMINAL, operations::motor);
-	// turn fan on.
-	// signal led
-	movement::roll_up(starting_dist, -1*movement::NOMINAL, operations::motor);
+	achilles_slam::course_map map = operations::get_map();
+	achilles_slam::coord* obj_pos = operations::object_mapped(operations::missions.top(), map);
+	operations::turn_properly(map.robot_pos, *obj_pos);
+	operations::use_controls(2);
+	ros::Duration(30).sleep();
+	operations::use_controls(3);
+	operations::use_controls(4);
+	ros::Duration(3).sleep();
+	operations::use_controls(5);
+	delete obj_pos;
+	obj_pos = NULL;
 }
 
 void operations::mission_food()
@@ -361,6 +369,33 @@ std::vector<achilles_slam::coord> operations::get_invalid(achilles_slam::course_
 	return invalid;	
 }
 
+int64_t operations::use_controls(int64_t value)
+{
+	sensor_package::AddTwoInts service;
+	service.request.input = value;
+	while (!controls_client.call(service));
+    if (value == 1)
+    {
+		return service.response.hall;
+    }
+    else if(value == 2)
+    {
+        return service.response.fanOn;
+    }    
+    else if (value == 3)
+    {
+        return service.response.fanOff;
+    }    
+    else if (value == 4)
+    {
+        return service.response.LEDOn;
+    }    
+    else
+    {
+        return service.response.LEDOff;
+    }
+}
+
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "operations");
@@ -368,6 +403,7 @@ int main(int argc, char **argv)
   	n.param<int>("/start_position", operations::starting_tile, 1);
 	operations::map_client = n.serviceClient<achilles_slam::get_course_map>("get_course_map");
 	operations::update_map_client = n.serviceClient<achilles_slam::update_course_map>("update_course_map");
+	operations::controls_client = n.serviceClient<sensor_package::AddTwoInts>("AddTwoInts");
 
 	ros::Subscriber laser = n.subscribe("/scan", 1, movement::get_lidar);
 	ros::Subscriber orientation = n.subscribe("/slam_out_pose", 1, movement::orientation);

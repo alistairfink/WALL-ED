@@ -108,12 +108,12 @@ encoder_handler::~encoder_handler()
 
 
 /**
-* motor_l
-* Gets encoder reading for left motor
+* motor_r
+* Gets encoder reading for right motor
 *
 * @return signed 16bit int for encoder reading
 */
-int16_t encoder_handler::motor_l()
+int16_t encoder_handler::motor_r()
 {	
 	static int16_t encoder_count = 0 ;
 
@@ -151,12 +151,12 @@ int16_t encoder_handler::motor_l()
 }
 
 /**
-* motor_r
-* Gets encoder reading for right motor
+* motor_l
+* Gets encoder reading for left motor
 *
 * @return signed 16bit int for encoder reading
 */
-int16_t encoder_handler::motor_r()
+int16_t encoder_handler::motor_l()
 {
 	static int16_t encoder_count = 0 ;
 

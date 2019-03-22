@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<launch>
+ 
+	<node pkg="encoders" type="encoder_handler" name="encoder_handler" output="screen">
+
+		<!-- Frequency to pole and publish -->
+ 		<param name="pub_frequency" value="600" type="int"/>		
+
+	</node> 
+
+</launch>

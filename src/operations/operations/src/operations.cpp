@@ -300,7 +300,7 @@ void operations::objective_tasks()
 	// Pop stack. Assumes mission was successful. Idk if we want more oversight here
 }
 
-int operations::mission_people()
+int operations::mission_people(action)
 {
 	float starting_dist = movement::roll_up(0.05, movement::NOMINAL, operations::motor);
 	// turn fan on.
@@ -312,6 +312,7 @@ int operations::mission_people()
     ros::ServiceClient perform_action = n.serviceClient<sensor_package::AddTwoInts>("perform_action");
     sensor_package::AddTwoInts srv;
     
+    srv.request = input;
     while(!perform_action.call(srv));
     
     if(srv.request == 1)
@@ -328,8 +329,16 @@ int operations::mission_people()
 
 void operations::mission_food()
 {
-	// lol
-	// Get sensor data
+    //check direction of the objective and turn to it
+    
+    mission_people(2); //turn on fan
+    ros::Duration(1).sleep() //sleep for a second
+    mission_people(3); //turn off fan
+    
+    mission_people(4); //turn on LED
+    ros::Duration(1).sleep()
+    mission_people(5); //turn off LED
+    
 	// Check sensor data
 	// complete?
 }
@@ -417,6 +426,8 @@ std::vector<achilles_slam::coord> operations::get_invalid(achilles_slam::course_
 
 	return invalid;	
 }
+
+
 
 int main(int argc, char **argv)
 {

@@ -8,6 +8,7 @@
 #include "motor_driver/motor_driver.h"
 #include "achilles_slam/course_map.h"
 #include "achilles_slam/get_course_map.h"
+#include "sensor_msgs/LaserScan.h"
 
 namespace operations {
 
@@ -35,6 +36,7 @@ namespace operations {
 	int direction;
 	std::stack<int> sand_index;
 	std::vector<int> completed;
+	int counter = 0;
 
 	void initialize(achilles_slam::course_map map, int start);
 	void traverse_to_empty(int curr_mission, achilles_slam::course_map map);
@@ -42,7 +44,7 @@ namespace operations {
 	void grid_traverse(achilles_slam::course_map map);
 	void objective_tasks(uint8_t next);
 	void mission_people(uint8_t next);
-	void mission_food();
+	void mission_food(const sensor_msgs::LaserScan::ConstPtr& msg);
 	void mission_candle();
 	void turn_properly(achilles_slam::coord current, achilles_slam::coord next);
 	achilles_slam::coord get_closest_unvisited(achilles_slam::course_map map);

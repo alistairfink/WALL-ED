@@ -10,6 +10,7 @@
 #include "achilles_slam/get_course_map.h"
 #include "achilles_slam/update_course_map.h"
 #include "sensor_package/AddTwoInts.h"
+#include "sensor_msgs/LaserScan.h"
 #include "path_plan_v2.h"
 
 void operations::initialize(achilles_slam::course_map map, int start)
@@ -248,12 +249,37 @@ void operations::mission_people(uint8_t next)
 	operations::use_controls(5);
 }
 
-void operations::mission_food()
+void operations::mission_food(const sensor_msgs::LaserScan::ConstPtr& msg)
 {
-	// lol
-	// Get sensor data
-	// Check sensor data
-	// complete?
+	float north = msg->ranges[0];
+
+	if (north <= 0.3)
+	{
+		if (operations::counter == 0)
+		{
+			operations::counter++;
+			operations::use_controls(2);
+			ros::Duration(30).sleep();
+			operations::use_controls(3);
+			operations::use_controls(4);
+			ros::Duration(3).sleep();
+			operations::use_controls(5);
+		}
+		else if (operations::counter == 1)
+		{
+			operations::counter++;
+			while (operations::use_controls(1) != 1);
+			operations::use_controls(4);
+			ros::Duration(3).sleep();
+			operations::use_controls(5);
+		}
+		else
+		{
+			operations::use_controls(4);
+			ros::Duration(3).sleep();
+			operations::use_controls(5);			
+		}
+	}
 }
 
 void operations::mission_candle()
@@ -451,7 +477,7 @@ int main(int argc, char **argv)
 	operations::update_map_client = n.serviceClient<achilles_slam::update_course_map>("update_course_map");
 	operations::controls_client = n.serviceClient<sensor_package::AddTwoInts>("AddTwoInts");
 
-	ros::Subscriber laser = n.subscribe("/scan", 1, movement::get_lidar);
+	ros::Subscriber laser = n.subscribe("/scan", 1, operations::mission_food);
 	ros::Subscriber orientation = n.subscribe("/slam_out_pose", 1, movement::orientation);
 	operations::motor = new motor_abs::motor_driver("/dev/ttyACM0", 115200);
 
@@ -481,7 +507,7 @@ int main(int argc, char **argv)
 	movement::turn(movement::RIGHT, operations::DIR_NORTH, operations::motor);
 	ros::Duration(1).sleep();
 	movement::turn(movement::RIGHT, operations::DIR_EAST, operations::motor);*/
-
+/*
 	operations::direction = operations::DIR_WEST;
 	achilles_slam::course_map map = operations::get_map();
 	movement::straight(movement::NOMINAL, movement::TILE_DIST, operations::motor);
@@ -505,7 +531,7 @@ int main(int argc, char **argv)
 		targ->x = next_targ/curr_map.width;
 		targ->y = next_targ%curr_map.width;
 		operations::traverse_to_objective(curr_map, targ);
-	}
+	}*/
 /*
 	achilles_slam::course_map end_map = operations::get_map();
 	achilles_slam::coord* starting = new achilles_slam::coord;
@@ -518,6 +544,10 @@ int main(int argc, char **argv)
 
 
 */
+
+
+
+
 
 
 

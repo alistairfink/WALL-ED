@@ -491,9 +491,9 @@ int main(int argc, char **argv)
 	ros::Duration(1).sleep();
 	movement::turn(movement::LEFT, operations::DIR_EAST, operations::motor);
 	ros::Duration(1).sleep();
-	movement::turn(movement::LEFT, operations::DIR_WEST, operations::motor);
-	ros::Duration(1).sleep();
 	movement::turn(movement::LEFT, operations::DIR_NORTH, operations::motor);
+	ros::Duration(1).sleep();
+	movement::turn(movement::LEFT, operations::DIR_WEST, operations::motor);
 	ros::Duration(1).sleep();
 	
 

@@ -209,7 +209,9 @@ add_executable(operations
         include/operations/movement.h
 				src/operations.cpp
 				src/path_plan.cpp
-        src/movement.cpp)
+        src/movement.cpp
+        src/path_plan_v2.cpp
+        src/path_plan_v2.h)
 
 #add_dependencies(operations achilles_slam_generate_messages_cpp)
 

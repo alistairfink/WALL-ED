@@ -416,13 +416,15 @@ void operations::turn_properly(achilles_slam::coord curr, achilles_slam::coord n
 	{
 		direction_to_go = DIR_WEST;
 	}
-
+	ROS_INFO("DIR: %i TOGO: %i", direction, direction_to_go);
 	if (operations::direction > direction_to_go || (operations::direction == DIR_NORTH && direction_to_go == DIR_WEST))
 	{
+		ROS_INFO("LeFT");
 		movement::turn(movement::RIGHT, direction_to_go, operations::motor);
 	}
 	else if (operations::direction < direction_to_go || (operations::direction == DIR_WEST && direction_to_go == DIR_NORTH))
 	{
+ROS_INFO("RIGHT");
 		movement::turn(movement::LEFT, direction_to_go, operations::motor);
 	}
 
@@ -466,8 +468,8 @@ int main(int argc, char **argv)
 	current.x = 3;
 	current.y = 3;
 	achilles_slam::coord next;
-	next.x = 3;
-	next.y = 4;
+	next.x = 4;
+	next.y = 3;
 	operations::turn_properly(current, next);
 	//ros::spinOnce();
 	// Straight Test

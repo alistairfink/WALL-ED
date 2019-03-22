@@ -91,7 +91,6 @@ void movement::get_lidar(const sensor_msgs::LaserScan::ConstPtr& msg)
 	east = msg->ranges[90];
 	south = msg->ranges[180];
 	west = msg->ranges[270];
-	ROS_INFO("NORTH = %f, SOUTH: %f", north, south);
 }
 
 float movement::roll_up(float dist_from_target, int speed, motor_abs::motor_driver* motor)

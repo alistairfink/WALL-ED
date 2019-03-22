@@ -5,12 +5,12 @@
 	<param name="/use_sim_time" value="false"/>
 
 	<!-- Launch for encoder_handler node -->
-	<include file="$(find controls_launch)/launch/encoder_handler.launch"/>
+	<!-- <include file="$(find controls_launch)/launch/encoder_handler.launch"/> -->
 
 	<!-- Launch for rplidar node -->
 	<include file="$(find rplidar_ros)/launch/rplidar.launch"/>
 
-	<!-- Launch for rplidar node -->
-	<include file="$(find controls_launch)/launch/tele_op.launch"/>
+	<!-- Launch for teleop nodes -->
+	<!-- <include file="$(find controls_launch)/launch/tele_op.launch"/> -->
 
 </launch>

@@ -332,11 +332,11 @@ void operations::mission_food()
     //check direction of the objective and turn to it
     
     mission_people(2); //turn on fan
-    ros::Duration(1).sleep() //sleep for a second
+    ros::Duration(1).sleep(); //sleep for a second
     mission_people(3); //turn off fan
     
     mission_people(4); //turn on LED
-    ros::Duration(1).sleep()
+    ros::Duration(1).sleep();
     mission_people(5); //turn off LED
     
 	// Check sensor data

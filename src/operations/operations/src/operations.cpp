@@ -526,23 +526,23 @@ int main(int argc, char **argv)
 	int second = 31;
 	int third = 3;
 
-	achilles_slam::course_map map = operations::get_map();
+	achilles_slam::course_map map1 = operations::get_map();
 	achilles_slam::coord* targ = new achilles_slam::coord;
-	targ->x = first/map.width;
-	targ->y = first%map.width;
-	operations::traverse_to_objective(map, targ);
+	targ->x = first/map1.width;
+	targ->y = first%map1.width;
+	operations::traverse_to_objective(map1, targ);
 
-	achilles_slam::course_map map = operations::get_map();
-	achilles_slam::coord* targ = new achilles_slam::coord;
-	targ->x = second/map.width;
-	targ->y = second%map.width;
-	operations::traverse_to_objective(map, targ);
+	achilles_slam::course_map map2 = operations::get_map();
+	achilles_slam::coord* targ2 = new achilles_slam::coord;
+	targ2->x = second/map2.width;
+	targ2->y = second%map2.width;
+	operations::traverse_to_objective(map2, targ2);
 
-	achilles_slam::course_map map = operations::get_map();
-	achilles_slam::coord* targ = new achilles_slam::coord;
-	targ->x = third/map.width;
-	targ->y = third%map.width;
-	operations::traverse_to_objective(map, targ);
+	achilles_slam::course_map map3 = operations::get_map();
+	achilles_slam::coord* targ3 = new achilles_slam::coord;
+	targ3->x = third/map3.width;
+	targ3->y = third%map3.width;
+	operations::traverse_to_objective(map3, targ3);
 /*
 	achilles_slam::course_map end_map = operations::get_map();
 	achilles_slam::coord* starting = new achilles_slam::coord;

@@ -29,13 +29,13 @@ bool get_sensor_data(sensor_package::AddTwoInts::Request  &req, sensor_package::
         res.fanOff = turnOffFan();
     
     else if (req.input == 4)
-        res.LEDon = turnOnLED();
+        res.LEDOn = turnOnLED();
     
     else if (req.input == 5)
         res.LEDOff = turnOffLED();
     
     ROS_INFO("request: sensor=%ld", (long int)req.input);
-    ROS_INFO("sending back response: [%ld]", (long int)res.hall, (long int)res.fanOn, (long int)res.fanOff, (long int)res.LEDon, (long int)res.LEDOff);
+    ROS_INFO("sending back response: [%ld]", (long int)res.hall, (long int)res.fanOn, (long int)res.fanOff, (long int)res.LEDOn, (long int)res.LEDOff);
     return true;
     
 }

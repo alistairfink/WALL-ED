@@ -300,12 +300,30 @@ void operations::objective_tasks()
 	// Pop stack. Assumes mission was successful. Idk if we want more oversight here
 }
 
-void operations::mission_people()
+int operations::mission_people()
 {
 	float starting_dist = movement::roll_up(0.05, movement::NOMINAL, operations::motor);
 	// turn fan on.
 	// signal led
 	movement::roll_up(starting_dist, -1*movement::NOMINAL, operations::motor);
+   
+    /* service for actions(turn on LED, FAN, check hall)*/
+    ros::NodeHandle n;
+    ros::ServiceClient perform_action = n.serviceClient<sensor_package::AddTwoInts>("sensor_data");
+    sensor_package::AddTwoInts srv;
+    
+    while(!perform_action.call(srv));
+    
+    if(srv.request == 1)
+        return srv.response.hall;
+    else if(srv.request == 2)
+        return srv.response.fanOn;
+    else if(srv.request == 3)
+        return srv.response.fanOff;
+    else if(srv.request == 4)
+        return srv.response.LEDOn;
+    else if(srv.request == 5)
+        return srv.response.LEDOff;
 }
 
 void operations::mission_food()
@@ -367,6 +385,7 @@ achilles_slam::course_map operations::get_map()
 	while (!map_client.call(map_service));
 	return map_service.response.silicon_valley;
 }
+
 
 void operations::update_tile(achilles_slam::coord coord, achilles_slam::course_map map)
 {

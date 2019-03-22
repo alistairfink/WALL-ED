@@ -28,6 +28,7 @@ namespace operations {
 	achilles_slam::coord* start;
 	ros::ServiceClient map_client; 
 	ros::ServiceClient update_map_client;
+    ros::ServiceClient perform_action;
 	motor_abs::motor_driver* motor;
 	int direction;
 	std::stack<int> sand_index;
@@ -37,7 +38,7 @@ namespace operations {
 	void traverse_to_objective(achilles_slam::course_map map, achilles_slam::coord* dest);
 	void grid_traverse(achilles_slam::course_map map);
 	void objective_tasks();
-	void mission_people();
+	int mission_people();
 	void mission_food();
 	void mission_candle();
 	achilles_slam::coord get_closest_unvisited(achilles_slam::course_map map);

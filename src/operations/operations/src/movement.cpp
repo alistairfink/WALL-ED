@@ -68,12 +68,20 @@ void movement::straight(int speed, float dist, motor_abs::motor_driver* motor)
 	float south_s = south;
 	// meters
 	float tol = 0.01;
+	int correction = 5;
 	motor->set_speed(speed-movement::OFFSET, -speed);
 	ros::Duration(1).sleep();
-	while (std::abs((north + dist) - north_s) > tol &&
-		std::abs((south - dist) - south_s) > tol)
+	while (std::abs((north + dist) - north_s) > tol)
 	{
 		ros::spinOnce();
+		if (east - west > 0 && east - west  < tol)
+		{
+			motor->set_speed(speed-movement::OFFSET + correction, -speed);
+		}
+		else if (west - east > 0 && west - east < tol)
+		{
+			motor->set_speed(speed-movement::OFFSET, -speed + correction);
+		}
 	}
 	motor->set_speed(0,0);	
 }

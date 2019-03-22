@@ -298,6 +298,7 @@ achilles_slam::course_map operations::get_map()
 	achilles_slam::get_course_map map_service;
 	while (!map_client.call(map_service));
 	achilles_slam::course_map map = map_service.response.silicon_valley;
+	ROS_INFO("SKYE x=%d y=%d", map.robot_pos.x , map.robot_pos.y);
 	int tempx = map.robot_pos.x;
 	map.robot_pos.x = map.robot_pos.y;
 	map.robot_pos.y = tempx;

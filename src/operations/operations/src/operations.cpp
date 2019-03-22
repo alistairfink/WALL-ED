@@ -484,10 +484,9 @@ int main(int argc, char **argv)
 
 	operations::direction = operations::DIR_WEST;
 	achilles_slam::course_map map = operations::get_map();
-	achilles_slam::coord* middle = new achilles_slam::coord;
-	middle->x = 21/map.width;
-	middle->y = 21%map.width;
-	operations::traverse_to_objective(map, middle);
+	movement::straight(movement::NOMINAL, movement::TILE_DIST, operations::motor);
+	movement::straight(movement::NOMINAL, movement::TILE_DIST, operations::motor);
+	//operations::traverse_to_objective(map, middle);
 	movement::turn(movement::LEFT, operations::DIR_SOUTH, operations::motor);
 	ros::Duration(1).sleep();
 	movement::turn(movement::LEFT, operations::DIR_EAST, operations::motor);

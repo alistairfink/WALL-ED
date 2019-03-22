@@ -521,17 +521,28 @@ int main(int argc, char **argv)
 	ros::Duration(1).sleep();
 	movement::turn(movement::LEFT, operations::DIR_WEST, operations::motor);
 	ros::Duration(1).sleep();
-	
+*/
+	int first = 19;
+	int second = 31;
+	int third = 3;
 
-	for (int i = 0; i < 3; i++)
-	{
-		achilles_slam::course_map curr_map = operations::get_map();
-		int next_targ = operations::get_next_target(curr_map);
-		achilles_slam::coord* targ = new achilles_slam::coord;
-		targ->x = next_targ/curr_map.width;
-		targ->y = next_targ%curr_map.width;
-		operations::traverse_to_objective(curr_map, targ);
-	}*/
+	achilles_slam::course_map map = operations::get_map();
+	achilles_slam::coord* targ = new achilles_slam::coord;
+	targ->x = first/map.width;
+	targ->y = first%map.width;
+	operations::traverse_to_objective(map, targ);
+
+	achilles_slam::course_map map = operations::get_map();
+	achilles_slam::coord* targ = new achilles_slam::coord;
+	targ->x = second/map.width;
+	targ->y = second%map.width;
+	operations::traverse_to_objective(map, targ);
+
+	achilles_slam::course_map map = operations::get_map();
+	achilles_slam::coord* targ = new achilles_slam::coord;
+	targ->x = third/map.width;
+	targ->y = third%map.width;
+	operations::traverse_to_objective(map, targ);
 /*
 	achilles_slam::course_map end_map = operations::get_map();
 	achilles_slam::coord* starting = new achilles_slam::coord;

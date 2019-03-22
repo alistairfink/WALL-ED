@@ -19,6 +19,8 @@ namespace operations {
 		cabin = 4,
 	};
 
+	int starting_tile;
+
 	const int DIR_NORTH = 0;
 	const int DIR_EAST = 1;
 	const int DIR_SOUTH = 2;

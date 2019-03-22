@@ -403,6 +403,7 @@ int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "operations");
   	ros::NodeHandle n;
+  	n.param<int>("/achilles_mapping/starting_tile", operations::starting_tile, 1);
 	operations::map_client = n.serviceClient<achilles_slam::get_course_map>("get_course_map");
 	operations::update_map_client = n.serviceClient<achilles_slam::update_course_map>("update_course_map");
 
@@ -455,9 +456,7 @@ int main(int argc, char **argv)
 
 /*
 	achilles_slam::course_map orig_map = operations::get_map();
-	// TODO : Change this to launch param
-	int start = 1; 
-	operations::initialize(orig_map, start);
+	operations::initialize(orig_map, operations::starting_tile);
 
 	while(!operations::missions.empty())
 	{

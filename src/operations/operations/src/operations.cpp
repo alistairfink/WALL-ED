@@ -76,8 +76,8 @@ void operations::traverse_to_objective(
 {
 	achilles_slam::coord curr_pos = map.robot_pos;
 	std::vector<achilles_slam::coord> invalid = operations::get_invalid(map, dest);
-	ROS_INFO("Traverse from %d to %d", 6*curr_pos.x+curr_pos.y, 6*dest->x+dest->y); 
-	std::deque<uint8_t> path = path_plan::get_path_to_target(6*curr_pos.x+curr_pos.y, 6*dest->x+dest->y, &map);
+	ROS_INFO("Traverse from %d to %d", 6*curr_pos.y+curr_pos.x, 6*dest->x+dest->y);
+	std::deque<uint8_t> path = path_plan::get_path_to_target(6*curr_pos.y+curr_pos.x, 6*dest->x+dest->y, &map);
 	path.pop_front();
 	achilles_slam::coord curr = curr_pos;
 

@@ -17,7 +17,7 @@ void operations::initialize(achilles_slam::course_map map, int start)
 	direction = 0;
 	operations::start->x = start_pos/map.width;
 	operations::start->y = start_pos%map.width;
-	operations::missions.push(operations::food);
+	//operations::missions.push(operations::food);
 	operations::missions.push(operations::candle);
 	operations::missions.push(operations::mansion);
 	operations::missions.push(operations::cabin);
@@ -52,65 +52,14 @@ void operations::traverse_to_empty(
 	achilles_slam::coord curr_pos = map.robot_pos;
 	std::vector<achilles_slam::coord> invalid = operations::get_invalid(map, &dest);
 	std::deque<achilles_slam::coord> path = path_plan::path_plan_objective(map, curr_pos, dest, invalid);
-
+	path.pop_front();
 	achilles_slam::coord curr = curr_pos;
 
-	while (!path.empty())
+	while (!path.size() > 0)
 	{
 		achilles_slam::coord next = path.front();
-		
-		int direction_to_go;
-		if (curr.x < next.x)
-		{
-			direction_to_go = DIR_NORTH;
-		}
-		else if (curr.x > next.x)
-		{
-			direction_to_go = DIR_SOUTH;
-		}
-		else if (curr.y < next.y)
-		{
-			direction_to_go = DIR_EAST;
-		}
-		else if (curr.y > next.y)
-		{
-			direction_to_go = DIR_WEST;
-		}
-
-		while (direction != direction_to_go)
-		{
-			if (direction > direction_to_go || (direction == DIR_NORTH && direction_to_go == DIR_WEST))
-			{
-				int next_dir = direction--;
-				if (next_dir < 0)
-				{
-					next_dir = DIR_WEST;
-				}
-
-				movement::turn(movement::LEFT, next_dir, operations::motor);
-				direction--;
-			}
-			else if (direction < direction_to_go || (direction == DIR_WEST && direction_to_go == DIR_NORTH))
-			{
-				int next_dir = direction++;
-				if (next_dir > 3)
-				{
-					next_dir = DIR_NORTH;
-				}
-
-				movement::turn(movement::RIGHT, next_dir, operations::motor);
-				direction++;
-			}
-
-			if (direction < 0)
-			{
-				direction = DIR_WEST;
-			}
-			else if (direction > 3)
-			{
-				direction = DIR_NORTH;
-			}
-		}
+		ROS_INFO("CURRENT: X %i Y %i, NEXT: X %i Y %i", curr.x, curr.y, next.x, next.y);
+		operations::turn_properly(curr, next);
 
 		movement::straight(movement::NOMINAL, movement::TILE_DIST, operations::motor);
 		operations::update_tile(next, map);
@@ -332,7 +281,11 @@ achilles_slam::course_map operations::get_map()
 {
 	achilles_slam::get_course_map map_service;
 	while (!map_client.call(map_service));
-	return map_service.response.silicon_valley;
+	achilles_slam::course_map map = map_service.response.silicon_valley;
+	int tempx = map.robot_pos.x;
+	map.robot_pos.x = map.robot_pos.y;
+	map.robot_pos.y = tempx;
+	return map;
 }
 
 void operations::update_tile(achilles_slam::coord coord, achilles_slam::course_map map)
@@ -365,7 +318,7 @@ void operations::turn_properly(achilles_slam::coord curr, achilles_slam::coord n
 	{
 		direction_to_go = DIR_WEST;
 	}
-	ROS_INFO("DIRECTION TO GO: %i", direction_to_go);
+
 	if (operations::direction > direction_to_go || (operations::direction == DIR_NORTH && direction_to_go == DIR_WEST))
 	{
 		movement::turn(movement::RIGHT, direction_to_go, operations::motor);
@@ -393,6 +346,16 @@ std::vector<achilles_slam::coord> operations::get_invalid(achilles_slam::course_
 			temp.y = y;
 			invalid.push_back(temp);
 		}
+	}
+
+	for (int i = 0; i < map.bad_zones.size(); i++)
+	{
+		int x = map.bad_zones[i]/map.width;
+		int y = map.bad_zones[i]%map.width;
+		achilles_slam::coord temp;
+		temp.x = x;
+		temp.y = y;
+		invalid.push_back(temp);
 	}
 
 	return invalid;	

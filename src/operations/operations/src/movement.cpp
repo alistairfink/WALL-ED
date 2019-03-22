@@ -27,19 +27,19 @@ void movement::turn(int direction, int direction_to_go, motor_abs::motor_driver*
 	double tol = 30;
 	double desired_angle = 0;
 
-	if (direction_to_go == movement::DIR_NORTH)
+	if (direction_to_go == movement::DIR_WEST)
 	{
 		desired_angle = 0;
 	}
-	else if (direction_to_go == movement::DIR_EAST)
+	else if (direction_to_go == movement::DIR_NORTH)
 	{
 		desired_angle = 90;
 	}
-	else if (direction_to_go == movement::DIR_SOUTH)
+	else if (direction_to_go == movement::DIR_EAST)
 	{
 		desired_angle = 180;
 	}
-	else if (direction_to_go == movement::DIR_WEST)
+	else if (direction_to_go == movement::DIR_SOUTH)
 	{
 		desired_angle = -90;
 	}

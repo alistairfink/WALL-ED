@@ -42,6 +42,7 @@ namespace operations {
 	void mission_people();
 	void mission_food();
 	void mission_candle();
+	void turn_properly(achilles_slam::coord current, achilles_slam::coord next);
 	achilles_slam::coord get_closest_unvisited(achilles_slam::course_map map);
 	achilles_slam::course_map get_map();
 	void update_tile(achilles_slam::coord coord, achilles_slam::course_map map);

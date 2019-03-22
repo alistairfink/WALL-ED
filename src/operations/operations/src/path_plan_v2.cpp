@@ -32,10 +32,6 @@ bool path_plan::find_path(uint8_t current, uint8_t target, achilles_slam::course
 				path->push_front(current);
 				return true;
 			}
-			// else
-			// {
-			// 	return false;
-			// }
 		}
 	}
 	return false;

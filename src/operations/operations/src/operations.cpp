@@ -78,15 +78,15 @@ void operations::traverse_to_objective(
 	std::vector<achilles_slam::coord> invalid = operations::get_invalid(map, dest);
 	ROS_INFO("Traverse from %d to %d", 6*curr_pos.y+curr_pos.x, 0);
 	std::deque<uint8_t> path = path_plan::get_path_to_target(6*curr_pos.y+curr_pos.x, 0, &map);
-	path.pop_front();
+	path.pop_back();
 	achilles_slam::coord curr = curr_pos;
 
-	for (int i = 0; i < path.size(); i++)
+	/*for (int i = 0; i < path.size(); i++)
 	{
 		ROS_INFO("%i: %i", i, path[i]);
-	}
-/*
-	while (path.front() != 6*dest->x + dest->y)
+	}*/
+
+	while (path.front() != 6*dest->y + dest->x)
 	{
 		achilles_slam::coord next;
 		next.x = path.front()/map.width;
@@ -96,10 +96,10 @@ void operations::traverse_to_objective(
 
 		movement::straight(movement::NOMINAL, movement::TILE_DIST, operations::motor);
 		operations::update_tile(next, map);
-		path.pop_front();
+		path.pop_back();
 		curr = next;
 	}
-*/
+
 	operations::objective_tasks();
 }
 

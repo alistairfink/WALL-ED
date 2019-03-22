@@ -523,6 +523,14 @@ int main(int argc, char **argv)
 	movement::turn(movement::LEFT, operations::DIR_WEST, operations::motor);
 	ros::Duration(1).sleep();
 */
+	/*wiringPiSetup();
+	pinMode(5, OUTPUT);
+	digitalWrite(5, HIGH);
+
+	pinMode(4, OUTPUT);
+	digitalWrite(4, HIGH);	*/
+
+
 	int speed = 100; 
 	operations::motor->set_speed(speed-movement::OFFSET, -speed);
 	ros::Duration(6.5).sleep();
@@ -534,15 +542,13 @@ int main(int argc, char **argv)
 	ros::Duration(1.62).sleep();
 	operations::motor->set_speed(0,0);
 	operations::motor->set_speed(100, 100);
-	ros::Duration(2.4).sleep();
+	ros::Duration(3).sleep();
 	operations::motor->set_speed(speed-movement::OFFSET, -speed);
 	ros::Duration(8.1).sleep();
 	operations::motor->set_speed(0,0);
 	operations::motor->set_speed(-100, -100);
 	ros::Duration(1.2).sleep();
 	operations::motor->set_speed(0,0);
-
-	//pinMode(5, OUTPUT)
 	/*
 	int first = 19;
 	int second = 31;

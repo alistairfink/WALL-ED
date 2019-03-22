@@ -287,6 +287,9 @@ achilles_mapping_service::achilles_mapping_service()
 		this->course_map->map[10].terrain = achilles_slam::tile::TERRAIN_WATER;
 		this->course_map->map[18].terrain = achilles_slam::tile::TERRAIN_WATER;
 		this->course_map->map[33].terrain = achilles_slam::tile::TERRAIN_WATER;
+
+		uint8_t temp_bad_zones[6] = {2, 17, 25, 10, 18, 33};
+		this->course_map->bad_zones.insert(this->course_map->bad_zones.end(), temp_bad_zones, temp_bad_zones+6);
 	} 
 	else if (this->start_pos == 2)
 	{
@@ -304,6 +307,9 @@ achilles_mapping_service::achilles_mapping_service()
 		this->course_map->map[7].terrain = achilles_slam::tile::TERRAIN_WATER;
 		this->course_map->map[17].terrain = achilles_slam::tile::TERRAIN_WATER;
 		this->course_map->map[33].terrain = achilles_slam::tile::TERRAIN_WATER;
+
+		uint8_t temp_bad_zones[6] = {2, 18, 28, 7, 17, 33};
+		this->course_map->bad_zones.insert(this->course_map->bad_zones.end(), temp_bad_zones, temp_bad_zones+6);
 
 	}
 	else if (this->start_pos == 3)
@@ -323,6 +329,9 @@ achilles_mapping_service::achilles_mapping_service()
 		this->course_map->map[2].terrain = achilles_slam::tile::TERRAIN_WATER;
 		this->course_map->map[25].terrain = achilles_slam::tile::TERRAIN_WATER;
 
+		uint8_t temp_bad_zones[6] = {10, 18, 33, 17, 2, 25};
+		this->course_map->bad_zones.insert(this->course_map->bad_zones.end(), temp_bad_zones, temp_bad_zones+6);
+
 	}
 	else if (this->start_pos == 4)
 	{
@@ -340,6 +349,9 @@ achilles_mapping_service::achilles_mapping_service()
 		this->course_map->map[2].terrain = achilles_slam::tile::TERRAIN_WATER;
 		this->course_map->map[18].terrain = achilles_slam::tile::TERRAIN_WATER;
 		this->course_map->map[28].terrain = achilles_slam::tile::TERRAIN_WATER;
+
+		uint8_t temp_bad_zones[6] = {17, 7, 33, 2, 18, 28};
+		this->course_map->bad_zones.insert(this->course_map->bad_zones.end(), temp_bad_zones, temp_bad_zones+6);
 
 	}
 

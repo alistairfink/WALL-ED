@@ -80,6 +80,11 @@ void operations::traverse_to_objective(
 	path.pop_front();
 	achilles_slam::coord curr = curr_pos;
 
+	for (int i = 0; i < path.size(); i++)
+	{
+		ROS_INFO("%i: %i", i, path[i]);
+	}
+/*
 	while (path.front() != 6*dest->x + dest->y)
 	{
 		achilles_slam::coord next;
@@ -93,7 +98,7 @@ void operations::traverse_to_objective(
 		path.pop_front();
 		curr = next;
 	}
-
+*/
 	operations::objective_tasks();
 }
 

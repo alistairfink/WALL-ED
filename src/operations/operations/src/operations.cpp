@@ -462,14 +462,13 @@ int main(int argc, char **argv)
 	operations::motor = new motor_abs::motor_driver("/dev/ttyACM0", 115200);
 
 	operations::direction = operations::DIR_WEST;
-	ros::Duration(1).sleep();
-	movement::turn(movement::LEFT, operations::DIR_NORTH, operations::motor);
-	ros::Duration(1).sleep();
-	movement::turn(movement::LEFT, operations::DIR_EAST, operations::motor);
-	ros::Duration(1).sleep();
-	movement::turn(movement::LEFT, operations::DIR_SOUTH, operations::motor);
-	ros::Duration(1).sleep();
-	movement::turn(movement::LEFT, operations::DIR_WEST, operations::motor);
+	achilles_slam::coord current;
+	current.x = 3;
+	current.y = 3;
+	achilles_slam::coord next;
+	next.x = 3;
+	next.y = 4;
+	operations::turn_properly(current, next);
 	//ros::spinOnce();
 	// Straight Test
 	//movement::straight(movement::NOMINAL, movement::TILE_DIST, operations::motor);

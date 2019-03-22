@@ -431,7 +431,8 @@ int main(int argc, char **argv)
 	movement::turn(movement::RIGHT, operations::DIR_EAST, operations::motor);*/
 
 	// Get Close Test
-	movement::roll_up(0.05, movement::NOMINAL, operations::motor);
+	float starting_dist = movement::roll_up(0.05, movement::NOMINAL, operations::motor);
+	movement::roll_up(starting_dist, -1*movement::NOMINAL, operations::motor);
 /*
 	achilles_slam::course_map orig_map = operations::get_map();
 	// TODO : Change this to launch param
